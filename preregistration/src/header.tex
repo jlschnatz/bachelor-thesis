@@ -1,0 +1,23 @@
+\usepackage{titling}
+\setlength{\droptitle}{5em} 
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{calc}
+\newlength{\depthofsumsign}
+\setlength{\depthofsumsign}{\depthof{$\sum$}}
+\newlength{\totalheightofsumsign}
+\newlength{\heightanddepthofargument}
+\newcommand{\nsum}[1][1.6]{
+  \mathop{%
+    \raisebox
+    {-#1\depthofsumsign+1\depthofsumsign}
+    {\scalebox
+      {#1}
+      {$\displaystyle\sum$}%
+    }
+  }
+}
+\usepackage{units}
+\usepackage[titles]{tocloft}
+\renewcommand{\cftdot}{}
