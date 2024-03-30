@@ -1,0 +1,7 @@
+\newpage
+
+# Appendix
+
+## Appendix A: Power Analysis and SESOI
+
+## Appendix B: Open Science Statement

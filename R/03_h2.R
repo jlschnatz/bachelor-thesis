@@ -35,6 +35,8 @@ mod_h2 <- betareg(
 
 summary(mod_h2)
 
+write_rds(mod_h2, here("data/src/model_betareg_h2.rds"))
+
 
 # Plot model predictions ———————————————————————————————————————————————————————————————————————————————————————————————————————
 p <- ggeffect(mod_h2, "Delta [-.9:.9, by = 0.01]") |> 

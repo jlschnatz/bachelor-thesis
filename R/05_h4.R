@@ -3,7 +3,7 @@ if(!"pacman" %in% installed.packages()) install.packages("pacman")
 pacman::p_load(
   tidyverse, betareg, here, sysfonts, showtext,
   marginaleffects, ggdist, latex2exp, systemfonts, kableExtra,
-  sjPlot
+  sjPlot, insight
 )
 source(here("R/functions.R"))
 
@@ -38,6 +38,8 @@ mod_h4 <- betareg(
   ) 
 
 summary(mod_h4)
+
+write_rds(mod_h4, here("data/src/model_betareg_h4.rds"))
 
 
 # Plot model predictions ————————————————————————————————————————————————————————————————————————————————————————————————————

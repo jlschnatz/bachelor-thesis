@@ -1,0 +1,143 @@
+---
+bibliography: ../references.bib
+---
+
+\newpage
+
+```{r}
+#| message: false
+#| echo: false
+
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
+pacman::p_load(insight, glue, tidyverse, here, parameters, broom, betareg)
+source(here("R/functions.R"))
+```
+
+# Results
+
+## Testing the Predictions from the Hypotheses
+
+<!-- Multi-Panel Figure for Hypotheses -->
+
+```{=latex}
+\begin{figure}[h]
+\caption{Graphical Overview of the Examination of the Predictions from the four Hypotheses
+\label{fig:hypotheses}}
+```
+```{r hypotheses}
+#| out-width: 100%
+#| fig-align: center
+knitr::include_graphics(here("figures/combine_hypotheses.png"))
+```
+
+```{=latex}
+\begingroup
+\scriptsize
+\textit{Note.} \textbf{A}. Estimated publication bias parameter as a function of Fisher z-transformed correlation coefficients. Fitted line represents the regression coefficients from the model and the 95\% CI. \textbf{B}. Estimated publication bias parameter as a function of the difference between the estimated mean parameter and the average effect size. \textbf{C}. The mean difference between the estimated mean parameter and the average effect size and its 90\% confidence interval compared against the null t-distribution for the lower and upper bounds. \textbf{D}. A comparison between the distribution of estimated publication bias parameter between normal meta-analyses and multisite replications. The pointrange indicates the marginal predicted values and the 95\% confidence interval from the regression.
+\endgroup
+\end{figure}
+```
+<!--# Hypotheses I -->
+
+```{r}
+mod_h1 <- read_rds(here("data/src/model_betareg_h1.rds"))
+z <- coef(mod_h1) / sqrt(diag(vcov(mod_h1)))
+p_b1 <- pnorm(z[2], lower.tail = FALSE)
+tm1 <- tidy(mod_h1, conf.int = TRUE) |> 
+    filter(term == "z_rs") |>
+    mutate(p.value = if_else(term == "z_rs", p_b1, p.value)) 
+ 
+string_h1 <- glue("$\\log$($OR$) = {format_value(tm1$estimate)}, $SE$ = {format_value(tm1$std.error)}, $z$ = {format_value(tm1$statistic)}, {format_ci(tm1$conf.low, tm1$conf.high)}, {format_p(tm1$p.value, name = '$p$')}")
+
+sp_h1 <- standardize_parameters(mod_h1, exponentiate = TRUE) 
+```
+
+Regarding hypotheses $\mathcal{H}_1$, panel A of @fig-hypotheses depicts the relationship between the Fisher z-transformed Spearman correlation coefficients $z_{r_S}$ of the association between effect size and sample size in each meta-analysis and the estimated publication bias parameter $\widehat{\omega}_{\text{PBS}}$. Only marginally positive slope, which was not statistically significant; `r string_h1`. Lower correlation coefficients were not significantly associated with lower publication bias parameter values.
+
+<!--# Hypotheses II -->
+
+```{r}
+mod_h2 <- read_rds(here("data/src/model_betareg_h2.rds"))
+#standardize_parameters(mod_h2)
+```
+
+Regarding hypotheses II, panel B of figure 1 depicts the predicted values for the estimated publication bias parameter as a function of the difference between the average effect size estimate and the estimated mean parameter of Gaussian effect size distribution. The corresponding quadratic slope parameter was not statistically significant.
+
+<!--# Hypotheses III -->
+
+```{r}
+#| results: asis
+
+tost_model <- read_rds(here::here("data/src/tost_model.rds"))
+tidy_tost <- tost_model |>
+    pluck("TOST") |>
+    as.data.frame() |>
+    rownames_to_column("type") |>
+    mutate(across(t:SE, ~round(.x, 2)))
+
+tidy_effsize <- tost_model |>
+    pluck("effsize") |>
+    rownames_to_column("type") |>
+    mutate(across(estimate:upper.ci, ~round(.x, 2)))
+
+# Mean Difference
+string_md <- glue("$M$ = {tidy_effsize[1, 'estimate']}, {format_ci(tidy_effsize[1, 'lower.ci'], tidy_effsize[1, 'upper.ci'], ci = 0.9)}")
+
+# Hedge´s g_rm
+string_smd <- glue("Hedge´s $g_{rm}$ = {{tidy_effsize[2, 'estimate']}}, {{format_ci(tidy_effsize[2, 'lower.ci'], tidy_effsize[2, 'upper.ci'], ci = 0.9)}}", .open = "{{", .close = "}}")
+
+# t-test
+tt <- subset(tidy_tost, type == "t-test")
+string_tt <- glue("$t$({tt$df}) = {tt$t}, $SE$ = {tt$SE}, {format_p(tt$p.value, digits = 3, name = '$p$')}")
+
+# TOST (only test with lower t-values necessary)
+tost <- tidy_tost |>
+    filter(type != "t-test") |>
+    filter(abs(t) == min(abs(t)))
+string_tost <- glue("$t$({tost$df}) = {tost$t}, $SE$ = {tost$SE}, {format_p(tost$p.value, digits = 3, name = '$p$')}")
+```
+
+Regarding $\mathcal{H}_3$, panel C of figure 2 depicts the observed mean difference and its respective confidence interval as well as the null $t$-distributions used to perform the TOST procedure against the equivalence bounds $\Delta=(-0.17, 0.17)$. The mean difference between estimated mean parameter of the Gaussian effect size distribution and the average effect size for the multisite replication studies subset of the data was `r string_md`; `r string_smd`. The equivalence test was significant, `r string_tost`.
+
+<!--# Hypotheses IV -->
+
+```{r}
+
+mod_h4 <- read_rds(here("data/src/model_betareg_h4.rds"))
+tm4 <- tidy(mod_h4, conf.int = TRUE) |>
+    filter(str_detect(term, "type_synthesis")) 
+
+string_h4 <- glue("$\\log$($OR$) = {format_value(tm4$estimate)}, $SE$ = {format_value(tm4$std.error)}, $z$ = {format_value(tm4$statistic)}, {format_ci(tm4$conf.low, tm4$conf.high)}, {format_p(tm4$p.value, name = '$p$')}")
+
+```
+
+`r string_h4`
+
+\newpage
+
+## Diagnostic Checks
+
+```{r tab-ml-speec}
+#| results: asis
+
+table_ml_speec <- read_tex(here("tables/ml_speec_diff_cor.tex"))
+cat(table_ml_speec, sep = "\n")
+```
+
+```{=latex}
+\begin{figure}[H]
+\caption{Test\label{fig:ml-speec-comparison}}
+```
+```{r ml-speec-comparison}
+#| out-width: 80%
+#| fig-align: center
+knitr::include_graphics(here("figures/ml_speec_comparison.png"))
+```
+
+```{=latex}
+\begingroup
+\scriptsize
+\textit{Note.} \textbf{A1}. Test. \textbf{A2}. Test. \textbf{B1}. Test \textbf{B2}. Test 
+\endgroup
+\end{figure}
+```

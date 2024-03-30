@@ -1,0 +1,87 @@
+---
+bibliography: ../references.bib
+---
+
+\newpage
+
+# Introduction
+
+<!--# Epistemological Intro -->
+
+<!--# Topics: Epistemological background, Definition publication bias historical account, consequences (in light of the replication crisis) -->
+
+<!--# Question? More into causes of publication bias? is this missing?-->
+
+Science is commonly conceived as a cumulative enterprise [@cooper_research_2019] with the overarching goal of attaining robust knowledge about the world [@kitcher_advancement_1993]. Within this landscape, researcher often study the same phenomen, driven by the idea that generalizing and synthesizing findings from individual studies contributes to advancement of knowledge. However, this premise hinges on the underlying assumption, that the available scientific literature is representative for all conducted research [@song_dissemination_2010].\
+Contrary to this, researchers have pointed out for over half a century that results of published studies differ systematically from unpublished studies [@smart_importance_1964; @sterling_publication_1959; @bozarth_signifying_1972; @bakan_test_1966]. This discrepancy arises as the publication of a study often hinges on the direction or strength of its findings [@dickersin_existence_1990; \
+@dickersin_publication_1993] and is collectively known as *publication bias*. Especially in a publishing culture that prioritizes novelty and positive results [@nosek_scientific_2012], many statistically nonsignificant studies end up in the "file-drawer" and never get published [@rosenthal_file_1979].
+
+The ramifications of publication bias are severe, culminating in inflated meta-analytical effect sizes [@stanley_detecting_2021; @franco_publication_2014], heightened false-positive rate [@kicinski_how_2014; @munafo_how_2010], thereby increasing the risk of erroneous conclusions that may jeopardize the validity of research [@begg_publication_1994]. These ramifications become especially relevant in the light of recent large-scale replication projects providing evidence for non-replicability of many psychological findings [@open_science_collaboration_estimating_2015; @klein_many_2018; @camerer_evaluating_2018; @klein_investigating_2014; @ebersole_many_2016; @ebersole_many_2020]. This underscores why publication bias identified as a major threat to replicable science [@munafo_manifesto_2017] and thus a considered as a significant contributor to the replication crisis [@renkewitz_how_2019]. Given the myriad of issues associated with publication bias and its widespread impact, there has been considerable attention directed towards investigating methodologies to detect publication bias.
+
+<!--# How can we measure publication bias? High-level summary -->
+
+In this regard, there has been a great deal of research on publication bias detection techniques with numerous statistical methods developed over the past 50 years [@marks-anglin_historical_2020]. These statistical techniques can generally be classified into methodologies that operate with *p*-values and methodologies that are based on the relationship between effect size and sample size [@vevea_publication_2019]. While both categories encompass highly sophisticated statistical techniques (CITATION?), a straightforward and frequently described method, that has been associated with publication bias, involves examining the correlation between effect size and sample size. Additionally, this method encapsulates the central ideas of other approaches, such as Begg's rank correlation [@begg_operating_1994], Egger's regression [@egger_bias_1997], and its proposed variants [for an overview see @song_dissemination_2010], all rooted in the relationship between effect size and sample size.
+
+## Reasoning of the n-ES correlation
+
+The central tenets of the correlation of effect size and sample size as an indicator of publication bias originate from the concepts of the funnel plot and its assemmetry under the influence of publication bias that was introduced by @light_summing_1984. When multiple studies investigate of common underlying effect, the empirical effect sizes (for example Cohen´s *d* or Fisher-z transformed *r*) follow a normal distribution and fluctuate around the true effect size. Due to sampling error, the lower the sample sizes of individual studies, the less precision they exhibit to estimate the true effect size (i.e., larger standard error), leading to a larger variation around the true effect size. In the absence of publication bias this will result in a symmetric funnel shaped distribution [@light_summing_1984]. However, when the publishing of studies is contingent on their statistical significance, the funnel plot will be assymetric. As the statistical significance of *p*-values is jointly determined by the sample size (i.e., standard error of the test statistic) and effect size (i.e., test statistic), larger effect sizes attain statistical significance with smaller sample sizes, while smaller effect sizes necessitate larger sample sizes to be significant. Consequently, the negative correlation between effect size and sample size emerges because the threshold for the smallest effect sizes that is statistically significant decreases with increasing sample size [@linden_publication_2024]. The correlation between effect size and sample size has been described and attributed to publication bias extensively in various research including psychology [@kuhberger_publication_2014; @fritz_comprehensive_2013; @levine_sample_2009], evolutionary biology and ecology [@palmer_detecting_1999; @moller_how_2001; @jennions_publication_2002; @jennions_relationships_2002], political science [@gerber_testing_2001] and educational research [@slavin_effective_2008; @slavin_relationship_2009] Its prevalence across these disciplines highlights its role as a widely recognized and applied tool for the detection of publication bias.<!--# Challenges of the n-ES correlation -->
+
+## Methodological Concerns
+
+Despite the significant attention and prevalent use of the effect size-sample size correlation in various research fields for detecting publication bias, coupled with its frequent acknowledgment as a valid indicator of such bias, there exist persisting methodological concerns. As I will argue in the next section, these concerns have only been partially discussed and adressed in the existing literature and may compromise the validity of the interpretation of the correlation as an indicator of publication bias. To illustrate the inherent challenges of the effect size-sample size correlation as an indicator of publication bias, we simulated a set 10000 primary studies[^1] on the same effect underlying effect and varied different parameters that contribute to its limitations (see figure 1). This includes the true effect size $\delta: \{0,~0.4\}$, the extent of publication bias $\omega_{PBS}:\{0,~1\}$ or how much less likely studies with non-significant *p*-values are compared to studies with significant results (in this extreme case either non-significant studies are not published at all, or there are no differences between non-significant and significant studies), the signedness of the effect size ($d$ and $\lvert ~ d ~ \rvert$) and the type of hypothesis (directional $\mathcal{H_1}:\theta>0$ and non-directional $\mathcal{H_1}: \theta \neq0$)
+
+[^1]: The selected number of primary studies aims to visually highlight its inherent limitations. The claims would still hold true even with a significantly lower number of primary studies (more representative of primary studies of meta-analysis e.g., 100), albeit with increased variability.
+
+```{=latex}
+\begin{figure}[h]
+\caption{n-ES Correlation in Simulated Data: Influence of Publication Bias, True Effect Size, and Signed vs. Unsigned Effects\label{fig:n-es-grid}}
+```
+```{r n-es-grid}
+#| echo: false
+#| out-width: 80%
+#| fig-align: center
+knitr::include_graphics(here::here("figures/nes_correlation_grid.png"))
+```
+
+```{=latex}
+\begingroup
+\footnotesize
+\textit{Note: } 
+\endgroup
+\end{figure}
+```
+<!--# Use of unsignes effect sizes -->
+
+Firstly, it is common practice to use unsigned effect sizes to estimate the n-es correlation [e.g., @slavin_relationship_2009; @levine_sample_2009; @weinerova_published_2022; @kuhberger_publication_2014]. Whilst this is very common, it has only recently been acknowledged that the use of unsigned effect sizes can lead to a statistical artefact resulting in a small negative correlation, even in the absence of publication bias [@linden_publication_2024]. As depicted in figure 1 (leftmost column compared to second leftmost column), the artificial correlation in absence of publication bias is most severe when the true effect is close to zero, as this condition leads to the most sign changes. Especially when considering that effect sizes in psychology are typically smaller than common benchmarks [@weinerova_published_2022; @lovakov_empirically_2021], and thus it is likely that the true effect sizes of psychological phenomen are often small, this excaberates the problem of the statistical artifact.
+
+<!--# Nil null hypothesis -->
+
+If a negative correlation can emerge even in the absence of publication bias, this raises questions about the appropriate null hypotheses to test against, specifically, what correlation we would expect if publication bias is absent [@linden_publication_2024]. There has been a long tradition in null hypothesis testing to use the nil null hypothesis [@cohen_earth_1994], which states that a population parameter is exactly zero. This is also very common in studies that have used the n-es correlation together with unsigned effect sizes [@kuhberger_publication_2014; @slavin_relationship_2009; @levine_sample_2009; @weinerova_published_2022] and underscores a lack of thorough consideration for the potential falseness of this hypothesis in such cases. The determination of an appropriate null hypothesis for testing in these scenarios, however, remains uncertain.
+
+<!--# Why not signed effect sizes? -->
+
+Utilizing *signed* effect sizes may seem like a straightfoward solution to the aforementioned problems, however, it introduces its own set of challenges. Especially, when researcher make non-directional hypothesis and where the true effect size is close to zero, the distribution of the signed effect sizes and sample size will be symmetrically hollowed out under the influence of publication bias. This symmetry (see Figure 1 H) will result in the correlation being zero, leading to a false negative - a failure to detect publication bias when it is present.
+
+<!--# Conceptual challenges (linearity assumption, doesn´t capture what is aims to capture -->
+
+Apart from these more statistical challenges, there is also a more conceptual challenge.
+
+-\> n-es correlation somewhat misses the point of publication bias
+
+-   Fails to capture the point of publication bias -\> depending on statistical significance -\> effect size and sample size correlation only indirectly captures the censorship process of non-significant studies
+
+-   as figure shows, the non-linear relationship → critical test statistic value under which p \< alpha nonlinear -\>
+
+-   @harrer_doing_2021
+
+-   **Questionable linearity assumption**
+
+    -   Pearson correlation assumes that under publication bias → linear relationship between effect size and sample size → the higher the effect size the lower the required sample size for the effect to be significant and vice versa may given the (false) impression that this assumptions holds
+
+    -   But publication bias operates under statistical significance (which is most dominantly → if p-value smaller than alpha threshold; CITATION) → as figure shows, the non-linear relationship → critical test statistic value under which p \< alpha nonlinear
+
+    -   Spearman correlation loosens the assumption of a linear effect in that the relationship has to be only strictly monotic → but still: this is not how publication bias operates
+
+## The present study
+
+In summary the use of the effect size-sample size correlation as a method to assess publication bias suffers from various methodological challenges

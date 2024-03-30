@@ -2,7 +2,7 @@
 if(!"pacman" %in% installed.packages()) {install.packages("pacman")}
 pacman::p_load(
   sysfonts, showtext, here, tidyverse, betareg, latex2exp, broom, 
-  marginaleffects, systemfonts, kableExtra, sjPlot
+  marginaleffects, systemfonts, kableExtra, sjPlot, insight
   )
 source(here("R/functions.R"))
 
@@ -38,7 +38,9 @@ mod_h1 <- betareg(
   ) 
 
 summary(mod_h1)
-confint(mod_h1)
+
+write_rds(mod_h1, here("data/src/model_betareg_h1.rds"))
+
 
 # Generate scatter plot with model predictions —————————————————————————————————————————————————————————————————————————
 predictions(mod_h1, by  = "z_rs", type = "response", conf_level = 0.95) |> 
@@ -100,7 +102,7 @@ table_h1 <- nice_table(
   caption = "Beta Regression Results for $\\mathcal{H}_1$", 
   footnote = report_fit(mod_h1, "w_pbs"), 
   digits = 2,
-  col_names = c("Term", "Estimate", "$CI", "$SE$", "$z$", "$p$")
+  col_names = c("Term", "Estimate", "$CI$", "$SE$", "$z$", "$p$")
   ) |> 
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
   group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") 

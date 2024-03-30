@@ -110,7 +110,7 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
 #' @param font_size The font size (default = 12)
 #' @return A character vector of the table source code
 #' 
-nice_table <- function(x, digits = 3, caption, footnote, align = NULL, col_names = NULL, font_size = 12) {
+nice_table <- function(x, digits = 3, caption, footnote, align = NULL, col_names = NULL, font_size = 12, full_width = TRUE) {
   n_col <- ncol(x)
   center <- paste0(rep("c", n_col - 1), collapse = "")
   if (is.null(align)) align <- paste0("l", center, collape = "")
@@ -121,7 +121,7 @@ nice_table <- function(x, digits = 3, caption, footnote, align = NULL, col_names
     align = align, caption = caption, 
     digits = digits, row.names = FALSE, col.names = col_names
   ) |> 
-    kableExtra::kable_styling(full_width = TRUE, font_size = font_size) |> 
+    kableExtra::kable_styling(full_width = full_width, font_size = font_size, latex_options = 'HOLD_position') |> 
     kableExtra::footnote(footnote, footnote_as_chunk = TRUE, escape = FALSE, fixed_small_size = TRUE)
 }
 
@@ -157,7 +157,7 @@ pformat <- function(x, stars = FALSE) {
 #' 
 read_tex <- function(file) {
   x <- readLines(file, warn = FALSE)
-  cat(x, sep = "\n")
+  invisible(x)
 }
 
 #' @title Extract Parameter Data from DE-Optimization

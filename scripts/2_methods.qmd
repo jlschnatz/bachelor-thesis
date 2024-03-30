@@ -1,0 +1,171 @@
+---
+bibliography: ../references.bib
+---
+
+\newpage
+
+```{r}
+#| echo: false
+source(here::here("R/functions.R"))
+```
+
+# Method
+
+## The `speec` Approach
+
+### Overview
+
+-   Simulation-based approach to estimate publication bias severity and correct potentially biased (inflated) effect sizes under present publication bias based on the joint distribution of effect size and sample size
+
+-   Simulation of theoretical data -\> joint distribution of effect size and sample size under marginal distributional assumptions -\> Application of publication bias -\> empirical kernel density estimation -\> comparison of empirical and simulated data -\> loss function
+
+-   Implementation as an open source R package (alpha version) that is already available on GitHub: <https://github.com/jlschnatz/speec>
+
+-   General steps
+
+    -   Simulate samples of joint distribution of effect size and sample size from marginal distributional assumptions
+
+    -   Application of publication bias
+
+    -   KDE for Simulated and Empirical Data
+
+    -   Compare Distributions using KL Divergence
+
+    -   Parameter Optimization via Simulated Annealing
+
+(1) Simulation of random samples from joint probability distribution of effect size and sample size
+(2) Application of publication bias
+(3) Kernel Density Estimation of drawn theoretical samples and the empirical empirical samples
+(4) Compuation of the divergence between the estimated probability of empirical against theoretical data
+(5) Algorithmic optimization of bias and distributional parameters via simulated annealing
+
+### Simulation Framework
+
+The marginal distribution for the total sample size $n$ should be inherently modeled as a discrete distribution. Count data of this nature are commonly modeled using either a Poisson or Negative-Binomial distribution. In various psychological domains, sample size distributions often exhibit considerable variance and skewness [see for example @cafri_meta-meta-analysis_2010; @marszalek_sample_2011; @sassenberg_research_2019; @shen_samples_2011; @szucs_empirical_2017]. Considering this variability and skewness we opted for the Negative-Binomial distribution which can account for variance independently of the mean and thus handle overdispered data effectively. We use the reparametrized mean-dispersion parametrization where the number of successes $r = \phi_n$ and the probability of success $p = {\phi_n}/({\mu_n+\phi_n})$ to model the study-specific total sample sizes $n_i$.
+
+$$
+n_1, \,n_2,\, \ldots, \,n_k \quad \text{where} \quad N\stackrel{\mathrm{i.i.d.}}{\sim} \mathcal{NB}(\phi_n, \mu_n) \quad \text{for } i = 1, \ldots, k
+$$ {#eq-nb-dist}
+
+Concerning the marginal distribution of the effect size $d$, we assume a normal distribution with mean $\mu_d$ and variance $\sigma^2_d$, where the effect size itself is assumed to originate from a common two-sample independent *t*-test design. To address the increasing precision in estimating the true effect size mean $\mu_d$ as sample size increases, contributing to the characteristic funnel shape of the effect size-sample size distribution, we compute the variance of the mean differences $\bar{x}_{i1} - \bar{x}_{i2}$, from which the effect sizes originate in this type of design. Subsequently, we derive a normalization factor $\gamma_i$ by dividing each individual variance $\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}$ with overall mean of those variances ensuring that $\bar{\gamma}=1$.
+
+$$
+\begin{gathered}
+\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}=\sigma_d^2/n_i \\
+\gamma_i=\frac{\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}}{\sum_{i=1}^{k}\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}/k} \\
+\end{gathered}
+$$ {#eq-normalization}
+
+With this normalization factor, the total variance of the individual variances of the individual variances is $\text{Var}(\gamma \cdot \sigma^2_d) = \sigma^2_d$. The study-specific effect sizes $d_i$ are subsequently modeled as
+
+$$
+d_1, \,d_2, \,\ldots, \,d_k \quad \text{where} \quad D \stackrel{}{\sim} \mathcal{N}(\mu_d, \gamma_i\cdot\sigma_d^2) \quad \text{for } i = 1, \ldots, k 
+$$ {#eq-norm-dist}
+
+### Definition and Application of Publication Bias
+
+Following the simulation step of sampling $k$ individual studies from the joint distribution of effect size and sample size given the distributional parameters, the subsequent step entails applying publication bias to these samples. As mentioned in the introduction, we operationalize publication bias in terms of the likelihood of a study being published conditional on the statistical significance of its results. Translated to this simulation setting we can calculate the two-tailed *p*-value of each individual study $i$ from the random samples of effect size $d_i$ and sample size $n_i$. We presume that individual studies $i$ originate from a balanced sample size design, where the group sample sizes $n_{1i}$ and $n_{2i}$ are defined as $n_i/2$ when the total sample size is even. If the total sample size is odd, the group sample sizes are determined as the ceilinged $\lceil n_i/2 \rceil$ and and floored $\lfloor n_i/2 \rfloor$ values, respectively. To calculate the *p*-value $p_i$ of each simulated study, derived from *t*-value $t_i$
+
+$$\begin{gathered}t_i=\Big\lvert \frac{d_i}{\sqrt{1/n_{1i} +1/n_{2i}}} \Big\rvert \\\end{gathered}$$ {#eq-t-value}
+
+$$p_i=2 \cdot P(t_i~|~df_i)$$ {#eq-p-value}
+
+where $P(t_i , \, df_i)$ is the cumulative central *t*-distribution with degrees of freedom $df_i=n_{1i}+n_{2i}-2$. Given each p-value $p_i$, publication bias is introduced by assigning each study $i$ a weight
+
+$$\omega_{\text{PBS}_i}(p_i)= \begin{cases}  \omega_{\text{PBS}} & \text{for}~~p_i \geq \alpha \\1 & \text{otherwise}\end{cases}$$ {#eq-pbs}
+
+given $\omega_{\text{PBS}} \in \mathbb{R}:0\leq\omega_{\text{PBS}}\leq1$. This weight denotes the probability of a study $i$ being selected conditional on the *p*-value and the type I error rate $\alpha$. If $p_i \geq \alpha$, a publication bias weight $\omega_{\text{PBS}}$ is assigned, else the probability of a study being selected is 1, indicating no publication bias. We assume a fixed type I error rate for all simulated studies at the common threshold of $\alpha = .05$.
+
+Following the computation of publication bias weight $\omega_{\text{PBS}_i}$ for each study $i$, the likelihood of a study being selected can be expressed as $\mathbb{P}(S_i = 1)= \omega_{\text{PBS}_i}$. Here, $S_i$ serves as a binary indicator function, signifying whether study $i$ is selected during the publication bias process.
+
+$$S_i= \begin{cases}  0 & \text{study not selected} \\1 & \text{study selected}\end{cases}$$ {#eq-id-fun}
+
+Subsequently the two resulting subsets $(d_i^\prime, \,n_i^\prime)$ and $(d_i^{\prime\prime}, \,n_i^{\prime\prime})$ from the initial random sample can be defined as
+
+$$
+(d_i^\prime, n_i^\prime) = (d_i, n_i~|~S_i=1) \quad \text{and} \quad (d_i^{\prime\prime}, n_i^{\prime\prime}) = (d_i, n_i~|~S_i=0) \quad \text{for} \quad i = 1, \dots, k.
+$$ {#eq-subsets}
+
+### Formulation as an Optimization Problem
+
+In the subsequent phase, the statistical dissimilarity between the empirical meta-analytical data and the selected subset $(d_i^\prime, \,n_i^\prime)$ of the simulated theoretical samples is evaluated by means of the Kullback-Leibler divergence [@kullback_information_1951]. This assessment aims to quantify how closely the distributions of the theoretical samples align with the empirical data. To achieve this, the joint kernel density is estimated for both theoretical simulated and empirical data is estimated using a bivariate standard Gaussian kernel that is evaluated on a square grid, with a grid size of $n_{\text{grid}}=2^7+1$ equidistant grid points in each dimension. The bounds of the square grid are determined based on the empirical meta-analytical data. To the define these bounds the maximum likelihood estimates for the parameters of the marginal distribution of effect size ($\hat{\mu}_d,\hat{\sigma}^2_d$) and sample size ($\hat{\phi}_n, \hat{\mu}_n$) are computed. Then, utilizing these estimates, the quantiles derived from inner 99th percentile ($p_1 = .005, p_2=.995$) of the cumulative distribution are computed. Subsequently, the bounds are defined as the absolute minimum and maximum of these quantiles and then range of the empirical meta-analytical data , respectively.
+
+$[Q_n(p_1 \, | \, \hat{\phi}_n, \hat{\mu}_n), \, Q_d(p_1 \, | \, \hat{\phi}_n, \hat{\mu}_n)]$
+
+$[Q_d(p_1 \, | \, \hat{\mu}_d, \hat{\sigma}^2_d), \, Q_d(p_1 \, | \, \hat{\mu}_d, \hat{\sigma}^2_d)]$
+
+Finally, KL-divergence is calculated from the kernel density estimates for both empirical and simulated data, providing a measure of their statistical distance.
+
+$$
+D_{\text{KL}}(\widehat{f_e} ~ \lVert ~ \widehat{f_t})=\nsum_{u=1}^{g}\nsum_{v=1}^{g}\widehat{f_e}(u, v)\ln\left(\frac{\widehat{f_e}(u,v)}{\widehat{f_t}(u,v)}\right)
+$$ {#eq-kld}
+
+### Algorithmic Parameter Optimization
+
+-   KL-divergence between empirical and simulated data, based on chosen parameter values for marginal distribution and publication bias severity serves as a loss function -\> aim to find global minimum of loss function
+
+-   Which parameters are optimized -\> distributional parameters $[\mu_d, \sigma^2_d, \phi_n, \mu_n]$ and publication bias parameter $\omega_{\text{PBS}}$
+
+-   Simulated Annealing chosen as an optimization approach [@kirkpatrick_optimization_1983]
+
+-   Metaheuristic enabling solving complex optimization problems [@husmann_optimization_2022] -\> Probabilistic optimization techniques to find global minimum of
+
+-   SA enables optimization of multimodal loss functions with a very high number of covariates than many other methods
+
+-   We use a version of SA as implemented in the *optimization* R Package [@husmann_r_2017]
+
+-   Starting parameters for distribution parameters determined via maximum likelihood estimation, starting value for w_pbs set to 0.5
+
+-   Boundaries of parameter search space defined for all meta-analysis (all the same) -\> defined so that search space goes beyond MLE estimates of meta-analysis (see table)
+
+## Secondary Data Description
+
+-   Secondary Data from @linden_heterogeneity_2021
+
+## Statistical Analysis
+
+```{r}
+#| echo: false
+r_ver <- paste(version$major, version$minor, sep = ".")
+```
+
+All statistical analyses were performed using R [version `r r_ver`, @r_core_team_r_2023] in the RStudio Environment [version 2023.12.0.369, @posit_team_rstudio_2023]. Data and analysis scripts are made available members of Goethe University on the [Local Instrastructure for Open Science (LIFOS)] and the publicly on the Open Science Framework (OSF).
+
+Regarding the hypotheses, where the publication bias parameter $\omega_{\text{PBS}}$ is the dependent variable ($\mathcal{H}_1$, $\mathcal{H}_2$, $\mathcal{H}_4$), beta regression as implemented in the *betareg* package [@zeileis_betareg_2021] was used to analyse the data. This choice is motivated by the restriction of the parameter space for the publication bias to the standard unit interval, whereby non-normality, skewness and heteroscedasticity can anticipated [@cribari-neto_beta_2010; @smithson2006]. Beta regression is recognized for its adaptability in handling such deviations. We used a logit link for the mean parameter $\mu$ and a identity link for the dispersion parameter that is hold constant so that beta regression model can be described by
+
+$$
+\begin{gathered}
+\omega_{\text{PBS}_i} \sim  \mathcal{B}(\mu_i, \phi) \\
+\log{\bigg(\frac{\mu_i}{1 - \mu_i}\bigg)}=x_i^\top\beta
+\end{gathered}
+$$ {#eq-beta-reg}
+
+The independent variables for these three hypotheses are as follows: for $\mathcal{H}_1$ the independent variable was the Fisher z-transformed correlation coefficients for the correlation between effect size and sample size, where the transformation is defined as $z_{r}=0.5 \ln \Big(\frac{1+r}{1-r}\Big)$. The independent variable for $\mathcal{H}_2$ is the difference $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ between the average effect size estimate of each meta-analysis $\widehat{\delta}$ and the estimated mean parameter of the gaussian effect size distribution $\widehat{\mu}_d$. Lastly, the independent variable is a binary indicator specifying the research synthesis type (normal meta-analysis or multisite replication studies), with multisite replication studies set as the reference level for regression. The beta-coefficients for these hypotheses were estimated using ML estimation with the *BFGS* optimizer.
+
+To analyse $\mathcal{H}_2$, we conducted an equivalence test using the Two One-Sided Tests (TOST) procedure to assess whether the presence of effects, large enough to be considered meaningful within specified equivalence bounds, can be rejected. To perform the tests, we utilized the *TOSTER* R package [@lakens_toster_2023], employing two-sample dependent Welch tests. The equivalence bounds against which the data is tested were defined by the smallest effect size of interest (SESOI).
+
+We established the Smallest Effect Sizes of Interest (SESOI) for all four hypotheses through sensitivity power analyses, focusing on effect sizes reliably detectable within the constraints of available sample size resources for this secondary analysis [@lakens_performing_2014]. . More specifically, we conducted three simulation-based ($\mathcal{H}_1$, $\mathcal{H}_3$, $\mathcal{H}_4$) and one analytical ($\mathcal{H}_2$) sensitivity power analysis to determine which effect sizes we have at least 80% power to detect, taking into account the constraints of the sample size and a fixed significance level $\alpha = .05$ (details see section \[Power Analysis\]). The resulting SESOI for each hypothesis is presented in Table 1. The SESOI for the equivalence hypothesis will define the equivalence bounds for the TOST procedure ($\Delta_L = -0.17$ and $\Delta_U = 0.17$).
+
+```{r}
+#| echo: false
+#| results: asis
+
+
+data_sesoi <- readr::read_csv(here::here("preregistration/data/sesois.csv")) |>
+    dplyr::mutate(hypothesis = stringr::str_replace(hypothesis, "H", "$\\\\mathcal{H}_")) |>
+    dplyr::mutate(hypothesis = stringr::str_c(hypothesis, "$"))
+
+nice_table(
+       x = data_sesoi, 
+       caption = "Smallest Effect Sizes of Interest for All Hypotheses", 
+       footnote = "", 
+       col_names = c("Hypothesis", "SESOI", "Unit")
+    )
+
+```
+
+**Power Analysis**
+
+The simulated-based sensitivity power analysis targeted a statistical power of 0.8 with a fixed significance level of $\alpha = .05$. Samples sizes varied across hypotheses: $n = 150$ for hypotheses 1 (only meta-analysis) and $n = 207$ for hypothesis 2 and 4 (both meta-analysis and multisite replication studies) and $n = 57$ (only multisite replication studies) for hypothesis 3. Predictor variables´ distribution assumptions were specified as follows: Hypothesis 1 assumed a normal distribution ($\mu = -0.1; \sigma = 0.5$) for the Fisher z-transformed sample size effect size correlation coefficients, with linear regression coefficient as the parameter of interest. Hypothesis 2 assumed equal means $\Delta = 0$ and a standard deviation $\sigma_{diff}=\sqrt{0.3^2+0.3^2}$ for the difference scores of $\widehat{\mu}_d$ and $\widehat{\delta}$, with the same assumptions for hypothesis 3, incorporating a quadratic regression coefficient as the parameter of interest. Beta-regression on $\omega_{\text{PBS}}$ in hypotheses 1, 3, and 4 involved simulations for different dispersion parameter $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. We chose a conservative approach to define the SESOI for the parameters of interest ensuring a minimum power of 80% for the smallest simulated dispersion parameter $\phi = 10$. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. The R code for the simulation-based sensitivity power analysis is available in the same directory as the preregistration.
+
+  [Local Instrastructure for Open Science (LIFOS)]: https://lifos.uni-frankfurt.de/psychologische-methoden-mit-interdisziplinaerer-ausrichtung/publication-bias-psychology-reanalysis-of-nes-relationship

@@ -31,7 +31,6 @@ tost <- with(data_model, t_TOST(
   alpha = 0.05, rm_correction = TRUE, smd_ci = "goulet"
 ))
 
-as.data.frame(data_model)[, "mean_d"] |> as.data.frame()
 
 describe(tost)
 as_htest(tost) |> describe_htest()
@@ -51,6 +50,10 @@ write_rds(p, file = here("data/src/plot_h3.rds"))
 data_table <- chuck(tost, "TOST") |> 
   rownames_to_column("type") |> 
   mutate(p.value = pformat(p.value)) 
+
+center_text <- function(text){
+    paste0("\\multirow{1}{*}[0pt]{", text, "}")
+}
 
 table_h3 <- nice_table(
   x = data_table,
