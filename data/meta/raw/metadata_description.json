@@ -1,0 +1,20 @@
+{
+    "Metadata_Description":{
+        "id_meta":"unique identifier for each meta-analysis / multisite replication",
+        "area":{
+            "c":"Cognitive Psychology",
+            "o":"Organizational Psychology",
+            "r":"(Multisite) Replication Projects",
+            "s":"Social Psychology"
+        },
+        "type_synthesis":{
+            "ma":"(Normal) Meta-Analysis",
+            "mr":"Multisite Replication"
+        }
+    }
+}
+
+    
+
+    
+  
