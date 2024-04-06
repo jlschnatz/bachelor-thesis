@@ -8,23 +8,12 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
   sysfonts::font_add_google("Inter", "font")
   showtext::showtext_opts(dpi = 500)
   showtext::showtext_auto()
-
-  data_eqb <- tibble::tibble(
-    type = c("lower", "upper"),
-    bounds = c(tost$eqb$low_eq[1], tost$eqb$high_eq[1]),
-    df = c(tost$TOST$df[2], tost$TOST$df[3]),
-    se = c(tost$TOST$SE[2], tost$TOST$SE[3]),
-    alpha = tost$alpha,
-    crit_lower = bounds - stats::qnorm(1 - alpha) * se, 
-    crit_upper = bounds + stats::qnorm(1 - alpha) * se
-  )
-
-  data_est <- tibble::tibble(
-    estimate = tost$effsize[1, "estimate"],
-    lb = tost$effsize[1, "lower.ci"],
-    ub = tost$effsize[1, "upper.ci"]
-  )
   
+  emp_data <- tost$effsize["Raw", ]
+  eqb_lb <- subset(tost$eqb, subset = type == "Raw")$low_eq
+  eqb_ub <- subset(tost$eqb, subset = type == "Raw")$high_eq
+  df <- unique(tost$TOST$df)
+  dist <- distributional::dist_student_t(df = df, mu = c(eqb_lb, eqb_ub), sigma = emp_data$SE) 
   buffer <- 0.075
   data_text <- tibble::tibble(
     type = c("lower", "upper"),
@@ -33,33 +22,24 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
     label = dplyr::if_else(type == "lower", paste0("&Delta;<sub>L</sub> = ", round(bounds, 2)), paste0("&Delta;<sub>U</sub> = ", round(bounds, 2)))
   ) 
   
-  dist_lower <- with(data_eqb[1, ], distributional::dist_student_t(df = df, mu = bounds, sigma = se))
-  dist_upper <- with(data_eqb[2, ], distributional::dist_student_t(df = df, mu = bounds, sigma = se))
-  
-  ggplot2::ggplot(data_eqb, ggplot2::aes(y = 0)) +
+  ggplot2::ggplot(NULL, ggplot2::aes(y = 0, dist = dist)) +
     ggdist::stat_slab(
-      ggplot2::aes(dist = dist_lower, fill = ggplot2::after_stat(level)),
-      alpha = .6,
-      color = NA,
-      slab_size = 0.5,
-      .width = c(.9, 1)
-    ) +
-    ggdist::stat_slab(
-      ggplot2::aes(dist = dist_upper, fill = ggplot2::after_stat(level)),
-      alpha = .6,
+      ggplot2::aes(fill = ggplot2::after_stat(level)),
+      alpha = .8,
       color = NA,
       slab_size = 0.5,
       .width = c(.9, 1)
     ) +
     ggplot2::geom_pointrange(
-      mapping = ggplot2::aes(x = estimate, xmin = lb, xmax = ub),
-      data = data_est,
+      mapping = ggplot2::aes(x = estimate, xmin = lower.ci, xmax = upper.ci, y = 0),
+      data = emp_data,
       linewidth = 1,
       size = 0.3,
-      position = ggplot2::position_nudge(y = -0.05)
+      position = ggplot2::position_nudge(y = -0.05),
+      inherit.aes = FALSE
     ) +
-    ggplot2::geom_hline(yintercept = 0, linetype = "solid", color = "grey80", size = 0.4) +
-    ggplot2::geom_vline(ggplot2::aes(xintercept = bounds), linetype = "longdash", linewidth = 0.35) +
+    ggplot2::geom_hline(yintercept = 0, linetype = "solid", color = "grey80", linewidth = 0.4) +
+    ggplot2::geom_vline(data = data_text, ggplot2::aes(xintercept = bounds), linetype = "longdash", linewidth = 0.35) +
     ggtext::geom_richtext(
       data = data_text,
       mapping = ggplot2::aes(y = 1, x = x, label = label), 
@@ -70,7 +50,7 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
       family = "font",
       inherit.aes = FALSE
     ) +
-    ggplot2::scale_fill_manual(values = c("#051088", "#f7ce4c")) +
+    ggplot2::scale_fill_manual(values = (c("#051088", "#f7ce4c"))) +
     ggplot2::guides(fill = "none") +
     ggplot2::scale_y_continuous(
       name = NULL,
@@ -110,7 +90,7 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
 #' @param font_size The font size (default = 12)
 #' @return A character vector of the table source code
 #' 
-nice_table <- function(x, digits = 3, caption, footnote, align = NULL, col_names = NULL, font_size = 12, full_width = TRUE) {
+nice_table <- function(x, digits = 3, caption, footnote = NULL, align = NULL, col_names = NULL, font_size = 12, full_width = TRUE) {
   n_col <- ncol(x)
   center <- paste0(rep("c", n_col - 1), collapse = "")
   if (is.null(align)) align <- paste0("l", center, collape = "")
@@ -121,7 +101,10 @@ nice_table <- function(x, digits = 3, caption, footnote, align = NULL, col_names
     align = align, caption = caption, 
     digits = digits, row.names = FALSE, col.names = col_names
   ) |> 
-    kableExtra::kable_styling(full_width = full_width, font_size = font_size, latex_options = 'HOLD_position') |> 
+    kableExtra::kable_styling(
+      full_width = full_width, font_size = font_size, 
+      latex_options = c('HOLD_position', "scale_down")
+      ) |> 
     kableExtra::footnote(footnote, footnote_as_chunk = TRUE, escape = FALSE, fixed_small_size = TRUE)
 }
 
@@ -222,5 +205,23 @@ estimate_norm <- function(start, data) {
 report_fit <- function(x, yvar) {
   g <- glance(x) |> dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~round(.x, 2)))
   g$mae <-  round(mean(abs(x$model[[yvar]] - predict(x))), 2)
-  glue::glue("$LL$ = {{g$logLik}}, $MAE$ = {{g$mae}}, $AIC$ = {{g$AIC}}, $BIC$ = {{g$BIC}}", .open = "{{", .close = "}}")
+  g$r2 <- round(unname(unlist(performance::r2(x))), 3)
+  glue::glue("$LL$ = {{g$logLik}}, $MAE$ = {{g$mae}}, $AIC$ = {{g$AIC}}, $BIC$ = {{g$BIC}}, $R^2$ = {{g$r2}}", .open = "{{", .close = "}}")
+}
+
+center_text <- function(text) paste0("\\multirow{1}{*}[0pt]{", text, "}")
+
+theme_comparison <- function(...) {
+  theme_sjplot() +
+    theme(
+      legend.position = "bottom",
+      legend.title = element_text(vjust = 1, size = 10),
+      legend.text = element_text(size = 8),
+      legend.box.margin = margin(),
+      legend.margin = margin(),
+      text = element_text(family = "font"),
+      plot.margin = margin(),
+      legend.key.size = unit(0.6, "cm"),
+      ...
+    )
 }

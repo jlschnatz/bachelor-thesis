@@ -1,14 +1,13 @@
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
 if(!"pacman" %in% installed.packages()) {install.packages("pacman")}
-pacman::p_load(sysfonts, showtext, here, tidyverse, TOSTER, latex2exp,  systemfonts, kableExtra, ggrepel, sjPlot, rstatix)
+pacman::p_load(sysfonts, showtext, here, tidyverse, TOSTER, latex2exp,  systemfonts, kableExtra, ggrepel, sjPlot)
 source(here("R/functions.R"))
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
 fontname <- "CMU Serif"
 fontpath <- systemfonts::match_font(fontname)$path
 font_add(family = fontname, fontpath)
-font_add_google("Inter", "font")
-
+font_add_google("Lato", "font")
 showtext_opts(dpi = 500)
 showtext_auto()
 
@@ -24,43 +23,51 @@ data_model <- data_meta |>
   left_join(data_optim, join_by(id_meta)) |> 
   select(id_meta, mean_d, mu_d)
 
-
 tost <- with(data_model, t_TOST(
   mu_d, mean_d, eqb = c(-0.17, 0.17), 
-  paired = TRUE, hypothesis = "EQU", eqbound_type = "raw",
+  paired = TRUE, var.equal = TRUE,
+  hypothesis = "EQU", eqbound_type = "raw",
   alpha = 0.05, rm_correction = TRUE, smd_ci = "goulet"
 ))
 
-
-describe(tost)
-as_htest(tost) |> describe_htest()
-print(tost)
-
-write_rds(tost, here("data/src/tost_model.rds"))
-
-# Cohen´s d_rm
-with(data_model, mean(mu_d - mean_d)/sd(mu_d - mean_d) * sqrt(2*(1-cor(mu_d, mean_d))))
+write_rds(tost, here("data/src/model_tost_h3.rds"))
 
 # Plot TOSTER Results ———————————————————————————————————————————————————————————————————————————————————————————————————————
-p <- plot_equ_tnull(tost, font = "Inter")  + theme(text = element_text(family = "font"))
+p <- plot_equ_tnull(tost, font = "Open Sans") 
+
+ggsave(
+  plot = p,
+  filename = here("figures/h3_tost_tnull.png"),
+  width = 6, height = 4,
+  bg = "white", dpi = 500
+)
 
 write_rds(p, file = here("data/src/plot_h3.rds"))
 
 # Table TOSTER Results ———————————————————————————————————————————————————————————————————————————————————————————————————————
 data_table <- chuck(tost, "TOST") |> 
   rownames_to_column("type") |> 
-  mutate(p.value = pformat(p.value)) 
-
-center_text <- function(text){
-    paste0("\\multirow{1}{*}[0pt]{", text, "}")
-}
+  as_tibble() |>
+  mutate(type = case_when(
+    type == "t-test" ~ "NHST",
+    type == "TOST Lower" ~ "TOST $\\Delta < \\Delta_L$",
+    type == "TOST Upper" ~ "TOST $\\Delta > \\Delta_L$"
+  )) |>
+  mutate(p.value = format_p(p.value, name = NULL)) |>
+  mutate(p.value = str_remove(p.value, "^0")) |>
+  mutate(t = format_value(t, digits = 2)) |>
+  mutate(SE = format_value(SE, digits = 3))
 
 table_h3 <- nice_table(
   x = data_table,
-  caption = "TOST", 
-  footnote = "test",
+  caption = "Two One-Sided Tests Result for $\\mathcal{H}_3$", 
   digits = 2,
   col_names = c("Type", "$t$", "$SE$", "$df$", "$p$")
+  ) |>
+  footnote(
+    general = "NHST: Null Hypothesis Significance Test, TOST: Two One-Sided Test",
+    footnote_as_chunk = TRUE,
+    escape = FALSE
   )
 
 cat(table_h3, file = here("tables/h3_table.tex"))

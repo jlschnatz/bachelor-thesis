@@ -2,19 +2,21 @@
 \centering
 \caption{Beta Regression Results for $\mathcal{H}_1$}
 \centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \fontsize{12}{14}\selectfont
 \begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
 \toprule
-Term & Estimate & $CI$ & $SE$ & $z$ & $p$\\
+Term & Estimate & $CI$ (95\%) & $SE$ & $z$ & $p$\\
 \midrule
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Mean model component: $\mu$}}\\
-\\[-1.5ex]\hspace{1em}$b_0$ & 0.78 & {}[1.02, 1.47] & 0.11 & 10.93 & < .001\\
-\hspace{1em}$b_1: z_{r_S}$ & 0.55 & {}[-0.34, 0.71] & 0.27 & 0.69 & 0.245\\
+\\[-1.5ex]\hspace{1em}Intercept & $3.49^a$ & {}[2.79, 4.36] & 0.11 & 10.93 & < .001\\
+\hspace{1em}$z_{r_S}$ & $1.20^a$ & {}[0.71, 2.04] & 0.27 & 0.69 & .245\\
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Precision model component: $\phi$}}\\
-\\[-1.5ex]\hspace{1em}$b_0$ & 1.69 & {}[1.32, 2.06] & 0.19 & 8.89 & < .001\\
+\\[-1.5ex]\hspace{1em}$b_0$ & $5.41^b$ & {}[3.73, 7.84] & 0.19 & 8.89 & < .001\\
 \bottomrule
-\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: } $LL$ = 129.28, $MAE$ = 0.22, $AIC$ = -252.57, $BIC$ = -243.54}\\
-\end{tabu}
+\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: } $LL$ = 129.28, $MAE$ = 0.22, $AIC$ = -252.57, $BIC$ = -243.54, $R^2$ = 0.003}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}\textsuperscript{a} $OR$ \textsuperscript{b} Identity coefficient}\\
+\end{tabu}}
 \end{table}

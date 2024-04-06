@@ -14,7 +14,7 @@ pacman::p_load(
 )
 # Source custom functions
 source(here("R/functions.R"))
-font_add_google("Noto Sans", "font")
+font_add_google("Inter", "font")
 showtext_auto()
 showtext_opts(dpi = 500)
 set.seed(42)
@@ -95,51 +95,46 @@ p_star <- matrix(
     ), nrow = 6, ncol = 6
   )
 
-cor_data_format <- matrix(
-  paste0(
-    round(cor_data$r, 2), p_star,  "\\break [", round(lb_cor, 2), ", ", round(ub_cor, 2), "]"
-    ), 
-    6, 6
-    ) |> 
+cor_data_format <- matrix(paste0(round(cor_data$r, 2), p_star,  "\\break [", round(lb_cor, 2), ", ", round(ub_cor, 2), "]"), 6, 6) |> 
   as_cordf() |> 
   shave(upper = TRUE) |> 
   fashion()  
 
-center_text <- function(text){
-    paste0("\\multirow{1}{*}[0pt]{", text, "}")
-  }
-
 cor_data_format$term <- colnames(cor_data$r)
 colnames(cor_data_format) <- c("Variable", colnames(cor_data$r))
-cor_data_format <- cor_data_format[, -7]
-cor_data_format <- cor_data_format |>
-  as_tibble() |>
-  mutate(across(everything(), as.character)) |>
-  mutate(across(Variable, center_text))
   
 cor_table <- nice_table(
   x = cor_data_format,
   digits = 2,
-  caption = "Pairwise Pearson Correlations between Difference of ML and SPEEC Distributional Parameters, Publication Bias Parameter $\\omega_{\\text{PBS}}$ and Meta-Analysis Size $k$",
-  footnote = "Test",
-  font_size = 10,
-  full_width = TRUE
+  caption = "Pairwise Pearson Correlations between Difference of ML and SPEEC Distributional Parameters, \\break Publication Bias Parameter and Meta-Analysis Size",
+  footnote = "T",
+  font_size = 9
 ) 
 
 cat(cor_table, file = here("tables/ml_speec_diff_cor.tex"))
+
+data_ml_speec |>
+  filter(id_meta %in% id_mr) |> 
+  select(starts_with("delta")) |> 
+  pivot_longer(everything()) |> 
+  group_by(name) |> 
+  summarise(min = min(value), max = max(value)) 
+
 
 # Pairwise comparison plots: ML vs SPEEC
 theme_comparison <-  function(...) {
   theme_sjplot() +
   theme(
   legend.position = "bottom",
-  legend.title = element_text(vjust = 1, size = 10),
-  legend.text = element_text(size = 8),
+  legend.title = element_text(vjust = 1, size = 9),
+  legend.text = element_text(size = 6.5),
   legend.box.margin = margin(),
   legend.margin = margin(),
   text = element_text(family = "font"),
+  axis.text = element_text(size = 8),
+  axis.title = element_text(size = 9),
   plot.margin = margin(),
-  legend.key.size = unit(0.6, "cm"),
+  legend.key.size = unit(0.5, "cm"),
   ...
   )
 }
@@ -149,7 +144,7 @@ p_mu_n <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_mu_n, mu_n)) +
   geom_abline(intercept = 0, slope = 1, color = "darkgrey", linewidth = .7) +
-  geom_point(aes(color = delta_mu_n), size = 2.5, alpha = .7) +
+  geom_point(aes(color = delta_mu_n), size = 2.5, alpha = .6) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\mu}_{n_{ML}}$"),
     limits = c(0, 400),
@@ -175,7 +170,7 @@ p_phi_n <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_phi_n, phi_n)) +
   geom_abline(intercept = 0, slope = 1, color = "darkgrey", linewidth = .7) +
-  geom_point(aes(color = delta_phi_n), size = 2.5, alpha = .7) +
+  geom_point(aes(color = delta_phi_n), size = 2.5, alpha = .6) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\phi}^2_{n_{ML}}$"),
     trans = log10_trans(),
@@ -197,7 +192,8 @@ p_phi_n <- data_ml_speec |>
   scale_colour_paletteer_c(
     name = TeX("$|\\widehat{\\phi}_{n_{SPEEC}} - \\widehat{\\phi}_{n_{ML}} |$"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
-    limits = c(10^-1, 10^2),
+    breaks = 10^seq(-1, 2), 
+    limits = c(NA, 10^2),
     trans = log10_trans(),
     labels = label_log(10)
   ) +
@@ -206,12 +202,9 @@ p_phi_n <- data_ml_speec |>
 # mu_d
 p_mu_d <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
-  ggplot(aes(ml_mu_d, mu_d, color = delta_mu_d)) +
+  ggplot(aes(ml_mu_d, mu_d)) +
   geom_abline(intercept = 0, slope = 1, color = "darkgrey", linewidth = .7) +
-  geom_point(
-    size = 2.5,
-    alpha = .7
-    ) +
+  geom_point(aes(color = delta_mu_d), size = 2.5, alpha = .6) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\mu}_{d_{ML}}$"),
     limits = c(-3, 3),
@@ -228,7 +221,8 @@ p_mu_d <- data_ml_speec |>
   scale_colour_paletteer_c(
     name = TeX("$|\\widehat{\\mu}_{d_{SPEEC}} - \\widehat{\\mu}_{d_{ML}} |$"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
-    limits = c(0, .5)
+    limits = c(0, .3),
+    breaks = seq(0, .3, .1)
   ) +
   theme_comparison()
 
@@ -237,11 +231,7 @@ p_sigma2_d <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_sigma2_d, sigma2_d)) +
   geom_abline(intercept = 0, slope = 1, color = "darkgrey", linewidth = .7) +
-  geom_point(
-    aes(color = delta_sigma2_d),
-    size = 2.5,
-    alpha = .7
-  ) +
+  geom_point(aes(color = delta_sigma2_d), size = 2.5, alpha = .6) +
   scale_y_continuous(
     name = TeX("$\\widehat{\\sigma}^2_{d_{SPEEC}}$"),
     trans = log10_trans(),
@@ -262,10 +252,10 @@ p_sigma2_d <- data_ml_speec |>
   scale_colour_paletteer_c(
     name = TeX("$|\\widehat{\\sigma}^2_{d_{SPEEC}} - \\widehat{\\sigma}^2_{d_{ML}} |$"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
-    limits = c(10^-4, 10^1),
     trans = log10_trans(),
-    breaks = breaks_log(n = 6),
-    labels = label_log(10)
+    labels = label_log(10),
+    limits = 10^c(-4, 1),
+    breaks = 10^seq(-4, 1, 1)
   ) +
   annotation_logticks(colour = "darkgrey") +
   theme_comparison()
@@ -273,17 +263,20 @@ p_sigma2_d <- data_ml_speec |>
 # Combine plots with patchwork
 p_comb <- ((p_mu_d + p_sigma2_d) / (p_mu_n + p_phi_n)) +
   plot_annotation(tag_levels = c("A", "1")) &
-  theme(
-    plot.tag = element_text(face = "bold", family = "font", margin = margin(l = 10))
-    )
+  theme(plot.tag = element_text(face = "bold", family = "font", margin = margin(l = 10),
+                                size = 10))
 
 p_comb[[1]] <- p_comb[[1]] + plot_layout(tag_level = 'new')
 p_comb[[2]] <- p_comb[[2]] + plot_layout(tag_level = 'new')
 
+p_comb <- p_comb & theme(
+  text = element_text(family = "font")
+)
 # Save
 ggsave(
   plot = p_comb, 
   filename = here("figures/ml_speec_comparison.png"), 
-  width = 10, height = 8, 
+  width = 10, height = 6.5, 
   bg = "white", dpi = 500
   )
+

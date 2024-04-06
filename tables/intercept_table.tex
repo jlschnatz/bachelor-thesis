@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering
+\caption{Intercept Beta Regression Model Comprising the Full Dataset}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\fontsize{12}{14}\selectfont
+\begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
+\toprule
+Estimate & Probability & $SE$ & $z$ & $p$ & $CI$\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Mean Component Intercept $\mu$}}\\
+\hspace{1em}$1.14^a$ & 0.76 & 0.10 & 11.92 & < .001 & {}[0.95, 1.32]\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Precision Component Intercept $\phi$}}\\
+\hspace{1em}$1.56^b$ &  & 0.15 & 10.72 & < .001 & {}[1.27, 1.84]\\
+\bottomrule
+\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: } SE: standard error; CI: 95\% confidence interval}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}\textsuperscript{a} $\log$($OR$) \textsuperscript{b} Identity}\\
+\end{tabu}}
+\end{table}

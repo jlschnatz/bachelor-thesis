@@ -82,29 +82,39 @@ write_rds(p, file = here("data/src/plot_h1.rds"))
 
 # Generate table with model results ————————————————————————————————————————————————————————————————————————————————————
 
-# One-sided p-value
+# One-sided p-value: b1 > 0
 z <- coef(mod_h1) / sqrt(diag(vcov(mod_h1)))
 p_b1 <- pnorm(z[2], lower.tail = FALSE)
 
-data_table <- tidy(mod_h1, conf.int = TRUE) |> 
+data_table <- tidy(mod_h1, conf.int = TRUE) |>
+  # get OR for estimate and CIs for the mean parameter model
+  mutate(across(c(estimate, conf.low, conf.high), exp)) |>
+  # format confidence intervals
   mutate(ci = format_ci(conf.low, conf.high, ci_string = "", ci = NULL, digits = 2), .before = std.error) |>
   select(-starts_with("conf")) |>
-  # Format p-value
+  # format and correct p-values
   mutate(p.value = if_else(term == "z_rs", p_b1, p.value)) |>
-  mutate(p.value = pformat(p.value)) |> 
-  # Convert estimate for mean from log-odds to probability 
-  mutate(estimate = if_else(component == "mean", plogis(estimate), estimate))  |> 
-  mutate(term = (case_match(term, "(phi)" ~ "$b_0$", "(Intercept)" ~ "$b_0$", "z_rs" ~ "$b_1: z_{r_S}$"))) |> 
+  mutate(p.value = format_p(p.value, name = NULL, digits = "apa")) |>
+  # remove leading zero
+  mutate(p.value = str_remove(p.value, "^0")) |>
+  mutate(across(c(estimate, std.error, statistic), ~format_value(.x, digits = 2))) |>
+  mutate(estimate = if_else(component == "mean", paste0("$", estimate, "^a$"), paste0("$", estimate, "^b$"))) |>
+  mutate(term = (case_match(term, "(phi)" ~ "$b_0$", "(Intercept)" ~ "Intercept", "z_rs" ~ "$z_{r_S}$"))) |> 
   select(-component) 
   
 table_h1 <- nice_table(
   x = data_table, 
   caption = "Beta Regression Results for $\\mathcal{H}_1$", 
-  footnote = report_fit(mod_h1, "w_pbs"), 
   digits = 2,
-  col_names = c("Term", "Estimate", "$CI$", "$SE$", "$z$", "$p$")
+  col_names = c("Term", "Estimate", "$CI$ (95\\%)", "$SE$", "$z$", "$p$")
   ) |> 
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
-  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") 
+  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
+  footnote(
+    general = report_fit(mod_h1, "w_pbs"),
+    alphabet = c("$OR$", "Identity coefficient"),
+    escape = FALSE,
+    footnote_as_chunk = TRUE
+  )
 
 cat(table_h1, file = here("tables/h1_table.tex"))

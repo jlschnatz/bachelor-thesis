@@ -2,19 +2,23 @@
 \centering
 \caption{Beta Regression Results for $\mathcal{H}_2$}
 \centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \fontsize{12}{14}\selectfont
 \begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
 \toprule
-Term & Estimate & $CI$ (95%) & $SE$ & $z$ & $p$\\
+Term & Estimate & $CI$ (95\%) & $SE$ & $z$ & $p$\\
 \midrule
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Mean model component: $\mu$}}\\
-\\[-1.5ex]\hspace{1em}$b_0$ & 0.77 & {}[1.00, 1.39] & 0.10 & 11.79 & < .001\\
-\hspace{1em}$b_2: \Delta^2$ & 0.03 & {}[-6.95, 0.27] & 1.84 & -1.81 & 0.070\\
+\\[-1.5ex]\hspace{1em}Intercept & $3.30^a$ & {}[2.71, 4.03] & 0.10 & 11.79 & < .001\\
+\hspace{1em}Quadratic $\Delta_{\widehat{\mu}_d, \widehat{\delta}}$ & $0.04^a$ & {}[9.58e-04, 1.31] & 1.84 & -1.81 & .035\\
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Precision model component: $\phi$}}\\
-\\[-1.5ex]\hspace{1em}$b_0$ & 1.58 & {}[1.29, 1.87] & 0.15 & 10.70 & < .001\\
+\\[-1.5ex]\hspace{1em}Intercept & $4.85^b$ & {}[3.63, 6.47] & 0.15 & 10.70 & < .001\\
 \bottomrule
-\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: } $LL$ = 164.25, $MAE$ = 0.23, $AIC$ = -322.51, $BIC$ = -312.51}\\
-\end{tabu}
+\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: }}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}\$LL\$ = 164.25, \$MAE\$ = 0.23, \$AIC\$ = -322.51, \$BIC\$ = -312.51, \$R\textasciicircum{}2\$ = 0.026}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}\textsuperscript{a} \$OR\$}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}\textsuperscript{b} Identity}\\
+\end{tabu}}
 \end{table}

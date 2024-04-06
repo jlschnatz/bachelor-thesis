@@ -1,16 +1,17 @@
 \begin{table}[H]
 \centering
-\caption{TOST}
+\caption{Two One-Sided Tests Result for $\mathcal{H}_3$}
 \centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \fontsize{12}{14}\selectfont
 \begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
 \toprule
 Type & $t$ & $SE$ & $df$ & $p$\\
 \midrule
-t-test & -2.36 & 0.01 & 56 & 0.022\\
-TOST Lower & 17.30 & 0.01 & 56 & < .001\\
-TOST Upper & -22.02 & 0.01 & 56 & < .001\\
+NHST & -2.36 & 0.009 & 56 & .022\\
+TOST $\Delta < \Delta_L$ & 17.30 & 0.009 & 56 & < .001\\
+TOST $\Delta > \Delta_L$ & -22.02 & 0.009 & 56 & < .001\\
 \bottomrule
-\multicolumn{5}{l}{\rule{0pt}{1em}\textit{Note: } test}\\
-\end{tabu}
+\multicolumn{5}{l}{\rule{0pt}{1em}\textit{Note: } NHST: Null Hypothesis Significance Test, TOST: Two One-Sided Test}\\
+\end{tabu}}
 \end{table}

@@ -2,19 +2,21 @@
 \centering
 \caption{Beta Regression Results for $\mathcal{H}_4$}
 \centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \fontsize{12}{14}\selectfont
 \begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
 \toprule
-Term & Estimate & $CI$ (95%) & $SE$ & $z$ & $p$\\
+Term & Estimate & $CI$ (95\%) & $SE$ & $z$ & $p$\\
 \midrule
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Mean model component: $\mu$}}\\
-\\[-1.5ex]\hspace{1em}$b_0$ & 0.77 & {}[0.98, 1.41] & 0.11 & 11.07 & < .001\\
-\hspace{1em}$b_1$: MR & 0.45 & {}[-0.56, 0.14] & 0.18 & -1.17 & 0.879\\
+\\[-1.5ex]\hspace{1em}Intercept & $3.30^a$ & {}[2.67, 4.08] & 0.11 & 11.07 & < .001\\
+\hspace{1em}Research Synthesis Type (MR) & $0.81^a$ & {}[0.57, 1.15] & 0.18 & -1.17 & .879\\
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Precision model component: $\phi$}}\\
-\\[-1.5ex]\hspace{1em}$b_0$ & 1.57 & {}[1.28, 1.85] & 0.15 & 10.71 & < .001\\
+\\[-1.5ex]\hspace{1em}Intercept & $4.79^b$ & {}[3.59, 6.38] & 0.15 & 10.71 & < .001\\
 \bottomrule
-\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: } MR: Multisite Replication; $LL$ = 163.31, $MAE$ = 0.23, $AIC$ = -320.62, $BIC$ = -310.62}\\
-\end{tabu}
+\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: } MR: Multisite Replication; $LL$ = 163.31, $MAE$ = 0.23, $AIC$ = -320.62, $BIC$ = -310.62, $R^2$ = 0.011}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}\textsuperscript{a} $OR$ \textsuperscript{b} Identity coefficient}\\
+\end{tabu}}
 \end{table}

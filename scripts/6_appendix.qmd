@@ -1,7 +1,49 @@
 \newpage
 
+```{r}
+
+pacman::p_load(here)
+source(here("R/functions.R"))
+
+```
+
 # Appendix
 
 ## Appendix A: Power Analysis and SESOI
 
 ## Appendix B: Open Science Statement
+
+## Appendix C: Regression Tables of Confirmatory Analyses
+
+
+```{r h1_table}
+#| results: asis
+
+table_h1 <- read_tex(here("tables/h1_table.tex"))
+cat(table_h1, sep = "\n")
+
+```
+
+```{r h2_table}
+#| results: asis
+
+table_h2 <- read_tex(here("tables/h2_table.tex"))
+cat(table_h2, sep = "\n")
+
+```
+
+```{r h3_table}
+#| results: asis
+
+table_h3 <- read_tex(here("tables/h3_table.tex"))
+cat(table_h3, sep = "\n")
+
+```
+
+```{r h4_table}
+#| results: asis
+
+table_h4 <- read_tex(here("tables/h4_table.tex"))
+cat(table_h4, sep = "\n")
+
+```

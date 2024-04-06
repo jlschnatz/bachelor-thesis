@@ -5,8 +5,12 @@ bibliography: ../references.bib
 \newpage
 
 ```{r}
+#| message: false
 #| echo: false
-source(here::here("R/functions.R"))
+
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
+pacman::p_load(insight, glue, tidyverse, here, parameters, broom, betareg)
+source(here("R/functions.R"))
 ```
 
 # Method
@@ -149,7 +153,6 @@ We established the Smallest Effect Sizes of Interest (SESOI) for all four hypoth
 ```{r}
 #| echo: false
 #| results: asis
-
 
 data_sesoi <- readr::read_csv(here::here("preregistration/data/sesois.csv")) |>
     dplyr::mutate(hypothesis = stringr::str_replace(hypothesis, "H", "$\\\\mathcal{H}_")) |>

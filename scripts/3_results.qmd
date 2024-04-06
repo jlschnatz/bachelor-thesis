@@ -15,13 +15,33 @@ source(here("R/functions.R"))
 
 # Results
 
-## Testing the Predictions from the Hypotheses
+## Variable Dispersion of $\omega_{\text{PBS}}$ 
+
+```{r}
+#| results: asis
+
+m_phi <- read_rds(here("data/src/model_dispersion.rds")) |>
+    tidy(conf.int = TRUE) |>
+    mutate(ci = format_ci(conf.low, conf.high)) |>
+    filter(component == "precision") |>
+    mutate(across(c(estimate, std.error, statistic), ~format_value(.x, digits = 2))) |>
+    mutate(p.value = format_p(p.value, name = "$p$")) |>
+    select(b = estimate, se = std.error, z = statistic, ci, p = p.value)
+  
+string_phi <- glue("$\\widehat{\\phi}$ = {{m_phi$b}}, {{m_phi$ci}}, $SE$ = {{m_phi$se}}, $z$ = {{m_phi$z}}, {{m_phi$p}}", .open = "{{", .close = "}}")
+
+```
+
+Test: `r string_phi`
+
+
+## Confirmatory Results of the Predictions from the Hypotheses
 
 <!-- Multi-Panel Figure for Hypotheses -->
 
 ```{=latex}
 \begin{figure}[h]
-\caption{Graphical Overview of the Examination of the Predictions from the four Hypotheses
+\caption{Visual Summary of Results from Four Hypotheses
 \label{fig:hypotheses}}
 ```
 ```{r hypotheses}
@@ -33,7 +53,7 @@ knitr::include_graphics(here("figures/combine_hypotheses.png"))
 ```{=latex}
 \begingroup
 \scriptsize
-\textit{Note.} \textbf{A}. Estimated publication bias parameter as a function of Fisher z-transformed correlation coefficients. Fitted line represents the regression coefficients from the model and the 95\% CI. \textbf{B}. Estimated publication bias parameter as a function of the difference between the estimated mean parameter and the average effect size. \textbf{C}. The mean difference between the estimated mean parameter and the average effect size and its 90\% confidence interval compared against the null t-distribution for the lower and upper bounds. \textbf{D}. A comparison between the distribution of estimated publication bias parameter between normal meta-analyses and multisite replications. The pointrange indicates the marginal predicted values and the 95\% confidence interval from the regression.
+\textit{Note.} \textbf{A}. Estimated publication bias parameter as a function of Fisher z-transformed correlation coefficients. Fitted line represents the regression coefficients from the model and the 95\% CI. \textbf{B}. Estimated publication bias parameter as a function of the difference between the estimated mean parameter and the average effect size. \textbf{C}. The mean difference between the estimated mean parameter and the average effect size and its 90\% confidence interval compared against the null t-distribution for the lower and upper equivalence bounds. \textbf{D}. A comparison between the distribution of estimated publication bias parameter between normal meta-analyses and multisite replications. The pointrange indicates the marginal predicted values and the 95\% confidence interval from the regression.
 \endgroup
 \end{figure}
 ```
@@ -49,26 +69,27 @@ tm1 <- tidy(mod_h1, conf.int = TRUE) |>
  
 string_h1 <- glue("$\\log$($OR$) = {format_value(tm1$estimate)}, $SE$ = {format_value(tm1$std.error)}, $z$ = {format_value(tm1$statistic)}, {format_ci(tm1$conf.low, tm1$conf.high)}, {format_p(tm1$p.value, name = '$p$')}")
 
-sp_h1 <- standardize_parameters(mod_h1, exponentiate = TRUE) 
 ```
 
-Regarding hypotheses $\mathcal{H}_1$, panel A of @fig-hypotheses depicts the relationship between the Fisher z-transformed Spearman correlation coefficients $z_{r_S}$ of the association between effect size and sample size in each meta-analysis and the estimated publication bias parameter $\widehat{\omega}_{\text{PBS}}$. Only marginally positive slope, which was not statistically significant; `r string_h1`. Lower correlation coefficients were not significantly associated with lower publication bias parameter values.
+Regarding hypotheses $\mathcal{H}_1$, panel A of figure 2 depicts the relationship between the Fisher z-transformed Spearman correlation coefficients $z_{r_S}$ of the association between effect size and sample size in each meta-analysis and the estimated publication bias parameter $\widehat{\omega}_{\text{PBS}}$. The observed slope was marginally positive but statistically non-significant, `r string_h1`. This indicates, that lower correlation coefficients were not significantly linked to lower publication bias parameter values $\widehat{\omega}_{\text{PBS}}$.
 
 <!--# Hypotheses II -->
 
 ```{r}
 mod_h2 <- read_rds(here("data/src/model_betareg_h2.rds"))
-#standardize_parameters(mod_h2)
+tm2 <- tidy(mod_h2, conf.int = TRUE) |> filter(term =="I(Delta^2)") 
+string_h2 <- glue("$\\log$($OR$) = {format_value(tm2$estimate)}, $SE$ = {format_value(tm2$std.error)}, $z$ = {format_value(tm2$statistic)}, {format_ci(tm2$conf.low, tm2$conf.high)}, {format_p(tm2$p.value, name = '$p$')}")
+
 ```
 
-Regarding hypotheses II, panel B of figure 1 depicts the predicted values for the estimated publication bias parameter as a function of the difference between the average effect size estimate and the estimated mean parameter of Gaussian effect size distribution. The corresponding quadratic slope parameter was not statistically significant.
+Concerning hypotheses II, panel B of figure 2 depicts the predicted values for the estimated publication bias parameter as a function of the difference between the average effect size estimate and the estimated mean parameter of Gaussian effect size distribution. The corresponding quadratic slope parameter was negative but not statitistically significant, `r string_h2`.
 
 <!--# Hypotheses III -->
 
 ```{r}
 #| results: asis
 
-tost_model <- read_rds(here::here("data/src/tost_model.rds"))
+tost_model <- read_rds(here::here("data/src/model_tost_h3.rds"))
 tidy_tost <- tost_model |>
     pluck("TOST") |>
     as.data.frame() |>
@@ -97,21 +118,31 @@ tost <- tidy_tost |>
 string_tost <- glue("$t$({tost$df}) = {tost$t}, $SE$ = {tost$SE}, {format_p(tost$p.value, digits = 3, name = '$p$')}")
 ```
 
-Regarding $\mathcal{H}_3$, panel C of figure 2 depicts the observed mean difference and its respective confidence interval as well as the null $t$-distributions used to perform the TOST procedure against the equivalence bounds $\Delta=(-0.17, 0.17)$. The mean difference between estimated mean parameter of the Gaussian effect size distribution and the average effect size for the multisite replication studies subset of the data was `r string_md`; `r string_smd`. The equivalence test was significant, `r string_tost`.
+
+In relation to hypothesis $\mathcal{H}_3$, the depiction in panel C of Figure 2 presents the mean discrepancy between the estimated mean parameter of the Gaussian effect size distribution and the average effect size, along with its corresponding confidence interval. Additionally, the null $t$-distributions employed for executing the Two One-Sided Tests (TOST) procedure against the equivalence bounds $\Delta=(-0.17, 0.17)$ are illustrated. Both one-sided paired t-tests were statistically significant, lower t-value test `r string_tost`. We additionally conducted a null hypothesis significance test to test the hypotheses that the true mean difference is exactly equal to zero. The mean difference significantly deviated from zero `r string_md` (effect size `r string_smd`), `r string_tt`. This indicates that, despite the significant null hypothesis significance test, the difference was too small to be considered meaningful according to the equivalence range $\Delta=(-0.17, 0.17)$ of the equivalence test.
 
 <!--# Hypotheses IV -->
 
 ```{r}
 
 mod_h4 <- read_rds(here("data/src/model_betareg_h4.rds"))
+
+z <- coef(mod_h4) / sqrt(diag(vcov(mod_h4)))
+p_b1 <- pnorm(z[2], lower.tail = FALSE)
+
 tm4 <- tidy(mod_h4, conf.int = TRUE) |>
-    filter(str_detect(term, "type_synthesis")) 
+    filter(str_detect(term, "type_synthesis")) |>
+    mutate(estimate = if_else(component == "mean", plogis(estimate), estimate))  
+descr_h4 <- summarise(mod_h4$model, w_pbs = format_value(mean(w_pbs), digits = 2), .by = type_synthesis)
+m_ma <- filter(descr_h4, type_synthesis == "Meta-Analyses")$w_pbs
+m_mr <- filter(descr_h4, type_synthesis == "Multisite Replications")$w_pbs
 
 string_h4 <- glue("$\\log$($OR$) = {format_value(tm4$estimate)}, $SE$ = {format_value(tm4$std.error)}, $z$ = {format_value(tm4$statistic)}, {format_ci(tm4$conf.low, tm4$conf.high)}, {format_p(tm4$p.value, name = '$p$')}")
 
+
 ```
 
-`r string_h4`
+Finally, regarding hypothesis $\mathcal{H}_4$, panel D shows a comparison between the estimated publication bias parameters for typical meta-analysis in comparison to multisite replication studies. Already descriptively, contrary to our expectation, the mean of the estimated publication bias values $\omega_{\text{PBS}}$ of the normal meta-analysis subset is greater than the mean of the multisite replication subset ($M_{\text{MA}}=$ `r m_ma`; $M_{\text{MR}}=$ `r m_mr`). In line with this, slope of the beta regression is non-significant, `r string_h4`, as also indicated by the overlappping confidence interval if the marginal means in panel D.
 
 \newpage
 
@@ -124,12 +155,14 @@ table_ml_speec <- read_tex(here("tables/ml_speec_diff_cor.tex"))
 cat(table_ml_speec, sep = "\n")
 ```
 
+
+
 ```{=latex}
 \begin{figure}[H]
-\caption{Test\label{fig:ml-speec-comparison}}
+\caption{Scatter Plot comparing the estimated Distributional Parameters via SPEEC  vs. Maximum Likelihood\label{fig:ml-speec-comparison}}
 ```
-```{r ml-speec-comparison}
-#| out-width: 80%
+```{r ml-speec-cor}
+#| out-width: 100%
 #| fig-align: center
 knitr::include_graphics(here("figures/ml_speec_comparison.png"))
 ```
@@ -137,7 +170,8 @@ knitr::include_graphics(here("figures/ml_speec_comparison.png"))
 ```{=latex}
 \begingroup
 \scriptsize
-\textit{Note.} \textbf{A1}. Test. \textbf{A2}. Test. \textbf{B1}. Test \textbf{B2}. Test 
+\textit{Note.} \textbf{A1}. Comparison of estimated mean parameter $\mu_d$ from Gaussian effect size distribution. \textbf{A2}. Comparison of estimated variance parameter $\sigma_d^2$ of Gaussian effect size distribution. Axes and colorbar are log (base 10) transformed. \textbf{B1}. Comparison of mean parameter $\mu_n$ of Negative-Binomial sample size distribution \textbf{B2}. Comparison of dispersion parameter $\phi_n$ of Negative-Binomial sample size distribution. Axes and colorbar are log (base 10) transformed.
 \endgroup
 \end{figure}
 ```
+

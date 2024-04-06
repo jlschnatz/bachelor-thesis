@@ -2,7 +2,7 @@
 if(!"pacman" %in% installed.packages()) {install.packages("pacman")}
 pacman::p_load(
   sysfonts, showtext, here, tidyverse, betareg, latex2exp, broom, 
-  ggeffects, systemfonts, kableExtra, sjPlot, lmtest, tidymodels, insight
+  ggeffects, systemfonts, kableExtra, sjPlot, lmtest, insight
 )
 source(here("R/functions.R"))
 
@@ -11,12 +11,12 @@ fontname <- "CMU Sans Serif"
 fontpath <- systemfonts::match_font(fontname)$path
 font_add(family = fontname, fontpath)
 showtext_opts(dpi = 500)
-font_add_google("Inter", "font")
 showtext_auto()
 
 # Load data ————————————————————————————————————————————————————————————————————————————————————————————————————————————
 data_meta <- read_csv(here("data/meta/processed/data_lindenhonekopp_proc.csv"))
 data_optim <- read_csv(here("data/optim/processed/data_optim_merged.csv"))
+
 
 # Beta-regression model specification: w_pbs ~ Delta**2 ————————————————————————————————————————————————————————————————————
 data_model <- data_meta |> 
@@ -28,18 +28,15 @@ data_model <- data_meta |>
 
 # Fit model
 mod_h2 <- betareg(
-  formula = w_pbs ~ 1  + I(Delta^2),
+  formula = w_pbs ~ 1 + I(Delta**2),
   link = "logit",
   data = data_model
 )
 
 summary(mod_h2)
 
-write_rds(mod_h2, here("data/src/model_betareg_h2.rds"))
-
-
 # Plot model predictions ———————————————————————————————————————————————————————————————————————————————————————————————————————
-p <- ggeffect(mod_h2, "Delta [-.9:.9, by = 0.01]") |> 
+p <- ggeffect(mod_h2, "Delta [-2.8:2.9, by = 0.01]") |> 
   as_tibble() |> 
   ggplot(aes(x, y = predicted)) +
   geom_point(
@@ -57,41 +54,65 @@ p <- ggeffect(mod_h2, "Delta [-.9:.9, by = 0.01]") |>
     expand = expansion(),
   ) +
   scale_x_continuous(
-    name = latex2exp::TeX("Difference $\\widehat{\\mu}_d - \\widehat{\\delta}$"),
-    limits = c(-1, 1),
-    breaks = seq(-1, 1, .2),
+    name = latex2exp::TeX("Difference $\\Delta_{\\widehat{\\mu}_d, \\widehat{\\delta}}$"),
+    limits = c(-3, 3),
+    breaks = seq(-3, 3, .5),
     expand = expansion()
   ) +
   coord_cartesian(clip = "off") +
   theme_sjplot() +
   theme(
-    text = element_text(family = "font"),
+    text = element_text(family = fontname),
     plot.margin = margin(5, 5, 5, 5, "mm"),
-    axis.title = element_text(size = 10),
     axis.title.y = element_text(margin = margin(r = 0, unit = "mm")),
     axis.text.y = element_text(margin = margin(l = 0, unit = "mm")),
     axis.title.x = element_text(margin = margin(t = 8, unit = "mm"))
   )
 
+
+ggsave(
+  plot = p,
+  filename = here("figures/h2_scatter.png"),
+  width = 6, height = 4.5,
+  bg = "white",
+  dpi = 500
+)
+
 write_rds(p, file = here("data/src/plot_h2.rds"))
 
-
 # Generate table with model results ————————————————————————————————————————————————————————————————————————————————————
-data_table <- tidy(mod_h2, conf.int = TRUE) |> 
+
+z <- coef(mod_h2) / sqrt(diag(vcov(mod_h2)))
+p_b2 <- pnorm(z[2], lower.tail = TRUE)
+
+data_table <- tidy(mod_h2, conf.int = TRUE) |>
+  # get OR for estimate and CIs for the mean parameter model
+  mutate(across(c(estimate, conf.low, conf.high), exp)) |>
+  # format confidence intervals
   mutate(ci = format_ci(conf.low, conf.high, ci_string = "", ci = NULL, digits = 2), .before = std.error) |>
-  mutate(p.value = pformat(p.value)) |> 
-  mutate(estimate = if_else(component == "mean", plogis(estimate), estimate))  |> 
-  mutate(term = case_match(term, "(Intercept)" ~ "$b_0$",  "I(Delta^2)" ~ "$b_2: \\Delta^2$",  "(phi)" ~ "$b_0$")) |> 
-  select(-c(component, starts_with("conf"))) 
+  select(-starts_with("conf")) |>
+  # format and correct p-values
+  mutate(p.value = if_else(term == "I(Delta^2)", p_b2, p.value)) |>
+  mutate(p.value = format_p(p.value, name = NULL, digits = "apa")) |>
+  # remove leading zero
+  mutate(p.value = str_remove(p.value, "^0")) |>
+  mutate(across(c(estimate, std.error, statistic), ~format_value(.x, digits = 2))) |>
+  mutate(estimate = if_else(component == "mean", paste0("$", estimate, "^a$"), paste0("$", estimate, "^b$"))) |>
+  mutate(term = (case_match(term, "(phi)" ~ "Intercept", "(Intercept)" ~ "Intercept", "I(Delta^2)" ~ "Quadratic $\\Delta_{\\widehat{\\mu}_d, \\widehat{\\delta}}$"))) |> 
+  select(-component) 
 
 table_h2 <- nice_table(
   x = data_table, 
   caption = "Beta Regression Results for $\\mathcal{H}_2$", 
-  footnote = report_fit(mod_h2, "w_pbs"), 
   digits = 2, 
-  col_names = c("Term", "Estimate", "$CI$ (95%)","$SE$", "$z$", "$p$")) |> 
+  col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$")
+  ) |> 
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
-  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") 
+  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
+  footnote(
+    alphabet = c("$OR$", "Identity"),
+    general = report_fit(mod_h2, "w_pbs")
+  )
 
 cat(table_h2, file = here("tables/h2_table.tex"))  
 
@@ -109,9 +130,8 @@ summary(mod_h2_exploratory)
 
 # Likelihood Ratio Test
 model_comp <- lrtest(mod_h2, mod_h2_exploratory) |> 
-  tidy() |>
-  mutate(p.value = format_p(p.value, name = NULL))  |>
-  mutate(across(where(is.numeric), ~round(.x, 2))) |> 
+  tidy() |> 
+  mutate(across(where(is.numeric), ~round(.x, 3))) |> 
   mutate(across(everything(), as.character)) |> 
   mutate(across(everything(), ~replace_na(.x, "")))  |> 
   select(-df)
@@ -126,3 +146,5 @@ data_table_comparison <- nice_table(
 )
 
 cat(data_table_comparison, file = here("tables/h2_table_comparison.tex"))
+
+

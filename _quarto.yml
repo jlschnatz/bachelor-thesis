@@ -6,7 +6,7 @@ project:
 format: 
   pdf:
     title: "Assessing Publication Bias in Meta-Analyses:"
-    subtitle: "A Simulation-Based Estimation Approach Using the Joint Distribution of Effect Size and Sample Size"
+    subtitle: "A Simulation-Based Estimation Approach Focusing on the Joint Distribution of Effect Size and Sample Size"
     author:
     - name: "Jan Luca Schnatz"
       email: "janluca.schnatz@gmx.de"
