@@ -34,14 +34,6 @@ write_rds(tost, here("data/src/model_tost_h3.rds"))
 
 # Plot TOSTER Results ———————————————————————————————————————————————————————————————————————————————————————————————————————
 p <- plot_equ_tnull(tost, font = "Open Sans") 
-
-ggsave(
-  plot = p,
-  filename = here("figures/h3_tost_tnull.png"),
-  width = 6, height = 4,
-  bg = "white", dpi = 500
-)
-
 write_rds(p, file = here("data/src/plot_h3.rds"))
 
 # Table TOSTER Results ———————————————————————————————————————————————————————————————————————————————————————————————————————

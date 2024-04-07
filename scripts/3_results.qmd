@@ -9,7 +9,7 @@ bibliography: ../references.bib
 #| echo: false
 
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
-pacman::p_load(insight, glue, tidyverse, here, parameters, broom, betareg)
+pacman::p_load(insight, glue, tidyverse, here, parameters, broom, betareg, performance)
 source(here("R/00_functions.R"))
 ```
 
@@ -33,17 +33,15 @@ string_phi <- glue("$\\widehat{\\phi}$ = {{m_phi$b}}, {{m_phi$ci}}, $SE$ = {{m_p
 
 As an initial step, the assumptions made to determine the Smallest Effect Sizes of Interest (SESOI) for the four hypotheses were assessed. In the simulations-based sensitivity power analyses aimed at ascertaining the SESOIs (refer to the Appendix for details), three dispersion parameter conditions $\phi:\{10, 20, 30\}$ for the distribution of the publication bias parameter $\omega_{\text{PBS}}$ were simulated. Employing an intercept-only beta regression model with the complete dataset, the estimated dispersion parameter was `r string_phi`. This finding contradicts our initial assumptions regarding the dispersion parameter's magnitude, rendering the interpretation of SESOIs for our hypotheses untenable. Consequently, it is appropriate to refrain from interpreting SESOIs in the subsequent analyses.
 
-## Confirmatory Results of the Predictions from the Hypotheses
-
 <!-- Multi-Panel Figure for Hypotheses -->
 
 ```{=latex}
-\begin{figure}[h]
+\begin{figure}[H]
 \caption{Visual Summary of Results from Four Hypotheses
 \label{fig:hypotheses}}
 ```
 ```{r hypotheses}
-#| out-width: 100%
+#| out-width: 90%
 #| fig-align: center
 knitr::include_graphics(here("figures/combine_hypotheses.png"))
 ```
@@ -51,10 +49,12 @@ knitr::include_graphics(here("figures/combine_hypotheses.png"))
 ```{=latex}
 \begingroup
 \scriptsize
-\textit{Note.} \textbf{A}. Estimated publication bias parameter as a function of Fisher z-transformed correlation coefficients. Fitted line represents the regression coefficients from the model and the 95\% CI. \textbf{B}. Estimated publication bias parameter as a function of the difference between the estimated mean parameter and the average effect size. \textbf{C}. The mean difference between the estimated mean parameter and the average effect size and its 90\% confidence interval compared against the null t-distribution for the lower and upper equivalence bounds. \textbf{D}. A comparison between the distribution of estimated publication bias parameter between normal meta-analyses and multisite replications. The pointrange indicates the marginal predicted values and the 95\% confidence interval from the regression.
+\textit{Note.} \textbf{A}. Estimated publication bias parameter vs. Fisher z-transformed correlation coefficients. Fitted line: regression coefficients with 95% CI. \textbf{B}. Estimated publication bias parameter vs. difference between mean parameter and average effect size. \textbf{C}. Mean difference between mean parameter and effect size, with 90% CI, compared to null t-distribution for equivalence bounds. \textbf{D}. Comparison of estimated publication bias parameter distribution between normal meta-analyses and multisite replications. Point range: marginal predicted values with 95% CI from regression.
 \endgroup
 \end{figure}
 ```
+## Confirmatory Results of the Predictions from the Hypotheses
+
 <!--# Hypotheses I -->
 
 ```{r}
@@ -75,12 +75,48 @@ Regarding hypotheses $\mathcal{H}_1$, panel A of figure 2 depicts the relationsh
 
 ```{r}
 mod_h2 <- read_rds(here("data/src/model_betareg_h2.rds"))
-tm2 <- tidy(mod_h2, conf.int = TRUE) |> filter(term =="I(Delta^2)") 
-string_h2 <- glue("$\\log$($OR$) = {format_value(tm2$estimate)}, $SE$ = {format_value(tm2$std.error)}, $z$ = {format_value(tm2$statistic)}, {format_ci(tm2$conf.low, tm2$conf.high)}, {format_p(tm2$p.value, name = '$p$')}")
+
+b <- coef(mod_h2)
+se <- sqrt(diag(vcov(mod_h2)))
+z <- b / se
+q_crit <- qnorm(0.95) # because one-sided
+p <- pnorm(z, lower.tail = TRUE)
+ub <- b + se * q_crit # only lower bound
+
+f_b <- format_value(exp(b[2]))
+f_ci <- format_ci(0, exp(ub[2]))
+f_se <- format_value(se[2])
+f_z <- format_value(z)[2]
+f_p <- str_replace(format_p(p, name = "$p$"), "0\\.", "\\.")[2]
+
+string_h2 <- glue("$OR$ = {f_b}, {f_ci}, $SE$ = {f_se}, $z$ = {f_z}, $p$ {f_p}")
+
+# standardized OR
+std_or <- exp(standardise_parameters(mod_h2)$Std_Coefficient)[2]
+f_std_or <- format_value(std_or, digits = 3)
+
+# SD of Delta mu_d - mean_d
+data_parameters <- read_csv(here("data/optim/processed/data_optim_merged.csv"))
+data_meta <- read_csv(here("data/meta/processed/data_lindenhonekopp_proc.csv"))
+data_delta <-  data_meta |>
+    group_by(id_meta) |>
+    summarise(mean_d = mean(d)) |>
+    inner_join(data_parameters, join_by(id_meta)) |>
+    select(id_meta, mean_d, mu_d) |>
+    mutate(delta = mu_d - mean_d) 
+
+sd_delta <- sd(data_delta$delta)
+f_sd_delta <- format_value(sd_delta)
+
+#Delta <- 0
+#(coef(mod_h2)[2] * (2*Delta + 1))
+#(diff(predict(mod_h2, newdata = data.frame(Delta = c(Delta, Delta + 1)), type = "link")))
+
+r2_ferrari_cribari <- format_value(cor(qlogis(mod_h2$model$w_pbs), predict(mod_h2, type = "link"))^2, digits = 3)
 
 ```
 
-Concerning hypotheses II, panel B of figure 2 depicts the predicted values for the estimated publication bias parameter as a function of the difference between the average effect size estimate and the estimated mean parameter of Gaussian effect size distribution. The corresponding quadratic slope parameter was negative but not statitistically significant, `r string_h2`.
+Concerning $\mathcal{H}_2$, panel B of figure 1 depicts the relationship between estimated publication bias parameter as a function of the dfference between the average effect size $\widehat{\delta}$ and the estimated mean parameter of the Gaussian effect size distribution $\widehat{\mu}_d$. The corresponding estimated quadratic slope negative and statistically significant `r string_h2`. The standardized odds ratio of the quadratic slope was $OR$ = `r f_std_or` $SD(\Delta_{\widehat{\mu}_d,\widehat{\delta}})=$ `r f_sd_delta`. This means, that one standard deviation change in the predictor variable $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ leads to `r f_std_or` times reduction in $\omega_{\text{PBS}}$. The overall explained variation of $\omega_{\text{PBS}}$ by $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ as determined by the pseudo $R^2$ @ferrari_beta_2004 was low $R^2_{\text{pseudo}}=$ `r r2_ferrari_cribari`.
 
 <!--# Hypotheses III -->
 

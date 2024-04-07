@@ -36,7 +36,7 @@ mod_h2 <- betareg(
 summary(mod_h2)
 
 # Plot model predictions ———————————————————————————————————————————————————————————————————————————————————————————————————————
-p <- ggeffect(mod_h2, "Delta [-2.8:2.9, by = 0.01]") |> 
+p <- ggeffect(mod_h2, "Delta [-1.3:1.3, by = 0.01]") |> 
   as_tibble() |> 
   ggplot(aes(x, y = predicted)) +
   geom_point(
@@ -55,8 +55,8 @@ p <- ggeffect(mod_h2, "Delta [-2.8:2.9, by = 0.01]") |>
   ) +
   scale_x_continuous(
     name = latex2exp::TeX("Difference $\\Delta_{\\widehat{\\mu}_d, \\widehat{\\delta}}$"),
-    limits = c(-3, 3),
-    breaks = seq(-3, 3, .5),
+    limits = c(-1.5, 1.5),
+    breaks = seq(-1.5, 1.5, .5),
     expand = expansion()
   ) +
   coord_cartesian(clip = "off") +
@@ -68,15 +68,6 @@ p <- ggeffect(mod_h2, "Delta [-2.8:2.9, by = 0.01]") |>
     axis.text.y = element_text(margin = margin(l = 0, unit = "mm")),
     axis.title.x = element_text(margin = margin(t = 8, unit = "mm"))
   )
-
-
-ggsave(
-  plot = p,
-  filename = here("figures/h2_scatter.png"),
-  width = 6, height = 4.5,
-  bg = "white",
-  dpi = 500
-)
 
 write_rds(p, file = here("data/src/plot_h2.rds"))
 

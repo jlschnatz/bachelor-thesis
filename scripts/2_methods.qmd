@@ -5,12 +5,8 @@ bibliography: ../references.bib
 \newpage
 
 ```{r}
-#| message: false
 #| echo: false
-
-knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
-pacman::p_load(insight, glue, tidyverse, here, parameters, broom, betareg)
-source(here("R/00_functions.R"))
+source(here::here("R/00_functions.R"))
 ```
 
 # Method
@@ -104,7 +100,7 @@ $$
 D_{\text{KL}}(\widehat{f_e} ~ \lVert ~ \widehat{f_t})=\nsum_{u=1}^{g}\nsum_{v=1}^{g}\widehat{f_e}(u, v)\ln\left(\frac{\widehat{f_e}(u,v)}{\widehat{f_t}(u,v)}\right)
 $$ {#eq-kld}
 
-### Algorithmic Parameter Optimization
+### Algorithmic Optimization via Simulated Annealing
 
 -   KL-divergence between empirical and simulated data, based on chosen parameter values for marginal distribution and publication bias severity serves as a loss function -\> aim to find global minimum of loss function
 
@@ -135,7 +131,7 @@ r_ver <- paste(version$major, version$minor, sep = ".")
 
 All statistical analyses were performed using R [version `r r_ver`, @r_core_team_r_2023] in the RStudio Environment [version 2023.12.0.369, @posit_team_rstudio_2023]. Data and analysis scripts are made available members of Goethe University on the [Local Instrastructure for Open Science (LIFOS)] and the publicly on the Open Science Framework (OSF).
 
-Regarding the hypotheses, where the publication bias parameter $\omega_{\text{PBS}}$ is the dependent variable ($\mathcal{H}_1$, $\mathcal{H}_2$, $\mathcal{H}_4$), beta regression as implemented in the *betareg* package [@zeileis_betareg_2021] was used to analyse the data. This choice is motivated by the restriction of the parameter space for the publication bias to the standard unit interval, whereby non-normality, skewness and heteroscedasticity can anticipated [@cribari-neto_beta_2010; @smithson2006]. Beta regression is recognized for its adaptability in handling such deviations. We used a logit link for the mean parameter $\mu$ and a identity link for the dispersion parameter that is hold constant so that beta regression model can be described by
+Regarding the hypotheses, where the publication bias parameter $\omega_{\text{PBS}}$ is the dependent variable ($\mathcal{H}_1$, $\mathcal{H}_2$, $\mathcal{H}_4$), beta regression as implemented in the *betareg* package [@zeileis_betareg_2021] was used to analyse the data. This choice is motivated by the restriction of the parameter space for the publication bias to the standard unit interval, whereby non-normality, skewness and heteroscedasticity can anticipated [@cribari-neto_beta_2010; @smithson2006]. Beta regression is recognized for its adaptability in handling such deviations. We used a logit link for the mean parameter $\mu$ and a identity link for the dispersion paramater that is hold constant so that beta regression model can be described by
 
 $$
 \begin{gathered}
@@ -144,31 +140,34 @@ $$
 \end{gathered}
 $$ {#eq-beta-reg}
 
-The independent variables for these three hypotheses are as follows: for $\mathcal{H}_1$ the independent variable was the Fisher z-transformed correlation coefficients for the correlation between effect size and sample size, where the transformation is defined as $z_{r}=0.5 \ln \Big(\frac{1+r}{1-r}\Big)$. The independent variable for $\mathcal{H}_2$ is the difference $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ between the average effect size estimate of each meta-analysis $\widehat{\delta}$ and the estimated mean parameter of the gaussian effect size distribution $\widehat{\mu}_d$. Lastly, the independent variable is a binary indicator specifying the research synthesis type (normal meta-analysis or multisite replication studies), with multisite replication studies set as the reference level for regression. The beta-coefficients for these hypotheses were estimated using ML estimation with the *BFGS* optimizer.
+The independent variables for these three hypotheses are as follows: for $\mathcal{H}_1$ the independent variable was the Fisher z-transformed correlation coefficients for the correlation between effect size and sample size, where the transformation is defined as $z_r=0.5 \ln \Big(\frac{1+r}{1-r}\Big)$. The independent variable for $\mathcal{H}_2$ is the difference $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ between the average effect size estimate of each meta-analysis $\widehat{\delta}$ and the estimated mean parameter of the gaussian effect size distribution $\widehat{\mu}_d$. Lastly, the independent variable is a binary indicator specifying the research synthesis type (normal meta-analysis or multisite replication studies), with multisite replication studies set as the reference level for regression. The beta-coefficients for these hypotheses were estimated using ML estimation with the *BFGS* optimizer.
 
-To analyse $\mathcal{H}_2$, we conducted an equivalence test using the Two One-Sided Tests (TOST) procedure to assess whether the presence of effects, large enough to be considered meaningful within specified equivalence bounds, can be rejected. To perform the tests, we utilized the *TOSTER* R package [@lakens_toster_2023], employing two-sample dependent Welch tests. The equivalence bounds against which the data is tested were defined by the smallest effect size of interest (SESOI).
+To analyse $\mathcal{H}_2$, we conducted an equivalence test using the Two One-Sided Tests (TOST) procedure to assess whether the presence of effects, large enough to be considered meaningful within specified equivalence bounds, can be rejected. To perform the tests, we utilized the *TOSTER* R package [@lakens_toster_2023], employing two-sample dependent Welch tests. The equivalence bounds against which the data is tested were defined by the smallest effect size of interest (SESOI), which was determined by an analytical sensitivity power analysis.
 
-We established the Smallest Effect Sizes of Interest (SESOI) for all four hypotheses through sensitivity power analyses, focusing on effect sizes reliably detectable within the constraints of available sample size resources for this secondary analysis [@lakens_performing_2014]. . More specifically, we conducted three simulation-based ($\mathcal{H}_1$, $\mathcal{H}_3$, $\mathcal{H}_4$) and one analytical ($\mathcal{H}_2$) sensitivity power analysis to determine which effect sizes we have at least 80% power to detect, taking into account the constraints of the sample size and a fixed significance level $\alpha = .05$ (details see section \[Power Analysis\]). The resulting SESOI for each hypothesis is presented in Table 1. The SESOI for the equivalence hypothesis will define the equivalence bounds for the TOST procedure ($\Delta_L = -0.17$ and $\Delta_U = 0.17$).
-
-```{r}
-#| echo: false
-#| results: asis
-
-data_sesoi <- readr::read_csv(here::here("preregistration/data/sesois.csv")) |>
-    dplyr::mutate(hypothesis = stringr::str_replace(hypothesis, "H", "$\\\\mathcal{H}_")) |>
-    dplyr::mutate(hypothesis = stringr::str_c(hypothesis, "$"))
-
-nice_table(
-       x = data_sesoi, 
-       caption = "Smallest Effect Sizes of Interest for All Hypotheses", 
-       footnote = "", 
-       col_names = c("Hypothesis", "SESOI", "Unit")
-    )
-
-```
+Equivalence bounds against which data is tested determined by the smallest effect size of interest -\> in this case determined by analytical sensitivity power analysis -\> based on effect sizes that we can reliably detetect, onsidering the constraints imposed by the sample size resources available for this secondary analysis [@lakens_performing_2014]
 
 **Power Analysis**
 
 The simulated-based sensitivity power analysis targeted a statistical power of 0.8 with a fixed significance level of $\alpha = .05$. Samples sizes varied across hypotheses: $n = 150$ for hypotheses 1 (only meta-analysis) and $n = 207$ for hypothesis 2 and 4 (both meta-analysis and multisite replication studies) and $n = 57$ (only multisite replication studies) for hypothesis 3. Predictor variables´ distribution assumptions were specified as follows: Hypothesis 1 assumed a normal distribution ($\mu = -0.1; \sigma = 0.5$) for the Fisher z-transformed sample size effect size correlation coefficients, with linear regression coefficient as the parameter of interest. Hypothesis 2 assumed equal means $\Delta = 0$ and a standard deviation $\sigma_{diff}=\sqrt{0.3^2+0.3^2}$ for the difference scores of $\widehat{\mu}_d$ and $\widehat{\delta}$, with the same assumptions for hypothesis 3, incorporating a quadratic regression coefficient as the parameter of interest. Beta-regression on $\omega_{\text{PBS}}$ in hypotheses 1, 3, and 4 involved simulations for different dispersion parameter $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. We chose a conservative approach to define the SESOI for the parameters of interest ensuring a minimum power of 80% for the smallest simulated dispersion parameter $\phi = 10$. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. The R code for the simulation-based sensitivity power analysis is available in the same directory as the preregistration.
+
+**SESOI**
+
+For all four hypotheses, we will establish the smallest effect size of interest (SESOI) based on effect sizes that we can reliably detect, considering the constraints imposed by the sample size resources available for this secondary analysis [@lakens2014performing]. More specifically, we conducted three simulation-based ($\mathcal{H}_1$, $\mathcal{H}_3$, $\mathcal{H}_4$) and one analytical ($\mathcal{H}_2$) sensitivity power analysis to determine which effect sizes we have at least 80% power to detect, taking into account the constraints of the sample size and a fixed significance level $\alpha = .05$ (details see section \[Power Analysis\]). The resulting SESOI for each hypothesis is presented in Table 1. The SESOI for the equivalence hypothesis will define the equivalence bounds for the TOST procedure ($\Delta_L = -0.17$ and $\Delta_U = 0.17$).
+
+```{r}
+#| results: asis
+#| echo: false
+
+df_lims <- readRDS(here::here("data/src/dist_param_range.rds"))
+nice_table(
+  x = df_lims, 
+  caption = "Estimated Parameters for the Distribution of Effect Size and Sample Size from each Meta-Analysis via ML", 
+  footnote = "Test", 
+  col_names = c("Parameter", "Minimum", "Maximum")
+  ) |> 
+  kableExtra::group_rows("Effect Size", 1, 2) |> 
+  kableExtra::group_rows("Sample Size", 3, 4) 
+
+```
 
   [Local Instrastructure for Open Science (LIFOS)]: https://lifos.uni-frankfurt.de/psychologische-methoden-mit-interdisziplinaerer-ausrichtung/publication-bias-psychology-reanalysis-of-nes-relationship

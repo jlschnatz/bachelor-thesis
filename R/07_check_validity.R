@@ -14,9 +14,9 @@ pacman::p_load(
 )
 # Source custom functions
 source(here("R/00_functions.R"))
-font_add_google("Inter", "font")
+font_add_google("Noto Sans", "font")
 showtext_auto()
-showtext_opts(dpi = 500)
+showtext_opts(dpi = 1000)
 set.seed(42)
 
 # Load data ————————————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -113,37 +113,15 @@ cor_table <- nice_table(
 
 cat(cor_table, file = here("tables/ml_speec_diff_cor.tex"))
 
-data_ml_speec |>
-  filter(id_meta %in% id_mr) |> 
-  select(starts_with("delta")) |> 
-  pivot_longer(everything()) |> 
-  group_by(name) |> 
-  summarise(min = min(value), max = max(value)) 
-
-
 # Pairwise comparison plots: ML vs SPEEC
-theme_comparison <-  function(...) {
-  theme_sjplot() +
-  theme(
-  legend.position = "bottom",
-  legend.title = element_text(vjust = 1, size = 9),
-  legend.text = element_text(size = 6.5),
-  legend.box.margin = margin(),
-  legend.margin = margin(),
-  text = element_text(family = "font"),
-  axis.text = element_text(size = 8),
-  axis.title = element_text(size = 9),
-  plot.margin = margin(),
-  legend.key.size = unit(0.5, "cm"),
-  ...
-  )
-}
+
+minor_breaks <- rep(1:9, 21)*(10^rep(-10:10, each=9))
 
 # mu_n
 p_mu_n <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_mu_n, mu_n)) +
-  geom_abline(intercept = 0, slope = 1, color = "darkgrey", linewidth = .7) +
+  geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
   geom_point(aes(color = delta_mu_n), size = 2.5, alpha = .6) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\mu}_{n_{ML}}$"),
@@ -169,7 +147,7 @@ p_mu_n <- data_ml_speec |>
 p_phi_n <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_phi_n, phi_n)) +
-  geom_abline(intercept = 0, slope = 1, color = "darkgrey", linewidth = .7) +
+  geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
   geom_point(aes(color = delta_phi_n), size = 2.5, alpha = .6) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\phi}^2_{n_{ML}}$"),
@@ -177,6 +155,7 @@ p_phi_n <- data_ml_speec |>
     labels = label_log(),
     limits = c(10^-2, 10^3),
     breaks = c(10^-2, 10^-1, 10^0, 10^1, 10^2, 10^3),
+    minor_breaks = minor_breaks,
     expand = expansion()
   ) +
   scale_y_continuous(
@@ -185,15 +164,16 @@ p_phi_n <- data_ml_speec |>
     labels = label_log(),
     limits = c(10^-2, 10^3),
     breaks = c(10^-2, 10^-1, 10^0, 10^1, 10^2, 10^3),
+    minor_breaks = minor_breaks,
     expand = expansion()
   ) +
   coord_equal() +
-  annotation_logticks(colour = "darkgrey") +
+  #annotation_logticks(colour = "darkgrey", linewidth = 0.3) +
   scale_colour_paletteer_c(
     name = TeX("$|\\widehat{\\phi}_{n_{SPEEC}} - \\widehat{\\phi}_{n_{ML}} |$"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
-    breaks = 10^seq(-1, 2), 
-    limits = c(NA, 10^2),
+    limits = 10**c(-1, 2),
+    breaks = 10**seq(-1, 2), 
     trans = log10_trans(),
     labels = label_log(10)
   ) +
@@ -202,9 +182,12 @@ p_phi_n <- data_ml_speec |>
 # mu_d
 p_mu_d <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
-  ggplot(aes(ml_mu_d, mu_d)) +
-  geom_abline(intercept = 0, slope = 1, color = "darkgrey", linewidth = .7) +
-  geom_point(aes(color = delta_mu_d), size = 2.5, alpha = .6) +
+  ggplot(aes(ml_mu_d, mu_d, color = delta_mu_d)) +
+  geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
+  geom_point(
+    size = 2.5,
+    alpha = .6
+    ) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\mu}_{d_{ML}}$"),
     limits = c(-3, 3),
@@ -221,8 +204,7 @@ p_mu_d <- data_ml_speec |>
   scale_colour_paletteer_c(
     name = TeX("$|\\widehat{\\mu}_{d_{SPEEC}} - \\widehat{\\mu}_{d_{ML}} |$"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
-    limits = c(0, .3),
-    breaks = seq(0, .3, .1)
+    limits = c(0, .5)
   ) +
   theme_comparison()
 
@@ -230,13 +212,18 @@ p_mu_d <- data_ml_speec |>
 p_sigma2_d <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_sigma2_d, sigma2_d)) +
-  geom_abline(intercept = 0, slope = 1, color = "darkgrey", linewidth = .7) +
-  geom_point(aes(color = delta_sigma2_d), size = 2.5, alpha = .6) +
+  geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
+  geom_point(
+    aes(color = delta_sigma2_d),
+    size = 2.5,
+    alpha = .6
+  ) +
   scale_y_continuous(
     name = TeX("$\\widehat{\\sigma}^2_{d_{SPEEC}}$"),
     trans = log10_trans(),
     limits = c(0.001, 100),
     breaks = c(0.001, 0.01, 0.1, 1, 10, 100),
+    minor_breaks = minor_breaks,
     labels = label_log(),
     expand = expansion()
   ) +
@@ -246,37 +233,33 @@ p_sigma2_d <- data_ml_speec |>
     limits = c(0.001, 100),
     labels = label_log(),
     breaks = c(0.001, 0.01, 0.1, 1, 10, 100),
+    minor_breaks = minor_breaks,
     expand = expansion()
   ) +
   coord_fixed() +
   scale_colour_paletteer_c(
     name = TeX("$|\\widehat{\\sigma}^2_{d_{SPEEC}} - \\widehat{\\sigma}^2_{d_{ML}} |$"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
-    trans = log10_trans(),
+    limits = 10**c(-4, 1),
+    breaks = 10**seq(-4, 1),
     labels = label_log(10),
-    limits = 10^c(-4, 1),
-    breaks = 10^seq(-4, 1, 1)
+    trans = log10_trans()
   ) +
-  annotation_logticks(colour = "darkgrey") +
+  #annotation_logticks(colour = "darkgrey", linewidth = 0.3) +
   theme_comparison()
 
 # Combine plots with patchwork
 p_comb <- ((p_mu_d + p_sigma2_d) / (p_mu_n + p_phi_n)) +
   plot_annotation(tag_levels = c("A", "1")) &
-  theme(plot.tag = element_text(face = "bold", family = "font", margin = margin(l = 10),
-                                size = 10))
+  theme(plot.tag = element_text(face = "bold", family = "font", margin = margin(l = 10)))
 
 p_comb[[1]] <- p_comb[[1]] + plot_layout(tag_level = 'new')
 p_comb[[2]] <- p_comb[[2]] + plot_layout(tag_level = 'new')
 
-p_comb <- p_comb & theme(
-  text = element_text(family = "font")
-)
 # Save
 ggsave(
   plot = p_comb, 
   filename = here("figures/ml_speec_comparison.png"), 
-  width = 10, height = 6.5, 
-  bg = "white", dpi = 500
+  width = 10, height = 7, 
+  bg = "white", dpi = 1000
   )
-
