@@ -13,7 +13,7 @@ pacman::p_load(
   sjPlot, ggh4x, scales, paletteer, patchwork
 )
 # Source custom functions
-source(here("R/functions.R"))
+source(here("R/00_functions.R"))
 font_add_google("Inter", "font")
 showtext_auto()
 showtext_opts(dpi = 500)

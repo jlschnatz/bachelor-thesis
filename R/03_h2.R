@@ -4,7 +4,7 @@ pacman::p_load(
   sysfonts, showtext, here, tidyverse, betareg, latex2exp, broom, 
   ggeffects, systemfonts, kableExtra, sjPlot, lmtest, insight
 )
-source(here("R/functions.R"))
+source(here("R/00_functions.R"))
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
 fontname <- "CMU Sans Serif"

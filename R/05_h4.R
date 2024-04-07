@@ -5,7 +5,7 @@ pacman::p_load(
   marginaleffects, ggdist, latex2exp, systemfonts, kableExtra,
   sjPlot, insight
 )
-source(here("R/functions.R"))
+source(here("R/00_functions.R"))
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
 fontname <- "CMU Sans Serif"

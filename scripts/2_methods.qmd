@@ -10,7 +10,7 @@ bibliography: ../references.bib
 
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
 pacman::p_load(insight, glue, tidyverse, here, parameters, broom, betareg)
-source(here("R/functions.R"))
+source(here("R/00_functions.R"))
 ```
 
 # Method

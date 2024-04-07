@@ -1,5 +1,5 @@
 pacman::p_load(tidyverse, here, betareg, broom, insight)
-source(here("R/functions.R"))
+source(here("R/00_functions.R"))
 data_parameter <- read_csv(here("data/optim/processed/data_optim_merged.csv"))
 
 # Intercept Model 
