@@ -10,15 +10,14 @@ bibliography: ../references.bib
 
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
 pacman::p_load(insight, glue, tidyverse, here, parameters, broom, betareg)
-source(here("R/functions.R"))
+source(here("R/00_functions.R"))
 ```
 
 # Results
 
-## Variable Dispersion of $\omega_{\text{PBS}}$ 
+## Variable Dispersion of $\omega_{\text{PBS}}$
 
-```{r}
-#| results: asis
+```{r dispersion-w-wpbs}
 
 m_phi <- read_rds(here("data/src/model_dispersion.rds")) |>
     tidy(conf.int = TRUE) |>
@@ -32,8 +31,7 @@ string_phi <- glue("$\\widehat{\\phi}$ = {{m_phi$b}}, {{m_phi$ci}}, $SE$ = {{m_p
 
 ```
 
-Test: `r string_phi`
-
+As an initial step, the assumptions made to determine the Smallest Effect Sizes of Interest (SESOI) for the four hypotheses were assessed. In the simulations-based sensitivity power analyses aimed at ascertaining the SESOIs (refer to the Appendix for details), three dispersion parameter conditions $\phi:\{10, 20, 30\}$ for the distribution of the publication bias parameter $\omega_{\text{PBS}}$ were simulated. Employing an intercept-only beta regression model with the complete dataset, the estimated dispersion parameter was `r string_phi`. This finding contradicts our initial assumptions regarding the dispersion parameter's magnitude, rendering the interpretation of SESOIs for our hypotheses untenable. Consequently, it is appropriate to refrain from interpreting SESOIs in the subsequent analyses.
 
 ## Confirmatory Results of the Predictions from the Hypotheses
 
@@ -118,7 +116,6 @@ tost <- tidy_tost |>
 string_tost <- glue("$t$({tost$df}) = {tost$t}, $SE$ = {tost$SE}, {format_p(tost$p.value, digits = 3, name = '$p$')}")
 ```
 
-
 In relation to hypothesis $\mathcal{H}_3$, the depiction in panel C of Figure 2 presents the mean discrepancy between the estimated mean parameter of the Gaussian effect size distribution and the average effect size, along with its corresponding confidence interval. Additionally, the null $t$-distributions employed for executing the Two One-Sided Tests (TOST) procedure against the equivalence bounds $\Delta=(-0.17, 0.17)$ are illustrated. Both one-sided paired t-tests were statistically significant, lower t-value test `r string_tost`. We additionally conducted a null hypothesis significance test to test the hypotheses that the true mean difference is exactly equal to zero. The mean difference significantly deviated from zero `r string_md` (effect size `r string_smd`), `r string_tt`. This indicates that, despite the significant null hypothesis significance test, the difference was too small to be considered meaningful according to the equivalence range $\Delta=(-0.17, 0.17)$ of the equivalence test.
 
 <!--# Hypotheses IV -->
@@ -155,8 +152,6 @@ table_ml_speec <- read_tex(here("tables/ml_speec_diff_cor.tex"))
 cat(table_ml_speec, sep = "\n")
 ```
 
-
-
 ```{=latex}
 \begin{figure}[H]
 \caption{Scatter Plot comparing the estimated Distributional Parameters via SPEEC  vs. Maximum Likelihood\label{fig:ml-speec-comparison}}
@@ -174,4 +169,3 @@ knitr::include_graphics(here("figures/ml_speec_comparison.png"))
 \endgroup
 \end{figure}
 ```
-

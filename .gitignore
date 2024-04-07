@@ -5,4 +5,4 @@
 /.quarto/
 /.snakemake/
 .Rbuildignore
-*.vdoc.r
+/**/.vdoc.r
