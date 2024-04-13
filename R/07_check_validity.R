@@ -6,7 +6,7 @@ pacman::p_load(
   # File Management
   here, 
   # Data Manipulation & Analysis
-  tidyverse, psych, corrr, vroom, glue, broom,
+  tidyverse, psych, corrr, vroom, glue, broom, insight,
   # Latex Math Expression
   latex2exp,
   # Visualization
@@ -63,18 +63,20 @@ data_ml_speec <- reduce(list(data_k, ml_optim1, ml_optim2, data_optim), inner_jo
     delta_mu_n = mu_n - ml_mu_n
   ) |>
   # Calculate absolute differences
-  mutate(across(starts_with("delta"), abs))
+  mutate(across(starts_with("delta"), abs, .names = "abs_{.col}"))
 
 # Correlation Data
 cor_data <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
-  select(starts_with("delta"), w_pbs, k) |>
+  select(starts_with("abs_delta"), w_pbs, k) |>
   rename_with(~ c(
-    "$\\Delta_{\\mu_d}$", "$\\Delta_{\\sigma^2_d}$",
-    "$\\Delta_{\\phi_n}$", "$\\Delta_{\\mu_n}$",
-    "$\\omega_{\\text{PBS}}$",
-    "$k$"
+    "\\Delta_{\\mu_d}", "\\Delta_{\\sigma^2_d}",
+    "\\Delta_{\\phi_n}", "\\Delta_{\\mu_n}",
+    "\\omega_{\\text{PBS}}",
+    "k"
   )) |>
+  rename_with(.cols = contains("Delta"), ~str_c("\\lvert", .x, "\\rvert")) |>
+  rename_with(~glue("${.x}$")) |>
   relocate("$\\omega_{\\text{PBS}}$", .before = 1) |>
   corr.test( 
     minlength = 100,
@@ -103,6 +105,11 @@ cor_data_format <- matrix(paste0(round(cor_data$r, 2), p_star,  "\\break [", rou
 cor_data_format$term <- colnames(cor_data$r)
 colnames(cor_data_format) <- c("Variable", colnames(cor_data$r))
   
+general <- paste(
+  "Computed $p$-values are corrected for multiple comparison using the correction by Benjamini \\\\& Hochberg (1995).",
+  "$\\\\lvert\\\\Delta\\\\rvert$ is the absolute difference for each distributional parameter between SPEEC and MLE.",
+  sep = " "
+  )
 cor_table <- nice_table(
   x = cor_data_format,
   digits = 2,
@@ -110,12 +117,39 @@ cor_table <- nice_table(
   font_size = 9
 )  |>
   kableExtra::footnote(
-    general = "Computed p-values are corrected for multiple comparison using the correction by \\\\cite{benjamini_controlling_1995}",
+    general = general,
     escape = FALSE,
     footnote_as_chunk = TRUE
   )
 
 cat(cor_table, file = here("tables/ml_speec_diff_cor.tex"))
+
+# Desriptives Statistics: Quartile of the parameter estiamtes ————————————————————————————————————————————————————————————————————————————————————————————————————
+
+caption_descr <- "Descriptive Statistics of the Discrepancy in the Distributional Parameter Estimates between SPEEC and MLE"
+table_descr_discr <- data_ml_speec |> 
+  select(starts_with("delta")) |>
+  pivot_longer(cols = everything(), names_to = "parameter") |>
+  group_by(parameter) |>
+  summarise(fn = list(fivenum2(value))) |>
+  unnest(fn) |>
+  mutate(parameter = case_match(parameter,
+  "delta_mu_d" ~ "$\\Delta_{\\mu_d}$",
+  "delta_mu_n" ~ "$\\Delta_{\\mu_n}$",
+  "delta_sigma2_d" ~ "$\\Delta_{\\sigma^2_d}$",
+  "delta_phi_n" ~ "$\\Delta_{\\phi_n}$"
+  )) |>
+  nice_table(caption = caption_descr, col_names = c("Parameter", paste0("$Q_", 0:4, "$")), digits = 2)
+
+cat(table_descr_discr, file = here("tables/table_descr_discrepancy_ml_speec.tex"))
+
+data_ml_speec |> 
+  select(starts_with("delta")) |>
+  pivot_longer(cols = everything(), names_to = "parameter") |>
+  group_by(parameter) |>
+  summarise(median = median(value), mean = mean(value)) |>
+  mutate(across(where(is.numeric), ~format_value(.x, digits = 2))) |>
+  write_rds(here("data/src/data_descr_discrepancy_ml_speec.rds"))
 
 # Pairwise comparison plots: ML vs SPEEC
 
@@ -267,3 +301,4 @@ ggsave(
   width = 10, height = 7, 
   bg = "white", dpi = 1000
   )
+

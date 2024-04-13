@@ -322,3 +322,11 @@ theme_comparison <- function(...) {
 r2_fcn <- function(x, dependent) cor(qlogis(x$model[[dependent]]), predict(x, type = "link"))**2
 
 
+fivenum2 <- function(x) {
+  fn <- fivenum(x)
+  names(fn) <- paste0("q", 0:4)
+  df <- as.data.frame(as.list(fn))
+  return(df)
+}
+
+
