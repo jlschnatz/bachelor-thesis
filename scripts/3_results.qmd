@@ -58,38 +58,56 @@ knitr::include_graphics(here("figures/combine_hypotheses.png"))
 <!--# Hypotheses I -->
 
 ```{r}
+# Load beta-regression model
 mod_h1 <- read_rds(here("data/src/model_betareg_h1.rds"))
-z <- coef(mod_h1) / sqrt(diag(vcov(mod_h1)))
-p_b1 <- pnorm(z[2], lower.tail = FALSE)
-tm1 <- tidy(mod_h1, conf.int = TRUE) |> 
-    filter(term == "z_rs") |>
-    mutate(p.value = if_else(term == "z_rs", p_b1, p.value)) 
- 
-string_h1 <- glue("$\\log$($OR$) = {format_value(tm1$estimate)}, $SE$ = {format_value(tm1$std.error)}, $z$ = {format_value(tm1$statistic)}, {format_ci(tm1$conf.low, tm1$conf.high)}, {format_p(tm1$p.value, name = '$p$')}")
+
+# APA-string (OR, CI, SE, z, p)
+b <- coef(mod_h1)
+se <- sqrt(diag(vcov(mod_h1)))
+z <- b / se
+q_crit <- qnorm(0.05) # because one-sided
+p <- pnorm(z, lower.tail = FALSE)
+lb <- b + se * q_crit 
+f_b <- format_value(exp(b[2]))
+f_ci <- format_ci(exp(lb[2]), Inf, ci_string = "$CI$")
+f_se <- format_value(se[2])
+f_z <- format_value(z)[2]
+f_p <- str_replace(format_p(p, name = "$p$"), "0\\.", "\\.")[2]
+string_h1 <- glue("$OR$ = {f_b}, {f_ci}, $SE$ = {f_se}, $z$ = {f_z}, {f_p}")
+
+# Calculate standardized parameters (OR), and SD of predictor
+std_or <- exp(standardise_parameters(mod_h1)$Std_Coefficient)[2]
+f_std_or <- format_value(std_or, digits = 2)
+data_meta <- read_csv(here("data/meta/processed/data_lindenhonekopp_proc.csv"))
+data_cor <- summarise(data_meta, z_rs = atanh(cor(n, d, method = "spearman")), .by = id_meta)
+sd_zrs <- format_value(sd(data_cor$z_rs), digits = 2)
+
+# Calculate R2 of model
+r2_h1 <- format_value(r2_fcn(mod_h1, "w_pbs"), digits = 3)
 
 ```
 
-Regarding hypotheses $\mathcal{H}_1$, panel A of figure 2 depicts the relationship between the Fisher z-transformed Spearman correlation coefficients $z_{r_S}$ of the association between effect size and sample size in each meta-analysis and the estimated publication bias parameter $\widehat{\omega}_{\text{PBS}}$. The observed slope was marginally positive but statistically non-significant, `r string_h1`. This indicates, that lower correlation coefficients were not significantly linked to lower publication bias parameter values $\widehat{\omega}_{\text{PBS}}$.
-
+Regarding hypothesis $\mathcal{H}_1$, panel A of figure 2 depicts the relationship between the Fisher *z*-transformed Spearman correlation coefficients $z_{r_S}$ of the association between effect size and sample size in each meta-analysis and the estimated publication bias parameter $\widehat{\omega}_{\text{PBS}}$. The observed slope was marginally positive but statistically non-significant, `r string_h1`. This indicates, that lower correlation coefficients were not statistally significantly associated to lower publication bias parameter values $\widehat{\omega}_{\text{PBS}}$. Additionally, to enhance the interpretability of the regression slope, we refitted the model with standardized values of $z_{r_S}$ to obtain standardized coefficients. For ever standard deviation by which the Fisher *z*-transformed correlation coefficient increases ($SD(z_{r_S})=$ `r sd_zrs`), the model only predicted an increase in the publication bias parameter $\widehat{\omega}_{\text{PBS}}$ by a factor of `r f_std_or`. In line with this, the general explanative power of the model as determined by the pseudo $R^2$ [@ferrari_beta_2004] was low, $R^2=$ `r r2_h1`.
+ 
 <!--# Hypotheses II -->
 
 ```{r}
+# Load beta-regression model
 mod_h2 <- read_rds(here("data/src/model_betareg_h2.rds"))
 
+# APA-string (OR, CI, SE, z, p)
 b <- coef(mod_h2)
 se <- sqrt(diag(vcov(mod_h2)))
 z <- b / se
 q_crit <- qnorm(0.95) # because one-sided
 p <- pnorm(z, lower.tail = TRUE)
-ub <- b + se * q_crit # only lower bound
-
+ub <- b + se * q_crit 
 f_b <- format_value(exp(b[2]))
-f_ci <- format_ci(0, exp(ub[2]))
+f_ci <- format_ci(0, exp(ub[2]), ci_string = "$CI$")
 f_se <- format_value(se[2])
 f_z <- format_value(z)[2]
 f_p <- str_replace(format_p(p, name = "$p$"), "0\\.", "\\.")[2]
-
-string_h2 <- glue("$OR$ = {f_b}, {f_ci}, $SE$ = {f_se}, $z$ = {f_z}, $p$ {f_p}")
+string_h2 <- glue("$OR$ = {f_b}, {f_ci}, $SE$ = {f_se}, $z$ = {f_z}, {f_p}")
 
 # standardized OR
 std_or <- exp(standardise_parameters(mod_h2)$Std_Coefficient)[2]
@@ -97,26 +115,28 @@ f_std_or <- format_value(std_or, digits = 3)
 
 # SD of Delta mu_d - mean_d
 data_parameters <- read_csv(here("data/optim/processed/data_optim_merged.csv"))
-data_meta <- read_csv(here("data/meta/processed/data_lindenhonekopp_proc.csv"))
 data_delta <-  data_meta |>
     group_by(id_meta) |>
     summarise(mean_d = mean(d)) |>
     inner_join(data_parameters, join_by(id_meta)) |>
     select(id_meta, mean_d, mu_d) |>
     mutate(delta = mu_d - mean_d) 
-
 sd_delta <- sd(data_delta$delta)
 f_sd_delta <- format_value(sd_delta)
 
-#Delta <- 0
-#(coef(mod_h2)[2] * (2*Delta + 1))
-#(diff(predict(mod_h2, newdata = data.frame(Delta = c(Delta, Delta + 1)), type = "link")))
+# R2 of model
+r2_ferrari_cribari <- format_value(r2_fcn(mod_h2, "w_pbs"), digits = 3)
 
-r2_ferrari_cribari <- format_value(cor(qlogis(mod_h2$model$w_pbs), predict(mod_h2, type = "link"))^2, digits = 3)
+Delta <- 2
+#(2*Delta + 1) * coef(mod_h2)[2]
+
+#(diff(predict(mod_h2, newdata = data.frame(Delta = c(Delta, Delta + 1)), type = "link")))
+#(2 * standardise_parameters(mod_h2)$Std_Coefficient[2] * Delta)
 
 ```
 
-Concerning $\mathcal{H}_2$, panel B of figure 1 depicts the relationship between estimated publication bias parameter as a function of the dfference between the average effect size $\widehat{\delta}$ and the estimated mean parameter of the Gaussian effect size distribution $\widehat{\mu}_d$. The corresponding estimated quadratic slope negative and statistically significant `r string_h2`. The standardized odds ratio of the quadratic slope was $OR$ = `r f_std_or` $SD(\Delta_{\widehat{\mu}_d,\widehat{\delta}})=$ `r f_sd_delta`. This means, that one standard deviation change in the predictor variable $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ leads to `r f_std_or` times reduction in $\omega_{\text{PBS}}$. The overall explained variation of $\omega_{\text{PBS}}$ by $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ as determined by the pseudo $R^2$ @ferrari_beta_2004 was low $R^2_{\text{pseudo}}=$ `r r2_ferrari_cribari`.
+Concerning $\mathcal{H}_2$, panel B of figure 1 depicts the relationship between estimated publication bias parameter as a function of the difference between the average effect size $\widehat{\delta}$ and the estimated mean parameter of the Gaussian effect size distribution $\widehat{\mu}_d$. The corresponding estimated quadratic slope was negative as indicated by the predicted concave inverse u-shaped line and statistically significant at an$\alpha$-level of 5%, `r string_h2`. We again calculated standardized coefficients for improved interpretability,$OR$ = `r f_std_or` $SD(\Delta_{\widehat{\mu}_d,\widehat{\delta}})=$ `r f_sd_delta`. Thus, one standard deviation increase in $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ corresponds to an increase in the odds of $\widehat{\omega}_{\text{PBS}}$ by $e^{0.997\cdot(2\Delta_{\widehat{\mu}_d,\widehat{\delta}}+1)}$. The overall explained variation of $\omega_{\text{PBS}}$ by $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ was low $R^2_{\text{pseudo}}=$ `r r2_ferrari_cribari`.
+
 
 <!--# Hypotheses III -->
 
@@ -152,7 +172,7 @@ tost <- tidy_tost |>
 string_tost <- glue("$t$({tost$df}) = {tost$t}, $SE$ = {tost$SE}, {format_p(tost$p.value, digits = 3, name = '$p$')}")
 ```
 
-In relation to hypothesis $\mathcal{H}_3$, the depiction in panel C of Figure 2 presents the mean discrepancy between the estimated mean parameter of the Gaussian effect size distribution and the average effect size, along with its corresponding confidence interval. Additionally, the null $t$-distributions employed for executing the Two One-Sided Tests (TOST) procedure against the equivalence bounds $\Delta=(-0.17, 0.17)$ are illustrated. Both one-sided paired t-tests were statistically significant, lower t-value test `r string_tost`. We additionally conducted a null hypothesis significance test to test the hypotheses that the true mean difference is exactly equal to zero. The mean difference significantly deviated from zero `r string_md` (effect size `r string_smd`), `r string_tt`. This indicates that, despite the significant null hypothesis significance test, the difference was too small to be considered meaningful according to the equivalence range $\Delta=(-0.17, 0.17)$ of the equivalence test.
+In relation to hypothesis $\mathcal{H}_3$, panel C of Figure 2 illustrate the mean difference $\Delta_{\widehat{\mu}_d, \widehat{\delta}}$ between the estimated mean parameter of the Gaussian effect size distribution $\widehat{\mu}_d$ and the average effect size $\widehat{\delta}$, along with its corresponding confidence interval. Additionally, the null $t$-distributions of the Two One-Sided Tests (TOST) against the equivalence bounds $\Delta=(-0.17, 0.17)$ are illustrated. We only report the results of the t-test with the lower *t*-value in the main results as both tests must be significant to reject the null hypothesis [@lakens_equivalence_2017]. Both one-sided paired t-tests were statistically significant, `r string_tost`. This is also indicated by 90% confidence interval lying within the equivalence range in panel C of Figure 2. We additionally conducted an exploratory null hypothesis significance test to test the point hypothesis that the true mean difference of $\Delta_{\widehat{\mu}_d, \widehat{\delta}}$ is exactly zero. The mean difference significantly deviated from zero `r string_md` (effect size `r string_smd`), `r string_tt`. This indicates that, despite the significant null hypothesis significance test, the difference was too small to be considered meaningful according to the equivalence range $\Delta=(-0.17, 0.17)$ of the equivalence test.
 
 <!--# Hypotheses IV -->
 
@@ -160,48 +180,71 @@ In relation to hypothesis $\mathcal{H}_3$, the depiction in panel C of Figure 2 
 
 mod_h4 <- read_rds(here("data/src/model_betareg_h4.rds"))
 
-z <- coef(mod_h4) / sqrt(diag(vcov(mod_h4)))
-p_b1 <- pnorm(z[2], lower.tail = FALSE)
-
-tm4 <- tidy(mod_h4, conf.int = TRUE) |>
-    filter(str_detect(term, "type_synthesis")) |>
-    mutate(estimate = if_else(component == "mean", plogis(estimate), estimate))  
+# Descriptives
 descr_h4 <- summarise(mod_h4$model, w_pbs = format_value(mean(w_pbs), digits = 2), .by = type_synthesis)
 m_ma <- filter(descr_h4, type_synthesis == "Meta-Analyses")$w_pbs
 m_mr <- filter(descr_h4, type_synthesis == "Multisite Replications")$w_pbs
 
-string_h4 <- glue("$\\log$($OR$) = {format_value(tm4$estimate)}, $SE$ = {format_value(tm4$std.error)}, $z$ = {format_value(tm4$statistic)}, {format_ci(tm4$conf.low, tm4$conf.high)}, {format_p(tm4$p.value, name = '$p$')}")
+# APA-string (OR, CI, SE, z, p)
+b <- coef(mod_h4)
+se <- sqrt(diag(vcov(mod_h4)))
+z <- b / se
+q_crit <- qnorm(0.05) # because one-sided
+p <- pnorm(z, lower.tail = FALSE)
+lb <- b + se * q_crit 
+f_b <- format_value(exp(b[2]))
+f_ci <- format_ci(exp(lb[2]), Inf)
+f_se <- format_value(se[2])
+f_z <- format_value(z)[2]
+f_p <- str_replace(format_p(p, name = "$p$"), "0\\.", "\\.")[2]
+string_h4 <- glue("$OR$ = {f_b}, {f_ci}, $SE$ = {f_se}, $z$ = {f_z}, $p$ {f_p}")
 
+# Calculate R2 of model
+r2_h1 <- format_value(r2_fcn(mod_h4, "w_pbs"), digits = 3)
 
 ```
 
-Finally, regarding hypothesis $\mathcal{H}_4$, panel D shows a comparison between the estimated publication bias parameters for typical meta-analysis in comparison to multisite replication studies. Already descriptively, contrary to our expectation, the mean of the estimated publication bias values $\omega_{\text{PBS}}$ of the normal meta-analysis subset is greater than the mean of the multisite replication subset ($M_{\text{MA}}=$ `r m_ma`; $M_{\text{MR}}=$ `r m_mr`). In line with this, slope of the beta regression is non-significant, `r string_h4`, as also indicated by the overlappping confidence interval if the marginal means in panel D.
+Finally, regarding hypothesis $\mathcal{H}_4$, panel D of Figure 2 illustrates the comparison between the estimated publication bias parameters for typical meta-analysis in comparison to multisite replication studies / registered reports. Already descriptively, contrary to our expectation that the estimated puhblication bias parameters for multisite replication studies (MR) would be greater (i.e., lower publication bias) than for regular meta-analysis (MA), the mean of the estimated publication bias values $\omega_{\text{PBS}}$ of the regular meta-analysis subset is greater than the mean of the multisite replication subset ($M_{\text{MA}}=$ `r m_ma`; $M_{\text{MR}}=$ `r m_mr`). In line with this, slope of the beta regression was non-significant, `r string_h4`, as also indicated by the overlappping confidence interval of the predicted marginal means in panel D.
 
-\newpage
+## Diagnostic Evaluation of Parameter Estimation Challenges
 
-## Diagnostic Checks
+1. Question I: What is the extent of discrepancy between ML and SPEEC in the estimation of the distributional parameters?
+2. Question II: How consistent is the discprenancy between ML and SPEEC across the four distributional parameters?
+3. Question III:  Is the discprenancy between ML and SPEEC in the distributional parameters associated with sample size of multisize replication studies *k* (number of replications)?
+4. Question IV: Is the discprenancy between ML and SPEEC in the distributional parameters associated with the publication bias parameter?
 
-```{r tab-ml-speec}
-#| results: asis
+Secondary empirical data, we don´t know the true values for the empirical data. However, because we know that publication bias should be inherently absent by design in multisite replication studies / registered reports, thus the four distributional parameters ($\mu_d$, $\sigma^2_d$, $\mu_n$, $\phi_n$) within the SPEEC approach cannot be biased due to publication bias (e.g., the mean and standard deviation of the normal effect size distribution).
 
-table_ml_speec <- read_tex(here("tables/ml_speec_diff_cor.tex"))
-cat(table_ml_speec, sep = "\n")
-```
+We used the BFGS optimization algorithm the obtain the ML estimates for the mean $\mu_nd$ and variance $\sigma^2_d$ of the Gaussian effect size distribution and mean $\mu_n$ and dispersion $\phi_n$ of the Negative-Binomial sample size distribution.
+
+Figure 3 visually summarises the results of the analysis of  the divergence of the distributional parameters estimated via SPEEC in comparison to MLE. The diagonal line indicates perfect alignment between ML and SPEEC in the parameter estimation. Values below the diagonal  indicate greater values for ML in comparison the SPEEC and vice versa for values above the diagonal. 
+
+Panel A1 reiterates the results of the analysis of $\mathcal{H}_1$. Overall, low discrepancy between the ML and SPEEC of approach in estimating the mean of the Gaussian effect size distribution (so low that it can be considered unmeaningful according to the equivalence test). 
+
+However, the other the other panels clearly show a different result. 
+
 
 ```{=latex}
 \begin{figure}[H]
-\caption{Scatter Plot comparing the estimated Distributional Parameters via SPEEC  vs. Maximum Likelihood\label{fig:ml-speec-comparison}}
+\caption{Scatter Plot comparing the estimated Distributional Parameters via SPEEC and Maximum Likelihood\label{fig:ml-speec-comparison}}
 ```
 ```{r ml-speec-cor}
 #| out-width: 100%
 #| fig-align: center
 knitr::include_graphics(here("figures/ml_speec_comparison.png"))
 ```
-
 ```{=latex}
 \begingroup
 \scriptsize
 \textit{Note.} \textbf{A1}. Comparison of estimated mean parameter $\mu_d$ from Gaussian effect size distribution. \textbf{A2}. Comparison of estimated variance parameter $\sigma_d^2$ of Gaussian effect size distribution. Axes and colorbar are log (base 10) transformed. \textbf{B1}. Comparison of mean parameter $\mu_n$ of Negative-Binomial sample size distribution \textbf{B2}. Comparison of dispersion parameter $\phi_n$ of Negative-Binomial sample size distribution. Axes and colorbar are log (base 10) transformed.
 \endgroup
 \end{figure}
+```
+
+
+```{r tab-ml-speec}
+#| results: asis
+
+table_ml_speec <- read_tex(here("tables/ml_speec_diff_cor.tex"))
+cat(table_ml_speec, sep = "\n")
 ```

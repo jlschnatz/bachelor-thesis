@@ -1,5 +1,5 @@
 project:
-  output-dir: "_manuscript"
+  output-dir: "manuscript"
   execute-dir: project
   render: 
     - scripts/0_main.qmd
@@ -18,9 +18,9 @@ format:
         department: "Faculty 05: Psychology and Sports Sciences" 
         city: "Department of Psychological Methods with Interdisciplinary Focus"
     documentclass: scrartcl
-    include-in-header: _tex/header.tex
+    include-in-header: tex/header.tex
     template-partials: 
-      - _tex/before-body.tex 
+      - tex/before-body.tex 
     link-citations : true
     urlcolor       : black
     linkcolor      : black
@@ -31,10 +31,3 @@ format:
     bibliography: references.bib
     csl: apa.csl
     citecolor: black
-    #mainfont: CMU Bright
-    #mathfont: CMU Serif
-    
-
-
-
-

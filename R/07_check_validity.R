@@ -35,7 +35,7 @@ id_mr <- unique(filter(data_meta, type_synthesis == "mr")$id_meta)
 ## d ~ N(mu_d, sigma2_d)
 ml_optim1 <- data_meta |>
   group_by(id_meta) |>
-  summarise(norm = list(estimate_norm(c(0, 1), d))) |>
+  summarise(norm = list(suppressWarnings(estimate_norm(c(0, 1), d)))) |>
   mutate(norm = map(norm, tidy)) |>
   unnest(norm) |>
   mutate(parameter = case_match(parameter, "parameter1" ~ "ml_mu_d", "parameter2" ~ "ml_sigma2_d")) |>
@@ -44,7 +44,7 @@ ml_optim1 <- data_meta |>
 ## n ~ NB(phi_n, mu_n)
 ml_optim2 <- data_meta |>
   group_by(id_meta) |>
-  summarise(nb = list(estimate_nb(c(10, 10), n))) |>
+  summarise(nb = list(suppressWarnings(estimate_nb(c(10, 10), n)))) |>
   mutate(nb = map(nb, tidy)) |>
   unnest(nb) |>
   mutate(parameter = case_match(parameter, "parameter1" ~ "ml_phi_n", "parameter2" ~ "ml_mu_n")) |>
@@ -106,10 +106,14 @@ colnames(cor_data_format) <- c("Variable", colnames(cor_data$r))
 cor_table <- nice_table(
   x = cor_data_format,
   digits = 2,
-  caption = "Pairwise Pearson Correlations between Difference of ML and SPEEC Distributional Parameters, \\break Publication Bias Parameter and Meta-Analysis Size",
-  footnote = "T",
+  caption = "Pairwise Pearson Correlations between Difference of ML and SPEEC Distributional Parameters, Publication Bias Parameter and Meta-Analysis Size",
   font_size = 9
-) 
+)  |>
+  kableExtra::footnote(
+    general = "Computed p-values are corrected for multiple comparison using the correction by \\\\cite{benjamini_controlling_1995}",
+    escape = FALSE,
+    footnote_as_chunk = TRUE
+  )
 
 cat(cor_table, file = here("tables/ml_speec_diff_cor.tex"))
 

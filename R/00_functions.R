@@ -314,3 +314,11 @@ theme_comparison <- function(...) {
       ...
     )
 }
+
+#' Calculate R2 statistic from Ferrari & Cribari-Neto (2004)
+#' @x Object of class betareg
+#' @dependent Character string with name of dependent variable
+#' @return A numeric scalar
+r2_fcn <- function(x, dependent) cor(qlogis(x$model[[dependent]]), predict(x, type = "link"))**2
+
+

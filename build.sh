@@ -1,10 +1,21 @@
 #!/bin/bash
 
+# render project
+DIR="manuscript"
+AUTHOR="schnatz"
+rm -r ${DIR}
+mkdir ${DIR}
 quarto render --quiet
-mv _manuscript/scripts/*.pdf _manuscript
-rmdir _manuscript/scripts
-DIR="_manuscript/thesis_bachelor_schnatz.pdf"
-mv _manuscript/0_main.pdf $DIR
-rm -r _manuscript/figures
 
-echo "Output created in $DIR"
+# remove unnecessary folders that are rendered
+mv ${DIR}/scripts/*.pdf ${DIR}
+rm -r ${DIR}/scripts
+rm -r ${DIR}/figures
+
+# rename pdf with current date and time
+DATE=$(date +"%d-%m-%Y")
+TIME=$(date +"%H-%M")
+FILENAME="thesis-${AUTHOR}_${TIME}_${DATE}.pdf"
+mv ${DIR}/*.pdf "${DIR}/${FILENAME}"
+
+echo "Output created in ${DIR}/${FILENAME}"
