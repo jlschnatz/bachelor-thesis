@@ -3,8 +3,8 @@
 \caption{Beta Regression Results for $\mathcal{H}_1$}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{12}{14}\selectfont
-\begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}}
 \toprule
 Term & Estimate & $CI$ (95\%) & $SE$ & $z$ & $p$\\
 \midrule
@@ -16,7 +16,11 @@ Term & Estimate & $CI$ (95\%) & $SE$ & $z$ & $p$\\
 \multicolumn{6}{l}{\textbf{Precision model component: $\phi$}}\\
 \\[-1.5ex]\hspace{1em}$b_0$ & $5.41^b$ & {}[3.73, 7.84] & 0.19 & 8.89 & < .001\\
 \bottomrule
-\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: } $LL$ = 129.28, $MAE$ = 0.22, $AIC$ = -252.57, $BIC$ = -243.54, $R^2$ = 0.003}\\
-\multicolumn{6}{l}{\rule{0pt}{1em}\textsuperscript{a} $OR$ \textsuperscript{b} Identity coefficient}\\
-\end{tabu}}
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\item \textit{Note.} $LL$ = 129.28, $MAE$ = 0.22, $AIC$ = -252.57, $BIC$ = -243.54, $R^2$ = 0.003
+\item[a] $OR$
+\item[b] Identity coefficient
+\end{tablenotes}
+\end{threeparttable}}
 \end{table}

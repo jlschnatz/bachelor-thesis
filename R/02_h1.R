@@ -41,7 +41,6 @@ summary(mod_h1)
 
 write_rds(mod_h1, here("data/src/model_betareg_h1.rds"))
 
-
 # Generate scatter plot with model predictions —————————————————————————————————————————————————————————————————————————
 predictions(mod_h1, by  = "z_rs", type = "response", conf_level = 0.95) |> 
   ggplot(aes(z_rs, y = estimate)) +
@@ -103,18 +102,18 @@ data_table <- tidy(mod_h1, conf.int = TRUE) |>
   select(-component) 
   
 table_h1 <- nice_table(
-  x = data_table, 
+  x = data_table,
   caption = "Beta Regression Results for $\\mathcal{H}_1$", 
   digits = 2,
-  col_names = c("Term", "Estimate", "$CI$ (95\\%)", "$SE$", "$z$", "$p$")
-  ) |> 
-  group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
-  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
-  footnote(
-    general = report_fit(mod_h1, "w_pbs"),
-    alphabet = c("$OR$", "Identity coefficient"),
-    escape = FALSE,
-    footnote_as_chunk = TRUE
-  )
+  col_names = c("Term", "Estimate", "$CI$ (95\\%)", "$SE$", "$z$", "$p$"),
+  general_fn = report_fit(mod_h1, "w_pbs"),
+  alphabet_fn = c("$OR$", "Identity coefficient"),
+  remove_para = FALSE
+) |>
+group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
+group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
+str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
+
+
 
 cat(table_h1, file = here("tables/h1_table.tex"))

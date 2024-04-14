@@ -158,15 +158,15 @@ For all four hypotheses, we will establish the smallest effect size of interest 
 #| results: asis
 #| echo: false
 
-df_lims <- readRDS(here::here("data/src/dist_param_range.rds"))
-nice_table(
-  x = df_lims, 
-  caption = "Estimated Parameters for the Distribution of Effect Size and Sample Size from each Meta-Analysis via ML", 
-  footnote = "Test", 
-  col_names = c("Parameter", "Minimum", "Maximum")
-  ) |> 
-  kableExtra::group_rows("Effect Size", 1, 2) |> 
-  kableExtra::group_rows("Sample Size", 3, 4) 
+#df_lims <- readRDS(here::here("data/src/dist_param_range.rds"))
+#nice_table(
+#  x = df_lims, 
+#  caption = "Estimated Parameters for the Distribution of Effect Size and Sample Size from each Meta-Analysis via ML", 
+#  footnote = "Test", 
+#  col_names = c("Parameter", "Minimum", "Maximum")
+#  ) |> 
+#  kableExtra::group_rows("Effect Size", 1, 2) |> 
+#  kableExtra::group_rows("Sample Size", 3, 4) 
 
 ```
 

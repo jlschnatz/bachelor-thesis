@@ -17,7 +17,6 @@ showtext_auto()
 data_meta <- read_csv(here("data/meta/processed/data_lindenhonekopp_proc.csv"))
 data_optim <- read_csv(here("data/optim/processed/data_optim_merged.csv"))
 
-
 # Beta-regression model specification: w_pbs ~ Delta**2 ————————————————————————————————————————————————————————————————————
 data_model <- data_meta |> 
   group_by(id_meta) |> 
@@ -93,17 +92,16 @@ data_table <- tidy(mod_h2, conf.int = TRUE) |>
   select(-component) 
 
 table_h2 <- nice_table(
-  x = data_table, 
-  caption = "Beta Regression Results for $\\mathcal{H}_2$", 
-  digits = 2, 
-  col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$")
-  ) |> 
+  x = data_table,
+  caption = "Beta Regression Results for $\\mathcal{H}_2$",
+  digits = 2,
+  col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$"),
+  alphabet_fn = c("$OR$", "Identity"),
+  general_fn = report_fit(mod_h2, "w_pbs")
+) |>
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
-  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
-  footnote(
-    alphabet = c("$OR$", "Identity"),
-    general = report_fit(mod_h2, "w_pbs")
-  )
+  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") 
+
 
 cat(table_h2, file = here("tables/h2_table.tex"))  
 
@@ -126,16 +124,3 @@ model_comp <- lrtest(mod_h2, mod_h2_exploratory) |>
   mutate(across(everything(), as.character)) |> 
   mutate(across(everything(), ~replace_na(.x, "")))  |> 
   select(-df)
-
-# Save Results
-data_table_comparison <- nice_table(
-  x = model_comp,
-  caption = "Model comparison",
-  digits = 3,
-  col_names = c("Model", "$df$", "$\\log(\\mathcal{L})$", "$\\chi^2$", "$p$-value"),
-  footnote = "Test"
-)
-
-cat(data_table_comparison, file = here("tables/h2_table_comparison.tex"))
-
-

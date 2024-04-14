@@ -3,19 +3,23 @@
 \caption{Pairwise Pearson Correlations between Difference of ML and SPEEC Distributional Parameters, Publication Bias Parameter and Meta-Analysis Size}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{9}{11}\selectfont
-\begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
+\begin{threeparttable}
+\begin{tabular}[t]{lccccc}
 \toprule
-Variable & $\omega_{\text{PBS}}$ & $\Delta_{\mu_d}$ & $\Delta_{\sigma^2_d}$ & $\Delta_{\phi_n}$ & $\Delta_{\mu_n}$ & $k$\\
+Variable & $\omega_{\text{PBS}}$ & $\lvert\Delta_{\mu_d}\rvert$ & $\lvert\Delta_{\sigma^2_d}\rvert$ & $\lvert\Delta_{\phi_n}\rvert$ & $\lvert\Delta_{\mu_n}\rvert$\\
 \midrule
-$\omega_{\text{PBS}}$ &  &  &  &  &  & \\
-$\Delta_{\mu_d}$ & -0.44***\break [-0.61, -0.23] &  &  &  &  & \\
-$\Delta_{\sigma^2_d}$ & -0.37**\break [-0.56, -0.14] & 0.67***\break [0.54, 0.76] &  &  &  & \\
-$\Delta_{\phi_n}$ & 0.08\break [-0.18, 0.33] & -0.06\break [-0.31, 0.2] & -0.05\break [-0.3, 0.21] &  &  & \\
-$\Delta_{\mu_n}$ & 0.04\break [-0.22, 0.3] & 0.14\break [-0.12, 0.38] & 0.05\break [-0.22, 0.3] & -0.05\break [-0.3, 0.21] &  & \\
+$\omega_{\text{PBS}}$ &  &  &  &  & \\
+$\lvert\Delta_{\mu_d}\rvert$ & -0.44*** [-0.61, -0.23] &  &  &  & \\
+$\lvert\Delta_{\sigma^2_d}\rvert$ & -0.37** [-0.56, -0.14] & 0.67*** [0.54, 0.76] &  &  & \\
+$\lvert\Delta_{\phi_n}\rvert$ & 0.08 [-0.18, 0.33] & -0.06 [-0.31, 0.2] & -0.05 [-0.3, 0.21] &  & \\
+$\lvert\Delta_{\mu_n}\rvert$ & 0.04 [-0.22, 0.3] & 0.14 [-0.12, 0.38] & 0.05 [-0.22, 0.3] & -0.05 [-0.3, 0.21] & \\
 \addlinespace
-$k$ & -0.14\break [-0.38, 0.12] & 0.04\break [-0.22, 0.29] & 0.15\break [-0.11, 0.39] & -0.18\break [-0.41, 0.08] & 0\break [-0.25, 0.26] & \\
+$k$ & -0.14 [-0.38, 0.12] & 0.04 [-0.22, 0.29] & 0.15 [-0.11, 0.39] & -0.18 [-0.41, 0.08] & 0 [-0.25, 0.26]\\
 \bottomrule
-\multicolumn{7}{l}{\rule{0pt}{1em}\textit{Note: } Computed p-values are corrected for multiple comparison using the correction by \cite{benjamini_controlling_1995}}\\
-\end{tabu}}
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Note.} Computed $p$-values are corrected for multiple comparison using the correction by Benjamini \& Hochberg (1995). $\lvert\Delta\rvert$ is the absolute difference for each distributional parameter between SPEEC and MLE.
+\item[*] Significance *** $p$ < .001; ** $p$ < .01; * $p$ < .05
+\end{tablenotes}
+\end{threeparttable}}
 \end{table}

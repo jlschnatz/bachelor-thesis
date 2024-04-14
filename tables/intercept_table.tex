@@ -3,8 +3,8 @@
 \caption{Intercept Beta Regression Model Comprising the Full Dataset}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{12}{14}\selectfont
-\begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}}
 \toprule
 Estimate & Probability & $SE$ & $z$ & $p$ & $CI$\\
 \midrule
@@ -15,7 +15,11 @@ Estimate & Probability & $SE$ & $z$ & $p$ & $CI$\\
 \multicolumn{6}{l}{\textbf{Precision Component Intercept $\phi$}}\\
 \hspace{1em}$1.56^b$ &  & 0.15 & 10.72 & < .001 & {}[1.27, 1.84]\\
 \bottomrule
-\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: } SE: standard error; CI: 95\% confidence interval}\\
-\multicolumn{6}{l}{\rule{0pt}{1em}\textsuperscript{a} $\log$($OR$) \textsuperscript{b} Identity}\\
-\end{tabu}}
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Note.} SE: standard error; CI: 95\% confidence interval
+\item[a] $\log$($OR$)
+\item[b] Identity
+\end{tablenotes}
+\end{threeparttable}}
 \end{table}

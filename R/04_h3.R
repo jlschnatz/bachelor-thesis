@@ -1,5 +1,5 @@
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
-if(!"pacman" %in% installed.packages()) {install.packages("pacman")}
+if(!"pacman" %in% installed.packages()) install.packages("pacman")
 pacman::p_load(sysfonts, showtext, here, tidyverse, TOSTER, latex2exp,  systemfonts, kableExtra, ggrepel, sjPlot)
 source(here("R/00_functions.R"))
 
@@ -54,13 +54,9 @@ table_h3 <- nice_table(
   x = data_table,
   caption = "Two One-Sided Tests Result for $\\mathcal{H}_3$", 
   digits = 2,
-  col_names = c("Type", "$t$", "$SE$", "$df$", "$p$")
-  ) |>
-  footnote(
-    general = "NHST: Null Hypothesis Significance Test, TOST: Two One-Sided Test",
-    footnote_as_chunk = TRUE,
-    escape = FALSE
-  )
+  col_names = c("Type", "$t$", "$SE$", "$df$", "$p$"),
+  general_fn = "NHST: Null Hypothesis Significance Test, TOST: Two One-Sided Test"
+  ) 
 
 cat(table_h3, file = here("tables/h3_table.tex"))
 

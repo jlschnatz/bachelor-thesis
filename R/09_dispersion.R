@@ -22,18 +22,12 @@ table_intercept <- tidy(mod, conf.int = TRUE) |>
     select(-starts_with("conf"), -c(component, term)) |>
     nice_table(
         caption = "Intercept Beta Regression Model Comprising the Full Dataset",
-        col_names = c("Estimate", "Probability", "$SE$", "$z$", "$p$", "$CI$")
+        col_names = c("Estimate", "Probability", "$SE$", "$z$", "$p$", "$CI$"),
+        general_fn = "SE: standard error; CI: 95\\\\% confidence interval",
+        alphabet_fn = c("$\\\\log$($OR$)", "Identity")
     ) |>
     kableExtra::group_rows("Mean Component Intercept $\\mu$", 1, 1, escape = FALSE) |>
-    kableExtra::group_rows("Precision Component Intercept $\\phi$", 2, 2, escape = FALSE) |>
-    kableExtra::footnote(
-        general = "SE: standard error; CI: 95\\\\% confidence interval",
-        alphabet = c("$\\\\log$($OR$)", "Identity"), 
-        escape = FALSE, 
-        footnote_order = c("general", "alphabet"),
-        footnote_as_chunk = TRUE,
-        fixed_small_size = TRUE
-        )
+    kableExtra::group_rows("Precision Component Intercept $\\phi$", 2, 2, escape = FALSE) 
 
 cat(table_intercept, file = here("tables/intercept_table.tex"))
 

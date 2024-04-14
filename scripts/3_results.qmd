@@ -208,20 +208,46 @@ Finally, regarding hypothesis $\mathcal{H}_4$, panel D of Figure 2 illustrates t
 
 ## Diagnostic Evaluation of Parameter Estimation Challenges
 
-1. Question I: What is the extent of discrepancy between ML and SPEEC in the estimation of the distributional parameters?
-2. Question II: How consistent is the discprenancy between ML and SPEEC across the four distributional parameters?
-3. Question III:  Is the discprenancy between ML and SPEEC in the distributional parameters associated with sample size of multisize replication studies *k* (number of replications)?
-4. Question IV: Is the discprenancy between ML and SPEEC in the distributional parameters associated with the publication bias parameter?
+
+```{r}
+discr_ml_speec <- as.data.frame(read_rds(here("data/src/data_descr_discrepancy_ml_speec.rds")))
+rownames(discr_ml_speec) <- discr_ml_speec$parameter
+
+str_discr <- function(x, parameter) {
+    x$parameter <- dplyr::case_match(x$parameter,
+    "delta_mu_d" ~ "({\\Delta_{\\mu_d}})",
+    "delta_sigma2_d" ~ "({\\Delta_{\\sigma^2_d}})",
+    "delta_phi_n" ~ "({\\Delta_{\\phi_n}})",
+    "delta_mu_n" ~ "({\\Delta_{\\mu_n}})"
+    )
+    subs <- x[parameter, ]
+    glue::glue('$M{subs$parameter}$ = {subs$mean}, $Mdn{subs$parameter}$ = {subs$median}')
+}
+
+```
+
+1. What is the extent of discrepancy between SPEEC and MLE in the estimation of the distributional parameters?
+2. How consistent is the discprenancy between SPEEC and MLE across the four distributional parameters?
+3. Is the discprenancy between SPEEC and MLE in the distributional parameters associated with sample size of multisize replication studies *k* (number of replications)?
+4. Is the discprenancy between SPEEC and MLE in the distributional parameters associated with the publication bias parameter?
 
 Secondary empirical data, we don´t know the true values for the empirical data. However, because we know that publication bias should be inherently absent by design in multisite replication studies / registered reports, thus the four distributional parameters ($\mu_d$, $\sigma^2_d$, $\mu_n$, $\phi_n$) within the SPEEC approach cannot be biased due to publication bias (e.g., the mean and standard deviation of the normal effect size distribution).
 
-We used the BFGS optimization algorithm the obtain the ML estimates for the mean $\mu_nd$ and variance $\sigma^2_d$ of the Gaussian effect size distribution and mean $\mu_n$ and dispersion $\phi_n$ of the Negative-Binomial sample size distribution.
+We used the BFGS optimization algorithm the obtain the ML estimates for the mean $\mu_nd$ and variance $\sigma^2_d$ of the Gaussian effect size distribution and mean $\mu_n$ and dispersion $\phi_n$ of the Negative-Binomial sample size distribution. Additionally, we calculated the mean and median discrepancy between SPEEC and MLE descriptively to assess the average difference between the two estimation methods.
 
-Figure 3 visually summarises the results of the analysis of  the divergence of the distributional parameters estimated via SPEEC in comparison to MLE. The diagonal line indicates perfect alignment between ML and SPEEC in the parameter estimation. Values below the diagonal  indicate greater values for ML in comparison the SPEEC and vice versa for values above the diagonal. 
+Figure 3 provides a visual summary of the analysis comparing the distributional parameters estimated by the SPEEC method against those estimated by Maximum Likelihood Estimation (MLE). The diagonal line signifies perfect alignment between MLE and SPEEC estimates. Values below the diagonal indicate higher values for MLE compared to SPEEC, while values above the diagonal indicate the opposite.
 
-Panel A1 reiterates the results of the analysis of $\mathcal{H}_1$. Overall, low discrepancy between the ML and SPEEC of approach in estimating the mean of the Gaussian effect size distribution (so low that it can be considered unmeaningful according to the equivalence test). 
+Panel A1 reiterates the findings of the analysis of $\mathcal{H}_3$, suggesting a small discrepancy between the two methods in estimating the mean of the Gaussian effect size distribution (`r str_discr(discr_ml_speec, "delta_mu_d")`). This discrepancy is deemed practically negligible according to the equivalence test. However, the remaining panels indicate contrasting outcomes.
 
-However, the other the other panels clearly show a different result. 
+Panel A2 illustrates a systematic discrepancy in estimating the variance parameter of the Gaussian effect distribution between SPEEC and MLE (`r str_discr(discr_ml_speec, "delta_sigma2_d")`). 
+
+This discrepancy is evident as most points are positioned above the diagonal. Notably, the overestimation in SPEEC increases exponentially with rising variance estimates from MLE, displaying substantial heteroscedasticity.
+
+from the two approaches (`r str_discr(discr_ml_speec, "delta_sigma2_d")`). This is indicates as most points are located in above the diagonal. However, not only overestimation, variance estimated by MLE increases, the overestimation in SPEEC increases following an exponetial looking trend and displaying substantial heterscedasticity (increasing variance as the estimate of ML for parameter increases).
+
+Similarly, Panel B1 also illustrates a systematic overestimation of the mean parameter of the Negative-Binomial sample size distribution by SPEEC in comparison to MLE (`r str_discr(discr_ml_speec, "delta_mu_n")`), which intensifies with higher mean parameter estimates from MLE.
+
+Panel B2 shows that the SPEEC approach generally understimates dispersion parameter of the sample size distribution in comparison to the ML estimate (`r str_discr(discr_ml_speec, "delta_phi_n")`) and also furthermore indicates a systematic relationship in the misestimation.
 
 
 ```{=latex}
@@ -241,10 +267,23 @@ knitr::include_graphics(here("figures/ml_speec_comparison.png"))
 \end{figure}
 ```
 
-
 ```{r tab-ml-speec}
 #| results: asis
 
 table_ml_speec <- read_tex(here("tables/ml_speec_diff_cor.tex"))
 cat(table_ml_speec, sep = "\n")
 ```
+
+Pairwise correlational analysis of the absolute absolute difference in the parameter estimates from the two estimation methods together with additional variables: publication bias parameter $\widehat{\omega}_{\text{PBS}}$ and the total number of primary replication studies $k$ within each multisite replication project or registered report.
+
+Table XX summarises the results of the correlational analysis.
+
+Strong positive correlation between absolute difference between ML and SPEEC estimation of mean parameter and variance parameter of the Gaussian effect size distribution.This means that as the discrepancy between SPEEC and ML increases for mean parameter $\mu_d$, the discprencany also increases for the the variance parameter $\sigma^2_d$ of the effect size distribution.
+
+Moreover strong negative correlations between publication bias parameter $\omega_{\text{PBS}}$ and divergence of between ML and SPEEC of the mean and variance parameter of the effect size distribution.
+
+As the discrepancy between ML and SPEEC estimation increases for both mean $\lvert\Delta_{\mu_d}\rvert$ and variance parameter $\lvert\Delta_{\sigma^2_d}\rvert$, the publication bias parameter $\omega_{\text{PBS}}$ decreases, indicating more severe predicted publication bias.
+
+Notably, no distributional parameter (divergence between ML and SPEEC) was significantly correlated with the total number of primary replications $k$.
+
+No other significant correlations 

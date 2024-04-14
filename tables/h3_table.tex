@@ -3,8 +3,8 @@
 \caption{Two One-Sided Tests Result for $\mathcal{H}_3$}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{12}{14}\selectfont
-\begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{3.2cm}}
 \toprule
 Type & $t$ & $SE$ & $df$ & $p$\\
 \midrule
@@ -12,6 +12,9 @@ NHST & -2.36 & 0.009 & 56 & .022\\
 TOST $\Delta < \Delta_L$ & 17.30 & 0.009 & 56 & < .001\\
 TOST $\Delta > \Delta_L$ & -22.02 & 0.009 & 56 & < .001\\
 \bottomrule
-\multicolumn{5}{l}{\rule{0pt}{1em}\textit{Note: } NHST: Null Hypothesis Significance Test, TOST: Two One-Sided Test}\\
-\end{tabu}}
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Note.} NHST: Null Hypothesis Significance Test, TOST: Two One-Sided Test
+\end{tablenotes}
+\end{threeparttable}}
 \end{table}

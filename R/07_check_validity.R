@@ -97,30 +97,64 @@ p_star <- matrix(
     ), nrow = 6, ncol = 6
   )
 
-cor_data_format <- matrix(paste0(round(cor_data$r, 2), p_star,  "\\break [", round(lb_cor, 2), ", ", round(ub_cor, 2), "]"), 6, 6) |> 
+cor_data_format <- matrix(paste0(round(cor_data$r, 2), p_star,  " [", round(lb_cor, 2), ", ", round(ub_cor, 2), "]"), 6, 6) |> 
   as_cordf() |> 
   shave(upper = TRUE) |> 
   fashion()  
 
 cor_data_format$term <- colnames(cor_data$r)
 colnames(cor_data_format) <- c("Variable", colnames(cor_data$r))
+cor_data_format <- cor_data_format[, -ncol(cor_data_format)]
   
-general <- paste(
+general <-  paste(
   "Computed $p$-values are corrected for multiple comparison using the correction by Benjamini \\\\& Hochberg (1995).",
   "$\\\\lvert\\\\Delta\\\\rvert$ is the absolute difference for each distributional parameter between SPEEC and MLE.",
   sep = " "
   )
+caption <- "Pairwise Pearson Correlations between Difference of ML and SPEEC Distributional Parameters, Publication Bias Parameter and Meta-Analysis Size"
+#cor_table <- nice_table(
+#  x = cor_data_format,
+#  digits = 2,
+#  caption = caption,
+#  font_size = 9
+#)  |>
+#  kableExtra::footnote(
+#    general = general,
+#    escape = FALSE,
+#    footnote_as_chunk = TRUE,
+#    fixed_small_size = FALSE
+#  ) 
+
 cor_table <- nice_table(
   x = cor_data_format,
   digits = 2,
-  caption = "Pairwise Pearson Correlations between Difference of ML and SPEEC Distributional Parameters, Publication Bias Parameter and Meta-Analysis Size",
-  font_size = 9
-)  |>
-  kableExtra::footnote(
-    general = general,
-    escape = FALSE,
-    footnote_as_chunk = TRUE
-  )
+  caption = caption,
+  general_fn = general,
+  symbol_fn = c("Significance *** $p$ < .001; ** $p$ < .01; * $p$ < .05")
+)
+
+#cor_table <- knitr::kable(
+#  x = cor_data_format, 
+#  format = "latex", 
+#  threeparttable = TRUE, 
+#  booktabs = TRUE, 
+#  caption = caption, 
+#  escape = FALSE,
+#  align = c("lccccc")
+#  ) |>
+#kableExtra::kable_styling(latex_options= c("scale_down", "HOLD_position")) |>
+#kableExtra::footnote(
+#    general = general,
+#    symbol = c("Significance *** $p$ < .001; ** $p$ < .01; * $p$ < .05"),
+#    escape = FALSE,
+#    footnote_as_chunk = TRUE,
+#    threeparttable = TRUE,
+#    general_title = "Note. ",
+#  ) |>
+#  str_remove_all(string = _, pattern = "\\[para\\]")
+
+#cat(str_remove_all(cor_table, "\\[para\\]"))
+
 
 cat(cor_table, file = here("tables/ml_speec_diff_cor.tex"))
 
@@ -147,8 +181,12 @@ data_ml_speec |>
   select(starts_with("delta")) |>
   pivot_longer(cols = everything(), names_to = "parameter") |>
   group_by(parameter) |>
-  summarise(median = median(value), mean = mean(value)) |>
-  mutate(across(where(is.numeric), ~format_value(.x, digits = 2))) |>
+  summarise(
+    mean = mean(value), median = median(value), 
+    iqr = diff(quantile(value, c(0.25, 0.75))),
+    q10 = quantile(value, .1), q25 = quantile(value, .25), q75 = quantile(value, .75), q90 = quantile(value, .9)
+    ) |>
+  mutate(across(where(is.numeric), \(x) round(x, 2))) |>
   write_rds(here("data/src/data_descr_discrepancy_ml_speec.rds"))
 
 # Pairwise comparison plots: ML vs SPEEC
@@ -160,7 +198,7 @@ p_mu_n <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_mu_n, mu_n)) +
   geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
-  geom_point(aes(color = delta_mu_n), size = 2.5, alpha = .6) +
+  geom_point(aes(color = abs_delta_mu_n), size = 2.5, alpha = .6) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\mu}_{n_{ML}}$"),
     limits = c(0, 400),
@@ -186,7 +224,7 @@ p_phi_n <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_phi_n, phi_n)) +
   geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
-  geom_point(aes(color = delta_phi_n), size = 2.5, alpha = .6) +
+  geom_point(aes(color = abs_delta_phi_n), size = 2.5, alpha = .6) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\phi}^2_{n_{ML}}$"),
     trans = log10_trans(),
@@ -220,7 +258,7 @@ p_phi_n <- data_ml_speec |>
 # mu_d
 p_mu_d <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
-  ggplot(aes(ml_mu_d, mu_d, color = delta_mu_d)) +
+  ggplot(aes(ml_mu_d, mu_d, color = abs_delta_mu_d)) +
   geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
   geom_point(
     size = 2.5,
@@ -252,7 +290,7 @@ p_sigma2_d <- data_ml_speec |>
   ggplot(aes(ml_sigma2_d, sigma2_d)) +
   geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
   geom_point(
-    aes(color = delta_sigma2_d),
+    aes(color = abs_delta_sigma2_d),
     size = 2.5,
     alpha = .6
   ) +
@@ -301,4 +339,5 @@ ggsave(
   width = 10, height = 7, 
   bg = "white", dpi = 1000
   )
+
 

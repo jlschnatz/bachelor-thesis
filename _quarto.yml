@@ -31,3 +31,7 @@ format:
     bibliography: references.bib
     csl: apa.csl
     citecolor: black
+    margin-left: 2.5cm
+    margin-right: 2.5cm
+    margin-top: 2.5cm
+    margin-bottom: 2cm

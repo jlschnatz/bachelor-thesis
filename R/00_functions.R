@@ -167,35 +167,86 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
   if (!is.null(save_file)) ggplot2::ggsave(save_file, p, dpi = 500, ...)
   return(p)
 }
-  
+
 #' @title APA-7 formatted Latex Table
 #' @description Create a nice looking table for APA-7 formatted Latex
 #' @param x A data frame
 #' @param digits Number of digits to round to (default = 3)
 #' @param caption The table caption
-#' @param footnote The table footnote
-#' @param align The alignment of the columns (if NULL, the first column is left aligned and the rest are centered)
-#' @param col_names The column names
-#' @param font_size The font size (default = 12)
+#' @param align The alignment of the table
+#' @param col_names Column names of the table
+#' @param general_fn General footnote
+#' @param symbol_fn Symbol footnote
+#' @param number_fn Number footnote
+#' @param alphabet_fn Alphabet footnote
 #' @return A character vector of the table source code
-#' 
-nice_table <- function(x, digits = 3, caption, footnote = NULL, align = NULL, col_names = NULL, font_size = 12, full_width = TRUE) {
+nice_table <- function(x, digits = 2, caption, align = NULL, col_names = NULL, general_fn = NULL, symbol_fn = NULL, number_fn = NULL, alphabet_fn = NULL) {
   n_col <- ncol(x)
   center <- paste0(rep("c", n_col - 1), collapse = "")
   if (is.null(align)) align <- paste0("l", center, collape = "")
   if (is.null(col_names)) col_names <- colnames(x)
-  knitr::kable(
-    x = x, format = "latex", 
-    escape = FALSE, booktabs = TRUE,
-    align = align, caption = caption, 
-    digits = digits, row.names = FALSE, col.names = col_names
-  ) |> 
-    kableExtra::kable_styling(
-      full_width = full_width, font_size = font_size, 
-      latex_options = c('HOLD_position', "scale_down")
-      ) |> 
-    kableExtra::footnote(footnote, footnote_as_chunk = TRUE, escape = FALSE, fixed_small_size = TRUE)
+  width_per_col <- paste0(floor((21 - 2 * 2.5)/n_col * 100) / 100, "cm")
+
+  table_raw <- knitr::kable(
+    x = x,
+    format = "latex",
+    threeparttable = TRUE,
+    booktabs = TRUE,
+    digits = digits,
+    col.names = col_names,
+    caption = caption,
+    escape = FALSE,
+    align = align
+  ) |>
+  kableExtra::kable_styling(latex_options = c("scale_down", "HOLD_position"), full_width = FALSE) |>
+  kableExtra::column_spec(column = seq_len(n_col), width = width_per_col)
+
+  if (!is.null(general_fn) || !is.null(symbol_fn) || !is.null(number_fn) || !is.null(alphabet_fn)) {
+    general_fn <- paste0("\\\\textit{Note.} ", general_fn)
+    out <- table_raw |>
+      kableExtra::footnote(
+        general = general_fn,
+        symbol = symbol_fn,
+        number = number_fn,
+        alphabet = alphabet_fn,
+        general_title = "",
+        escape = FALSE,
+        threeparttable = TRUE,
+      ) 
+      return(out)
+  } else {
+    return(table_raw)
+  }
 }
+  
+##' @title APA-7 formatted Latex Table
+##' @description Create a nice looking table for APA-7 formatted Latex
+##' @param x A data frame
+##' @param digits Number of digits to round to (default = 3)
+##' @param caption The table caption
+##' @param footnote The table footnote
+##' @param align The alignment of the columns (if NULL, the first column is left aligned and the rest are centered)
+##' @param col_names The column names
+##' @param font_size The font size (default = 12)
+##' @return A character vector of the table source code
+##' 
+#nice_table <- function(x, digits = 3, caption, footnote = NULL, align = NULL, col_names = NULL, font_size = 12, full_width = TRUE) {
+#  n_col <- ncol(x)
+#  center <- paste0(rep("c", n_col - 1), collapse = "")
+#  if (is.null(align)) align <- paste0("l", center, collape = "")
+#  if (is.null(col_names)) col_names <- colnames(x)
+#  knitr::kable(
+#    x = x, format = "latex", 
+#    escape = FALSE, booktabs = TRUE,
+#    align = align, caption = caption, 
+#    digits = digits, row.names = FALSE, col.names = col_names
+#  ) |> 
+#    kableExtra::kable_styling(
+#      full_width = full_width, font_size = font_size, 
+#      latex_options = c('HOLD_position', "scale_down")
+#      ) |> 
+#    kableExtra::footnote(footnote, footnote_as_chunk = TRUE, escape = FALSE, fixed_small_size = TRUE)
+#}
 
 
 #' @title Smithson-Verkuilen Transformation for Beta-Regression

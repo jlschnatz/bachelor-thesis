@@ -3,8 +3,8 @@
 \caption{Beta Regression Results for $\mathcal{H}_2$}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{12}{14}\selectfont
-\begin{tabu} to \linewidth {>{\raggedright}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}>{\centering\arraybackslash}p{2.66cm}}
 \toprule
 Term & Estimate & $CI$ (95\%) & $SE$ & $z$ & $p$\\
 \midrule
@@ -16,9 +16,11 @@ Term & Estimate & $CI$ (95\%) & $SE$ & $z$ & $p$\\
 \multicolumn{6}{l}{\textbf{Precision model component: $\phi$}}\\
 \\[-1.5ex]\hspace{1em}Intercept & $4.85^b$ & {}[3.63, 6.47] & 0.15 & 10.70 & < .001\\
 \bottomrule
-\multicolumn{6}{l}{\rule{0pt}{1em}\textit{Note: }}\\
-\multicolumn{6}{l}{\rule{0pt}{1em}\$LL\$ = 164.25, \$MAE\$ = 0.23, \$AIC\$ = -322.51, \$BIC\$ = -312.51, \$R\textasciicircum{}2\$ = 0.026}\\
-\multicolumn{6}{l}{\rule{0pt}{1em}\textsuperscript{a} \$OR\$}\\
-\multicolumn{6}{l}{\rule{0pt}{1em}\textsuperscript{b} Identity}\\
-\end{tabu}}
+\end{tabular}
+\begin{tablenotes}
+\item \textit{Note.} $LL$ = 164.25, $MAE$ = 0.23, $AIC$ = -322.51, $BIC$ = -312.51, $R^2$ = 0.026
+\item[a] $OR$
+\item[b] Identity
+\end{tablenotes}
+\end{threeparttable}}
 \end{table}

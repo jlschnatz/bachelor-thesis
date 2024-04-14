@@ -105,7 +105,6 @@ write_rds(p, file = here("data/src/plot_h4.rds"))
 z <- coef(mod_h4) / sqrt(diag(vcov(mod_h4)))
 p_b1 <- pnorm(z[2], lower.tail = FALSE)
 
-
 data_table <- tidy(mod_h4, conf.int = TRUE) |>
   # get OR for estimate and CIs for the mean parameter model
   mutate(across(c(estimate, conf.low, conf.high), exp)) |>
@@ -126,15 +125,11 @@ table_h4 <- nice_table(
   x = data_table, 
   caption = "Beta Regression Results for $\\mathcal{H}_4$", 
   col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$"),
-  digits = 2
+  digits = 2,
+  general_fn = glue::glue("MR: Multisite Replication; {report_fit(mod_h4, 'w_pbs')}"),
+  alphabet_fn = c("$OR$", "Identity coefficient")
 ) |> 
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
-  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]")  |>
-  footnote(
-    general = glue::glue("MR: Multisite Replication; {report_fit(mod_h4, 'w_pbs')}"),
-    alphabet = c("$OR$", "Identity coefficient"),
-    escape = FALSE,
-    footnote_as_chunk = TRUE
-  )
+  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") 
 
 cat(table_h4, file = here("tables/h4_table.tex"))
