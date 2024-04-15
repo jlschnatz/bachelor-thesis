@@ -129,7 +129,7 @@ $$ {#eq-kld}
 r_ver <- paste(version$major, version$minor, sep = ".")
 ```
 
-All statistical analyses were performed using R [version `r r_ver`, @r_core_team_r_2023] in the RStudio Environment [version 2023.12.0.369, @posit_team_rstudio_2023]. Data and analysis scripts are made available members of Goethe University on the [Local Instrastructure for Open Science (LIFOS)] and the publicly on the Open Science Framework (OSF).
+All statistical analyses were performed using R [version `r r_ver`, @r_core_team_r_2023] in the RStudio Environment [version 2023.12.0.369, @posit_team_rstudio_2023]. Data and analysis scripts are made available members of Goethe University on the [Local Instrastructure for Open Science (LIFOS)](https://lifos.uni-frankfurt.de/psychologische-methoden-mit-interdisziplinaerer-ausrichtung/publication-bias-psychology-reanalysis-of-nes-relationship) and the publicly on the Open Science Framework (OSF).
 
 Regarding the hypotheses, where the publication bias parameter $\omega_{\text{PBS}}$ is the dependent variable ($\mathcal{H}_1$, $\mathcal{H}_2$, $\mathcal{H}_4$), beta regression as implemented in the *betareg* package [@zeileis_betareg_2021] was used to analyse the data. This choice is motivated by the restriction of the parameter space for the publication bias to the standard unit interval, whereby non-normality, skewness and heteroscedasticity can anticipated [@cribari-neto_beta_2010; @smithson_better_2006]. Beta regression is recognized for its adaptability in handling such deviations. We used a logit link for the mean parameter $\mu$ and a identity link for the dispersion paramater that is hold constant so that beta regression model can be described by
 
@@ -169,5 +169,3 @@ For all four hypotheses, we will establish the smallest effect size of interest 
 #  kableExtra::group_rows("Sample Size", 3, 4) 
 
 ```
-
-  [Local Instrastructure for Open Science (LIFOS)]: https://lifos.uni-frankfurt.de/psychologische-methoden-mit-interdisziplinaerer-ausrichtung/publication-bias-psychology-reanalysis-of-nes-relationship

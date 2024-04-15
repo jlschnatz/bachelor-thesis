@@ -16,5 +16,3 @@ ggsave(
   filename = here("figures/combine_hypotheses.png"),
   plot = plots, width = 9, height = 6.5, dpi = 1000
   )
-
-

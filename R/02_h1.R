@@ -2,7 +2,7 @@
 if(!"pacman" %in% installed.packages()) {install.packages("pacman")}
 pacman::p_load(
   sysfonts, showtext, here, tidyverse, betareg, latex2exp, broom, 
-  marginaleffects, systemfonts, kableExtra, sjPlot, insight
+  marginaleffects, systemfonts, kableExtra, sjPlot, insight, datawizard
   )
 source(here("R/00_functions.R"))
 
@@ -37,7 +37,24 @@ mod_h1 <- betareg(
   data = data_model
   ) 
 
+std_mod_h1 <- standardise(mod_h1)
 summary(mod_h1)
+summary(std_mod_h1)
+
+# 1-SD increases in the predictor results in change in w_wpbs
+format_percent(plogis(coef(std_mod_h1)[1] + 1 * coef(std_mod_h1)[2]) - plogis(coef(std_mod_h1)[1]))
+
+exp(predict(std_mod_h1, newdata = data.frame(z_rs = 0), type = "link")) * exp(coef(std_mod_h1))[2]
+
+
+avg_slopes(std_mod_h1)
+plogis((coef(std_mod_h1)[1] + 1 * coef(std_mod_h1)[2])) - plogis(coef(std_mod_h1)[1])
+
+
+
+exp(predict(std_mod_h1, newdata = data.frame(z_rs = 0), type = "link")) * exp(coef(std_mod_h1))[2]
+exp(predict(std_mod_h1, newdata = data.frame(z_rs = 1), type = "link"))
+
 
 write_rds(mod_h1, here("data/src/model_betareg_h1.rds"))
 

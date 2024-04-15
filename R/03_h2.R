@@ -34,8 +34,13 @@ mod_h2 <- betareg(
 
 summary(mod_h2)
 
+library(marginaleffects)
+avg_slopes(mod_h2)
+avg_comparisons(mod_h2, variables = list(Delta = "sd"))
+
+
 # Plot model predictions ———————————————————————————————————————————————————————————————————————————————————————————————————————
-p <- ggeffect(mod_h2, "Delta [-1.3:1.3, by = 0.01]") |> 
+p <- ggeffect(mod_h2, "Delta [-.7:.7, by = 0.01]") |> 
   as_tibble() |> 
   ggplot(aes(x, y = predicted)) +
   geom_point(
@@ -54,8 +59,8 @@ p <- ggeffect(mod_h2, "Delta [-1.3:1.3, by = 0.01]") |>
   ) +
   scale_x_continuous(
     name = latex2exp::TeX("Difference $\\Delta_{\\widehat{\\mu}_d, \\widehat{\\delta}}$"),
-    limits = c(-1.5, 1.5),
-    breaks = seq(-1.5, 1.5, .5),
+    limits = c(-.8, .8),
+    breaks = seq(-.8, .8, .2),
     expand = expansion()
   ) +
   coord_cartesian(clip = "off") +
