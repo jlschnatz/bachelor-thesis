@@ -16,7 +16,7 @@ pacman::p_load(
 source(here("R/00_functions.R"))
 font_add_google("Noto Sans", "font")
 showtext_auto()
-showtext_opts(dpi = 1000)
+showtext_opts(dpi = 500)
 set.seed(42)
 
 # Load data ————————————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -253,7 +253,8 @@ p_phi_n <- data_ml_speec |>
     trans = log10_trans(),
     labels = label_log(10)
   ) +
-  theme_comparison()
+  theme_comparison() +
+  theme(plot.margin = margin(r = 20))
 
 # mu_d
 p_mu_d <- data_ml_speec |>
@@ -325,19 +326,34 @@ p_sigma2_d <- data_ml_speec |>
   theme_comparison()
 
 # Combine plots with patchwork
-p_comb <- ((p_mu_d + p_sigma2_d) / (p_mu_n + p_phi_n)) +
-  plot_annotation(tag_levels = c("A", "1")) &
+p_comb <- (p_mu_d | p_sigma2_d | p_mu_n | p_phi_n) +
+  plot_layout(ncol = 4) +
+  plot_annotation(tag_levels = c("A")) &
   theme(plot.tag = element_text(face = "bold", family = "font", margin = margin(l = 10)))
 
-p_comb[[1]] <- p_comb[[1]] + plot_layout(tag_level = 'new')
-p_comb[[2]] <- p_comb[[2]] + plot_layout(tag_level = 'new')
+#p_comb[[1]] <- p_comb[[1]] + plot_layout(tag_level = 'new')
+#p_comb[[2]] <- p_comb[[2]] + plot_layout(tag_level = 'new')
+#p_comb[[3]] <- p_comb[[3]] + plot_layout(tag_level = 'new')
+#p_comb[[4]] <- p_comb[[4]] + plot_layout(tag_level = 'new')
 
 # Save
 ggsave(
   plot = p_comb, 
   filename = here("figures/ml_speec_comparison.png"), 
-  width = 10, height = 7, 
-  bg = "white", dpi = 1000
+  width = 11, height = 3.5, 
+  bg = "white", dpi = 500
   )
+
+
+
+
+
+
+
+
+
+
+
+
 
 
