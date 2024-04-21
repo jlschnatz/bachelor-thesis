@@ -15,6 +15,7 @@ pacman::p_load(
 # Source custom functions
 source(here("R/00_functions.R"))
 font_add_google("Noto Sans", "font")
+font_add_google("Inter", "font")
 showtext_auto()
 showtext_opts(dpi = 500)
 set.seed(42)
@@ -26,7 +27,7 @@ id_mr <- unique(filter(data_meta, type_synthesis == "mr")$id_meta)
 
 # Step 1: Check convergence ————————————————————————————————————————————————————————————————————————————————————————————
 
-# For assessement of convergence of individual meta-analysis/multisite replication studies see `R/app.R`
+# For assessement of convergence of individual meta-analysis/multisite replication studies see `R/07_check_convergence.R`
 
 # Step 2: Compare ML estimates for distributional parameters against SPEEC estimates ————————————————————————————————————
 
@@ -35,7 +36,7 @@ id_mr <- unique(filter(data_meta, type_synthesis == "mr")$id_meta)
 ## d ~ N(mu_d, sigma2_d)
 ml_optim1 <- data_meta |>
   group_by(id_meta) |>
-  summarise(norm = list(suppressWarnings(estimate_norm(c(0, 1), d)))) |>
+  summarise(norm = list(suppressWarnings(estimate_norm(d, method = "Nelder-Mead")))) |>
   mutate(norm = map(norm, tidy)) |>
   unnest(norm) |>
   mutate(parameter = case_match(parameter, "parameter1" ~ "ml_mu_d", "parameter2" ~ "ml_sigma2_d")) |>
@@ -44,11 +45,20 @@ ml_optim1 <- data_meta |>
 ## n ~ NB(phi_n, mu_n)
 ml_optim2 <- data_meta |>
   group_by(id_meta) |>
-  summarise(nb = list(suppressWarnings(estimate_nb(c(10, 10), n)))) |>
+  summarise(nb = list(suppressWarnings(estimate_nb(n, method = "BFGS")))) |>
   mutate(nb = map(nb, tidy)) |>
   unnest(nb) |>
   mutate(parameter = case_match(parameter, "parameter1" ~ "ml_phi_n", "parameter2" ~ "ml_mu_n")) |>
   pivot_wider(names_from = parameter, values_from = value)
+
+inner_join(ml_optim1, ml_optim2, by = join_by(id_meta)) |>
+  pivot_longer(-id_meta, names_to = "parameter") |>
+  summarise(min = min(value), max = max(value), .by = parameter)
+
+
+data_meta |>
+group_by(id_meta) |>
+summarise(n = mean(n)) |> slice_max(n)
 
 # k primary studies
 data_k <- summarise(data_meta, k = n(), .by = id_meta)
@@ -111,19 +121,7 @@ general <-  paste(
   "$\\\\lvert\\\\Delta\\\\rvert$ is the absolute difference for each distributional parameter between SPEEC and MLE.",
   sep = " "
   )
-caption <- "Pairwise Pearson Correlations between Difference of ML and SPEEC Distributional Parameters, Publication Bias Parameter and Meta-Analysis Size"
-#cor_table <- nice_table(
-#  x = cor_data_format,
-#  digits = 2,
-#  caption = caption,
-#  font_size = 9
-#)  |>
-#  kableExtra::footnote(
-#    general = general,
-#    escape = FALSE,
-#    footnote_as_chunk = TRUE,
-#    fixed_small_size = FALSE
-#  ) 
+caption <- "Pairwise Pearson Correlations between the Absolute Difference of the Distributional Parameters from SPEEC and ML, Publication Bias Parameter and Meta-Analysis Size"
 
 cor_table <- nice_table(
   x = cor_data_format,
@@ -131,29 +129,12 @@ cor_table <- nice_table(
   caption = caption,
   general_fn = general,
   symbol_fn = c("Significance *** $p$ < .001; ** $p$ < .01; * $p$ < .05")
-)
-
-#cor_table <- knitr::kable(
-#  x = cor_data_format, 
-#  format = "latex", 
-#  threeparttable = TRUE, 
-#  booktabs = TRUE, 
-#  caption = caption, 
-#  escape = FALSE,
-#  align = c("lccccc")
-#  ) |>
-#kableExtra::kable_styling(latex_options= c("scale_down", "HOLD_position")) |>
-#kableExtra::footnote(
-#    general = general,
-#    symbol = c("Significance *** $p$ < .001; ** $p$ < .01; * $p$ < .05"),
-#    escape = FALSE,
-#    footnote_as_chunk = TRUE,
-#    threeparttable = TRUE,
-#    general_title = "Note. ",
-#  ) |>
-#  str_remove_all(string = _, pattern = "\\[para\\]")
-
-#cat(str_remove_all(cor_table, "\\[para\\]"))
+) |>
+  kableExtra::kable_styling(font_size = 10) |>
+  kableExtra::column_spec(column = 1, width = "1.3cm") |>
+  kableExtra::column_spec(column = 2:3, width = "3.5cm") |>
+  kableExtra::column_spec(column = 4:5, width = "2.75cm") |>
+  kableExtra::column_spec(column = 6, width = "2.2cm") 
 
 
 cat(cor_table, file = here("tables/ml_speec_diff_cor.tex"))
@@ -244,7 +225,6 @@ p_phi_n <- data_ml_speec |>
     expand = expansion()
   ) +
   coord_equal() +
-  #annotation_logticks(colour = "darkgrey", linewidth = 0.3) +
   scale_colour_paletteer_c(
     name = TeX("$|\\widehat{\\phi}_{n_{SPEEC}} - \\widehat{\\phi}_{n_{ML}} |$"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
@@ -322,7 +302,6 @@ p_sigma2_d <- data_ml_speec |>
     labels = label_log(10),
     trans = log10_trans()
   ) +
-  #annotation_logticks(colour = "darkgrey", linewidth = 0.3) +
   theme_comparison()
 
 # Combine plots with patchwork
@@ -331,11 +310,6 @@ p_comb <- (p_mu_d | p_sigma2_d | p_mu_n | p_phi_n) +
   plot_annotation(tag_levels = c("A")) &
   theme(plot.tag = element_text(face = "bold", family = "font", margin = margin(l = 10)))
 
-#p_comb[[1]] <- p_comb[[1]] + plot_layout(tag_level = 'new')
-#p_comb[[2]] <- p_comb[[2]] + plot_layout(tag_level = 'new')
-#p_comb[[3]] <- p_comb[[3]] + plot_layout(tag_level = 'new')
-#p_comb[[4]] <- p_comb[[4]] + plot_layout(tag_level = 'new')
-
 # Save
 ggsave(
   plot = p_comb, 
@@ -343,17 +317,3 @@ ggsave(
   width = 11, height = 3.5, 
   bg = "white", dpi = 500
   )
-
-
-
-
-
-
-
-
-
-
-
-
-
-

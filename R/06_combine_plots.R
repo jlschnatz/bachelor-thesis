@@ -1,6 +1,6 @@
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
 if(!"pacman" %in% installed.packages()) install.packages("pacman")
-pacman::p_load(sysfonts, showtext, here, tidyverse, systemfonts, fs, patchwork)
+pacman::p_load(sysfonts, showtext, here, tidyverse, fs, patchwork)
 source(here("R/00_functions.R"))
 showtext_opts(dpi = 1000)
 font_add_google("Inter", "font")
@@ -8,8 +8,7 @@ showtext_auto()
 
 # Combine Plots into Panel ———————————————————————————————————————————————————————————————————————————————————————————       
 file_paths <- dir_ls(here("data/src"), regexp = "plot")
-plots <- (purrr::reduce(map(file_paths, read_rds), `+`) +
-    plot_annotation(tag_levels = "A")) &
+plots <- (reduce(map(file_paths, read_rds), `+`) + plot_annotation(tag_levels = "A")) &
     theme(plot.tag = element_text(face = "bold", family = "font"))
 
 ggsave(

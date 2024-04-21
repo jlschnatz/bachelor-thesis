@@ -326,17 +326,24 @@ extract_loss <- function(x) {
 #' @start Starting parameters of ML-Estimation.
 #' @param data A numeric vector of sample sizes values from the meta-analysis data.
 #' 
-estimate_nb <- function(start, data) {
+estimate_nb <- function(data, method = "BFGS") {
+  n <- length(data)
+  mu_start <- mean(data)   
+  phi_start <- n / sum((data / mu_start - 1)^2)
+  start <- c(phi_start, mu_start)
   ll <- function(x, data) -sum(stats::dnbinom(data, size = x[1], mu = x[2], log = TRUE))
-  stats::optim(start, ll, data = data, method = "BFGS")
+  stats::optim(start, ll, data = data, method = method)
 }
 
 #' @title ML-Estimation of parameters of Normal Distribution
 #' @start Starting parameters of ML-Estimation.
 #' @param data A numeric vector of effect size values from the meta-analysis data.
-estimate_norm <- function(start, data) {
+estimate_norm <- function(data, method = "BFGS") {
+  mu_start <- mean(data)
+  sigma2_start <- var(data)
+  start <- c(mu_start, sigma2_start)
   ll <- function(x, data) -sum(stats::dnorm(data, mean = x[1], sd = sqrt(x[2]), log = TRUE))
-  stats::optim(start, ll, data = data, method = "BFGS")
+  stats::optim(start, ll, data = data, method = method)
 }
 
 #' @title Report Fit Statistics of Regression Model as String
