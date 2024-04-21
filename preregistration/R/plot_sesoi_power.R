@@ -5,8 +5,10 @@ pacman::p_load(tidyverse,  sysfonts, showtext, ggtext, ggsci, sjPlot, TOSTER, pa
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
 fontname <- "CMU Sans Serif"
+col_str <- c("#051088", "#c64086", "#f7ce4c")
 fontpath <- systemfonts::match_font(fontname)$path
-font_add(family = fontname, fontpath)
+font_add(family = "font", fontpath)
+font_add_google("Inter", "font")
 showtext_opts(dpi = 500)
 showtext_auto()
 
@@ -23,10 +25,12 @@ theme_power <- theme_sjplot() +
     legend.title = element_markdown(lineheight = 1.25),
     axis.title.x = element_markdown(margin = margin(t = 5)),
     axis.title.x.top = element_markdown(),
-    text = element_text(family = fontname),
+    text = element_text(family = "font"),
     panel.spacing = unit(1.5, "lines"),
     plot.margin = margin(5, 5, 5, 5, unit = "pt"),
   )
+
+color_scale_title <- "Dispersion<br>parameter<br>\U03C6"
 
 # Hypothesis I —————————————————————————————————————————————————————————————————————————————————————————————————————————
 
@@ -48,7 +52,7 @@ df_h1 |>
         label = glue::glue("SESOI = {sesoi1}")),
     color = "darkgrey",
     linewidth = 0.7,
-    family = "os"
+    family = "font"
   ) +
   geom_line(linewidth = 0.7) +
   geom_ribbon(
@@ -68,11 +72,13 @@ df_h1 |>
     limits = c(1, 1.4),
     breaks = seq(1, 1.4, 0.05),
     expand = c(0, 0),
-    sec.axis = sec_axis(~ log(.), name = "log(*OR*)")
+    sec.axis = sec_axis(~ log(.), name = "Logit")
   ) +
   coord_cartesian(clip = "off") +
-  scale_fill_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
-  scale_color_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
+  #scale_fill_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
+  #scale_color_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
+  scale_fill_manual(name = color_scale_title, values = col_str) +
+  scale_color_manual(name = color_scale_title, values = col_str) +
   theme_power -> p1
 
 print(p1)
@@ -110,7 +116,7 @@ df_h2 |>
         label = glue::glue("SESOI = {sesoi2}")),
     color = "darkgrey",
     linewidth = 0.7,
-    family = "os"
+    family = "font"
   ) +
   geom_line(linewidth = 0.7) +
   scale_power +
@@ -118,10 +124,12 @@ df_h2 |>
     name = "*OR* (b<sub>2</sub>)",
     expand = expansion(),
     limits = c(0.5, 1),
-    sec.axis = sec_axis(~ log(.), name = "log(*OR*)"),
+    sec.axis = sec_axis(~ log(.), name = "Logit"),
   ) +
-  scale_fill_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
-  scale_color_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
+  #scale_fill_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
+  #scale_color_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
+  scale_fill_manual(name = color_scale_title, values = col_str) +
+  scale_color_manual(name = color_scale_title, values = col_str) +
   coord_cartesian(clip = "off") +
   theme_power -> p2
 
@@ -159,11 +167,11 @@ tibble(bounds, n = 150, alpha = 0.05) |>
         label = glue::glue("SESOI = {sesoi3}")),
     color = "darkgrey",
     linewidth = 0.7,
-    family = "os"
+    family = "font"
   ) +
   geom_line(linewidth = 0.7, col = "black") +
   scale_x_continuous(
-    name = "Equivalence Bounds",
+    name = "&Delta;<sub>EQ</sub>",
     limits = c(0, .25),
     breaks = seq(0, .25, 0.05),
     expand = expansion()
@@ -208,7 +216,7 @@ df_h4 |>
         label = glue::glue("SESOI = {sesoi4}")),
     color = "darkgrey",
     linewidth = 0.7,
-    family = "os"
+    family = "font"
   ) +
   geom_line(linewidth = 0.7) +
   scale_power +
@@ -217,10 +225,12 @@ df_h4 |>
     limits = c(1, 1.5),
     breaks = seq(1, 1.5, 0.1),
     expand = c(0, 0),
-    sec.axis = sec_axis(~log(.), name = "log(*OR*)", breaks = seq(0, 0.5, 0.1)),
+    sec.axis = sec_axis(~log(.), name = "Logit", breaks = seq(0, 0.5, 0.1)),
   ) +
-  scale_fill_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
-  scale_color_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
+  #scale_fill_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
+  #scale_color_sjplot(name = "Dispersion<br>parameter<br>&Phi;", palette = "quadro") +
+  scale_fill_manual(name = color_scale_title, values = col_str) +
+  scale_color_manual(name = color_scale_title, values = col_str) +
   coord_cartesian(clip = "off") +
   theme_power  -> p4
 
@@ -241,5 +251,4 @@ write_csv(sesois, here("preregistration/data/sesois.csv"))
   plot_annotation(tag_prefix = "H<sub>", tag_levels = "1") &
   theme(plot.tag = element_markdown(family = fontname, face = "bold"))
 
-ggsave("preregistration/img/power_sesoi_prereg.pdf", width = 12, height = 8, dpi = 300)
-
+ggsave("preregistration/img/power_sesoi_prereg.pdf", width = 12, height = 8, dpi = 500)
