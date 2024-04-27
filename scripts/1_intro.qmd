@@ -30,8 +30,6 @@ The central tenets of the correlation of effect size and sample size as an indic
 
 Despite the significant attention and prevalent use of the effect size-sample size correlation in various research fields for detecting publication bias, coupled with its frequent acknowledgment as a valid indicator of such bias, there exist persisting methodological concerns. As I will argue in the next section, these concerns have only been partially discussed and adressed in the existing literature and may compromise the validity of the interpretation of the correlation as an indicator of publication bias. To illustrate the inherent challenges of the effect size-sample size correlation as an indicator of publication bias, we simulated a set 10000 primary studies[^1] on the same effect underlying effect and varied different parameters that contribute to its limitations (see figure 1). This includes the true effect size $\delta: \{0,~0.4\}$, the extent of publication bias $\omega_{PBS}:\{0,~1\}$ or how much less likely studies with non-significant *p*-values are compared to studies with significant results (in this extreme case either non-significant studies are not published at all, or there are no differences between non-significant and significant studies), the signedness of the effect size ($d$ and $\lvert ~ d ~ \rvert$) and the type of hypothesis (directional $\mathcal{H_1}:\theta>0$ and non-directional $\mathcal{H_1}: \theta \neq0$)
 
-[^1]: The selected number of primary studies aims to visually highlight its inherent limitations. The claims would still hold true even with a significantly lower number of primary studies (more representative of primary studies of meta-analysis e.g., 100), albeit with increased variability.
-
 ```{=latex}
 \begin{figure}[h]
 \caption{n-ES Correlation in Simulated Data: Influence of Publication Bias, True Effect Size, and Signed vs. Unsigned Effects\label{fig:n-es-grid}}
@@ -84,23 +82,43 @@ Apart from these more statistical challenges, there is also a more conceptual ch
 
 ## The Present Study
 
-Research questions:
-- How does publication bias influence the joint probability distribution of effect size and sample size?
-- How can the magnitude of publication bias in meta-analyses be estimated and effect sizes
-under publication bias be corrected from the joint distribution of sample size and effect
-size
+Research questions: - How does publication bias influence the joint probability distribution of effect size and sample size? - How can the magnitude of publication bias in meta-analyses be estimated and effect sizes under publication bias be corrected from the joint distribution of sample size and effect size
 
+-   Introduce novel simulation-based method to estimate publication bias in meta-analyses and correct biased effect sizes sizes under publication bias
+-   Proof of concept study -\> introduce method and assess the method using
+-   Introduce and explain new framework to estimate publication bias
+-   Assess the approach using secondary empirical meta-analytical data -\> set of predictions/hypotheses that should hold true if the approach works in principle,
 
-- Introduce novel simulation-based method to estimate publication bias in meta-analyses and correct biased effect sizes sizes under publication bias
-- Proof of concept study -> introduce method and assess the method using
-- Introduce and explain new framework to estimate publication bias 
-- Assess the approach using secondary empirical meta-analytical data -> set of predictions/hypotheses that should hold true if the approach works in principle,
+## Hypotheses
+
+**Hypothesis I**:
+
+Comparison between correlation between effect size and sample size as an indicator of publication bias and the newly proposed publication bias parameter $\pbs$ from the SPEEC approach ... it still can be expected that estimated publication bias parameter $\epbs$ is positively associated with the Fisher *z*-transformed Spearman correlation coefficients of the association between unsigned effect size and sample size in each meta-analysis. In other words, when the proposed method estimates high publication bias (i.e., low probabilities for $\epbs$ ) we expect the correlation coefficients for each meta-analysis to be more negative and conversely. In statistical terms, this expectation implies that the regression coefficient $\beta_{z}$ will be greater than zero.
+
+$$
+\begin{gathered}
+\mathcal{H}_0: \beta_{z_{r_s}} \leq 0 \\
+\mathcal{H}_1: \beta_{z_{r_s}} > 0
+\end{gathered}
+$$ {eq-h1}
+
+**Hypothesis II**: 
+
+In instances where the true effect size of a research phenomenon is exactly zero ($\delta=0$) and substantial publication bias is evident, the distribution of effect size and sample size should display a symmetric hollowing around zero [@light_summing_1984]. This is because only studies with either large positive effect or large negative effects will be statistically significant and thus more likely to be published. Thus, due to this symmetry, the average effect size $\widehat{\delta}$ will not be biased, because theoretically negative and positive effect should roughly "outweigh" each other. This means that the difference $\Delta_{\mu_d}$ between the average effect size $\widehat{\delta}$ the estimated mean parameter $\mu_d$ of the effect size distribtion from the SPEEC approach should remain invariant irrespective of the magnitude of publication bias. However, when the true effect size exceeds zero ($\delta>0$), publication bias leads to an overestimation of the true effect (i.e. $\widehat{\delta}>\delta$), and conversely, overestimation in the opposite direction (i.e., $\widehat{\delta} < \delta$) when $\delta<0$. If the estimated mean parameter $\widehat{\mu}_d$ from the SPEEC appraoch is a better estimate of the true effect size $\delta$ under publication bias than the simple average effect size $\widehat{\delta}$, then the relationship between the difference $\Delta_{\mu_d}$ of those parameters and the publication bias parameter $\pbs$ should follow a curvilinear inverse u-shaped pattern. In other words, when the observed difference $\Delta_{\widehat{\mu}_d}$ is approaching zero, publication bias severity is expected to decrease (indicated by larger values for $\widehat{\omega}_{\text{PBS}}$). Conversely, when the difference $\Delta_{\widehat{\mu}_d}$ diverges from zero in both negative and positive directions, publication bias severity is expected to increase (i.e. lower values for $\widehat{\omega}_{\text{PBS}}$). In statistical terms, it is anticipated that the quadratic term $\beta_{\Delta_{\mu_d}}$ of the regression model is smaller than zero.
+
+$$
+\begin{gathered}
+\mathcal{H}_0: \quad \beta_{\Delta_{\mu_d}} \geq 0 \\ 
+\mathcal{H}_1: \quad \beta_{\Delta_{\mu_d}} < 0
+\end{gathered}
+$$ {eq-h2}
+
 
 
 
 **Hypothesis III**:
 
-Registered reports are an alternative two-stage publishing model, where study protocols are submitted, peer-reviewed and in-princple accepted prior to data collection [@chambers_past_2022; @nosek_registered_2014]. In-princple accepted studies are then published regardless of the outcome of the study, because the decision to publish was made before the results of the studies are known, which completely eliminates publication bias [@simons_introduction_2014; @chambers_past_2022]. Thus, the effect sizes within these multisite replication projects and registered replication reports that are publishied within this framework cannot be biased by publication bias. Thus, the third hypothesis $\mathcal{H}_3$, the average effect size of a registered replication report $\widehat{\delta}$ can be expected to be equivalent to the mean of the Gaussien effect size distribution $\mu_d$ that is estimated within the SPEEC approach within specified equivalence bounds.
+Registered reports are an alternative two-stage publishing model, where study protocols are submitted, peer-reviewed and in-princple accepted prior to data collection [@chambers_past_2022; @nosek_registered_2014]. In-princple accepted studies are then published regardless of the outcome of the study, because the decision to publish was made before the results of the studies are known, which completely eliminates publication bias [@simons_introduction_2014; @chambers_past_2022]. Thus, the effect sizes within these multisite replication projects and registered replication reports that are publishied within this framework cannot be biased by publication bias. Thus, the third hypothesis $\mathcal{H}_3$, the average effect size of a registered replication report $\widehat{\delta}$ can be expected to be equivalent to the mean of the Gaussian effect size distribution $\mu_d$ that is estimated within the SPEEC approach within specified equivalence bounds $\Delta_{EQ} = \{\Delta_L, ~ \Delta_U\}$. The equivalence bounds are defined by the smallest effect size of interest in this study [@lakens_equivalence_2018] and are set to $\Delta_{EQ}=\{-0.18, 0.18\}$ (see section Smallest Effect Size of Interest for the rationale of this decision). 
 
 $$
 \begin{gathered}
@@ -108,23 +126,18 @@ $$
 \mathcal{H}_{01}: \Delta_{\mu_d} \leq \Delta_{L} \quad \cap \quad \mathcal{H}_{02}: \Delta_{\mu_d} \geq \Delta_{U} \\
 \mathcal{H}_1: \Delta_L >\Delta_{\mu_d} > \Delta_U
 \end{gathered}
-$${eq-h3}
+$$ {eq-h3}
 
+**Hypothesis IV**:
 
-** Hypothesis IV**:
-
-
-Moreover, when comparing meta-analysis which were published within a tradtional publishing system compared to multisite replication studies and registered replication reports, one can also make predictions about the publication bias parameter $\pbs$
-
-
-
-
-In statistical terms, when the regressor is a binary indicator of the type of research synthesis with the reference level being the publication biased absent multisite replication studies ($MR$) and the outcome is the estimated publication bias parameter $\pbs$, the regression coefficient $\beta_{MR}$ can be expected to be greater than zero.
+Moreover, when comparing meta-analysis which were published within a tradtional publishing system compared to multisite replication studies and registered replication reports, one can also make predictions about the publication bias parameter $\pbs$ Expected that the publication bias parameter $\pbs$ is greater for multisite replication studies in comparison to traditional meta-analysis. Relative comparison between traditional meta-analyses and multisite replication studies. Which means that relative to traditional meta-analysis, non-signicant studies within registered replication reports are more likely to be published in comparison. Not an absolute prediction, because in theory the $\pbs$ should equal one for multisite replication studies, as non-significant studies should not be less likely to be published within this publishing framework in comparison to significant replications. Rather, the pool of to be conducted studies within these large-scale replication projects is predetermined, and are published regardless of the outcome. However, this point prediction would be untestable in this context. In statistical terms, when the regressor is a binary indicator of the type of research synthesis with the reference level being the publication biased absent multisite replication studies ($MR$) and the outcome is the estimated publication bias parameter $\pbs$, the regression coefficient $\beta_{MR}$ can be expected to be greater than zero.
 
 $$
 \begin{gathered}
 \mathcal{H}_0: \quad \beta_{MR} \leq 0 \\
 \mathcal{H}_1: \quad \beta_{MR} > 0
 \end{gathered}
-$${eq-h4}
+$$ {eq-h4}
 
+
+[^1]: The selected number of primary studies aims to visually highlight its inherent limitations. The claims would still hold true even with a significantly lower number of primary studies (more representative of primary studies of meta-analysis e.g., 100), albeit with increased variability.
