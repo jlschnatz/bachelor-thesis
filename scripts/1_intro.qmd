@@ -114,11 +114,12 @@ $${eq-h3}
 ** Hypothesis IV**:
 
 
-when comparing "traditional" meta-analysis to multisite replication studies and registered replication reports 
+Moreover, when comparing meta-analysis which were published within a tradtional publishing system compared to multisite replication studies and registered replication reports, one can also make predictions about the publication bias parameter $\pbs$
 
-publication bias) in comparison to normal meta-analysis
 
-In statistical terms, when the regressor is a binary indicator of the type of research synthesis with the reference level being the publication biased absent multisite replication studies ($MR$) and the outcome is the estimated publication bias parameter $\omega_{\text{PBS}}$, the regression coefficient $\beta_{MR}$ can be expected to be greater than zero.
+
+
+In statistical terms, when the regressor is a binary indicator of the type of research synthesis with the reference level being the publication biased absent multisite replication studies ($MR$) and the outcome is the estimated publication bias parameter $\pbs$, the regression coefficient $\beta_{MR}$ can be expected to be greater than zero.
 
 $$
 \begin{gathered}
