@@ -34,7 +34,8 @@ mod_h1 <- betareg(
   formula = w_pbs ~ 1 + z_rs, 
   link = "logit",
   link.phi = "identity",
-  data = data_model
+  data = data_model,
+  control = betareg.control(method = "BFGS", trace = TRUE)
   ) 
 
 std_mod_h1 <- standardise(mod_h1)
@@ -49,8 +50,6 @@ exp(predict(std_mod_h1, newdata = data.frame(z_rs = 0), type = "link")) * exp(co
 
 avg_slopes(std_mod_h1)
 plogis((coef(std_mod_h1)[1] + 1 * coef(std_mod_h1)[2])) - plogis(coef(std_mod_h1)[1])
-
-
 
 exp(predict(std_mod_h1, newdata = data.frame(z_rs = 0), type = "link")) * exp(coef(std_mod_h1))[2]
 exp(predict(std_mod_h1, newdata = data.frame(z_rs = 1), type = "link"))
@@ -125,7 +124,7 @@ table_h1 <- nice_table(
   col_names = c("Term", "Estimate", "$CI$ (95\\%)", "$SE$", "$z$", "$p$"),
   general_fn = report_fit(mod_h1, "w_pbs"),
   alphabet_fn = c("$OR$", "Identity coefficient"),
-  remove_para = FALSE
+  #remove_para = FALSE
 ) |>
 group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
 group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
@@ -134,3 +133,8 @@ str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{
 
 
 cat(table_h1, file = here("tables/h1_table.tex"))
+
+
+
+
+

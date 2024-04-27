@@ -58,6 +58,8 @@ knitr::include_graphics(here("figures/combine_hypotheses.png"))
 <!-- Hypotheses I -->
 
 ```{r}
+#| message: false
+
 # Load beta-regression model
 mod_h1 <- read_rds(here("data/src/model_betareg_h1.rds"))
 
@@ -239,7 +241,7 @@ As this study relies on empirical data to preliminarily assess the proposed SPEE
 4.  Is the discrepancy between SPEEC and MLE in the distributional parameters associated with sample size of multisite replication studies *k*?
 5.  Is the discrepancy between SPEEC and MLE in the distributional parameters associated with the publication bias parameter $\omega_{\text{PBS}}$?
 
-The Maximum Likelihood estimates for the distributional parameters were obtained using the Nelder-Mead optimization algorithm. Additionally, the mean and median discrepancy between SPEEC and MLE were calculated to descriptively to assess the average difference between the two estimation methods.
+The Maximum Likelihood estimates for the distributional parameters were obtained using the Nelder-Mead optimization algorithm [@nelder_simplex_1965]. Additionally, the mean and median discrepancy between SPEEC and MLE were calculated to descriptively to assess the average difference between the two estimation methods.
 
 ```{=latex}
 \begin{figure}[H]
@@ -274,4 +276,4 @@ cat(table_ml_speec, sep = "\n")
 
 To address the remaining diagnostic questions, we conducted a pairwise correlational analysis between the absolute differences of the parameter estimates derived from the two estimation methods, alongside the publication bias parameter $\widehat{\omega}_{\text{PBS}}$ and the total number of primary replication studies $k$ within each multisite replication project or registered report. We used the Pearson correlation coefficient and corrected the obtained *p*-values for multiple comparisons to control the false discovery rate [@benjamini_controlling_1995].
 
-Regarding the parameters of the Gaussian effect size distribution, a strong positive correlation was observed between the absolute difference in the mean parameter estimates and the variance parameter estimates obtained from ML and SPEEC. This indicates that as the absolute discrepancy between SPEEC and ML increased for the mean parameter $\mu_d$, the absolute discrepancy also increased for the variance parameter $\sigma^2_d$ of the effect size distribution. Furthermore, strong negative correlations were found between the publication bias parameter $\omega_{\text{PBS}}$ and the discrepancy between ML and SPEEC estimates of the mean and variance parameters of the effect size distribution. More specifically, as the absolute  discrepancy between both estimation methods increased for both the mean ($\lvert\Delta_{\mu_d}\rvert$) and variance ($\lvert\Delta_{\sigma^2_d}\rvert$), the publication bias parameter $\omega_{\text{PBS}}$ decreased, signifying more severe predicted publication bias.Notably, the total number of of primary replications $k$ was not significantly associated to the divergence of ML and SPEEC of any distributional parameter or the publication bias parameter $\omega_{\text{PBS}}$.
+Regarding the parameters of the Gaussian effect size distribution, a strong positive correlation was observed between the absolute difference in the mean parameter estimates and the variance parameter estimates obtained from ML and SPEEC. This indicates that as the absolute discrepancy between SPEEC and ML increased for the mean parameter $\mu_d$, the absolute discrepancy also increased for the variance parameter $\sigma^2_d$ of the effect size distribution. Furthermore, strong negative correlations were found between the publication bias parameter $\omega_{\text{PBS}}$ and the discrepancy between ML and SPEEC estimates of the mean and variance parameters of the effect size distribution. More specifically, as the absolute  discrepancy between both estimation methods increased for both the mean ($\lvert\Delta_{\mu_d}\rvert$) and variance ($\lvert\Delta_{\sigma^2_d}\rvert$), the publication bias parameter $\omega_{\text{PBS}}$ decreased, signifying more severe predicted publication bias. Notably, the total number of of primary replications $k$ was not significantly associated to the divergence of ML and SPEEC of any distributional parameter or the publication bias parameter $\omega_{\text{PBS}}$.

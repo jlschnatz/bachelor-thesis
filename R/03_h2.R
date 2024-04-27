@@ -29,7 +29,8 @@ data_model <- data_meta |>
 mod_h2 <- betareg(
   formula = w_pbs ~ 1 + I(Delta**2),
   link = "logit",
-  data = data_model
+  data = data_model,
+  control = betareg.control(method = "BFGS", trace = TRUE)
 )
 
 summary(mod_h2)
@@ -117,7 +118,8 @@ mod_h2_exploratory <- betareg(
   formula = w_pbs ~ I(Delta**2) | I(Delta**2),
   link = "logit",
   link.phi = "identity",
-  data = data_model
+  data = data_model,
+  control = betareg.control(method = "BFGS", trace = TRUE)
 )
 
 summary(mod_h2_exploratory)

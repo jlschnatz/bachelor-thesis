@@ -388,3 +388,45 @@ fivenum2 <- function(x) {
 }
 
 
+include_image <- function(path, caption, footnote, label_latex, label_r, size = "footnotesize", out_width = "100%") {
+  head <- glue::glue("
+  \```{=latex}
+  \\begin{figure}[H]
+  \\caption{[[caption]]\\label{fig:[[label_latex]]}}
+  \```
+  ", 
+  .open = "[[", .close = "]]"
+  )
+
+  main <- glue::glue(
+    "
+    \```{r [[label_r]]}
+    #| fig-align: center
+    #| out-width: [[out_width]]
+    #| echo: false
+    knitr::include_graphics('[[path]]')
+    \```
+    ", 
+    .open = "[[", .close = "]]"
+  )
+
+  tail <- glue::glue("
+  \```{=latex}
+  \\begingroup
+  \\[[size]]
+  \\textit{Note.} [[footnote]]
+  \\endgroup
+  \\end{figure}
+  \```
+  ", 
+  .open = "[[", .close = "]]"
+  )
+
+ cat(head, main, tail, sep = "\n\n")
+}
+
+
+
+
+
+

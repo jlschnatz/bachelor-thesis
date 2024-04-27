@@ -33,7 +33,8 @@ mod_h4 <- betareg(
   formula = w_pbs ~ type_synthesis ,
   link = "logit",
   link.phi = "identity",
-  data = data_model
+  data = data_model,
+  control = betareg.control(method = "BFGS", trace = TRUE)
   ) 
 
 summary(mod_h4)

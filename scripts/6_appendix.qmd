@@ -1,7 +1,10 @@
+```{=latex}
 \newpage
+\renewcommand{\thetable}{\Alph{section}\arabic{table}}
+
+```
 
 ```{r}
-
 pacman::p_load(here)
 source(here("R/00_functions.R"))
 
@@ -9,11 +12,86 @@ source(here("R/00_functions.R"))
 
 # Appendix
 
-## Appendix A: Power Analysis and SESOI
+## Appendix A: Power Analyses determining the SESOIs
 
-## Appendix B: Open Science Statement
 
-## Appendix C: Regression Tables of Confirmatory Analyses
+The simulated-based sensitivity power analysis targeted a statistical power of $1-\beta=0.8$ with a fixed significance level of $\alpha = .05$. The simulated samples sizes were specified according to the hypotheses as follows:
+
+- $\mathcal{H}_1$: $n = 150$ (only traditional meta-analyses)
+- $\mathcal{H}_2$ and $\mathcal{H}_4$: $n = 207$ (both traditional meta-analyses and multisite replication studies)
+- $\mathcal{H}_3$: $n = 57$ (only multisite replication studies) 
+
+The distributional assumptions for the four sensitivity power analyses were specified as follows:
+$$
+\mathcal{H}_1: \quad z_{r_S} \sim \mathcal{N}(\mu=-0.1, \sigma=0.5) \\
+$$
+
+$$
+\mathcal{H}_2 ~ \text{and} ~ \mathcal{H}_3: \quad \Delta_{\mu_d} \sim \mathcal{N}\Big(\mu=0, \sigma_{diff}=\sqrt{0.3^2+0.3^2}\Big) 
+$$
+
+For hypothesis four, the proportions of the categorical predictor of the research synthesis type (traditional meta-analysis $MA$, multisite replication $MR$) were chosen according the the actual proportions of the data ($n_{MA}=150, n_{MR}=57$). For all simulations-based sensitivity power analyses ($\mathcal{H}_1, \mathcal{H}_2, \mathcal{H}_4$), the number of simulations was set to $n_{iter}=5000$. More over, the the beta-regressions on $\omega_{\text{PBS}}$ in $\mathcal{H}_1$, $\mathcal{H}_2$, and $\mathcal{H}_4$ involved simulations for different dispersion parameter conditions $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. 
+
+
+```{=latex}
+\begin{figure}[H]
+\caption{Power Curves of the Sensitivity Power Analyses determining the SESOIs
+\label{fig:sesoi}}
+```
+```{r sesoi}
+#| out-width: 100%
+#| fig-align: center
+knitr::include_graphics(here("figures/power_sesoi.png"))
+```
+
+```{=latex}
+\begingroup
+\scriptsize
+\textit{Note.} OR: Odds ratio. Ribbons around the lines represent the 95\\% confidence interval. 
+\endgroup
+\end{figure}
+```
+
+
+## Appendix B: Research Transparency Statement
+
+As transparent and reproducible as possible. The preregistration of study, the data needed to reproduce the results are open and  data analysis scripts that allow reproducing all reported results are all openly available at URL
+
+- The project is fully st containerized using *Docker* [@merkel_docker_2014]
+- Software and operating system virtualization, fully containerized project using Docker
+R package dependencies and version management using *renv* [@ushey_renv_2024].
+- Data analysis workflow management tool *Snakemake* [@molder_sustainable_2021] 
+- thesis is written using the *Quarto* [@allaire_quarto_2024] open-source scientific and technical publishing system
+
+
+
+## Appendix C: Deviations of Preregistration
+
+
+
+
+## Appendix D: Test
+
+```{r}
+#| results: asis
+#| echo: false
+
+df_lims <- readRDS(here::here("data/src/dist_param_range.rds"))
+
+df_lims |>
+    mutate(across(min:max, ~format_value(.x, digits = 3))) |>
+    nice_table(
+      x = _, 
+      caption = "Estimated Parameters for the Distribution of Effect Size and Sample Size from each Meta-Analysis via ML",
+      general_fn = "Maximum Likelihood Estimation using the Nelder-Mead optimizer.", 
+      col_names = c("Parameter", "Minimum", "Maximum")
+      ) |> 
+      kableExtra::group_rows("Effect Size", 1, 2) |> 
+      kableExtra::group_rows("Sample Size", 3, 4) 
+
+```
+
+## Appendix E: Regression Tables of Confirmatory Analyses
 
 
 ```{r h1_table}
