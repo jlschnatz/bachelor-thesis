@@ -82,6 +82,48 @@ Apart from these more statistical challenges, there is also a more conceptual ch
 
     -   Spearman correlation loosens the assumption of a linear effect in that the relationship has to be only strictly monotic → but still: this is not how publication bias operates
 
-## The present study
+## The Present Study
 
-In summary the use of the effect size-sample size correlation as a method to assess publication bias suffers from various methodological challenges
+Research questions:
+- How does publication bias influence the joint probability distribution of effect size and sample size?
+- How can the magnitude of publication bias in meta-analyses be estimated and effect sizes
+under publication bias be corrected from the joint distribution of sample size and effect
+size
+
+
+- Introduce novel simulation-based method to estimate publication bias in meta-analyses and correct biased effect sizes sizes under publication bias
+- Proof of concept study -> introduce method and assess the method using
+- Introduce and explain new framework to estimate publication bias 
+- Assess the approach using secondary empirical meta-analytical data -> set of predictions/hypotheses that should hold true if the approach works in principle,
+
+
+
+**Hypothesis III**:
+
+Registered reports are an alternative two-stage publishing model, where study protocols are submitted, peer-reviewed and in-princple accepted prior to data collection [@chambers_past_2022; @nosek_registered_2014]. In-princple accepted studies are then published regardless of the outcome of the study, because the decision to publish was made before the results of the studies are known, which completely eliminates publication bias [@simons_introduction_2014; @chambers_past_2022]. Thus, the effect sizes within these multisite replication projects and registered replication reports that are publishied within this framework cannot be biased by publication bias. Thus, the third hypothesis $\mathcal{H}_3$, the average effect size of a registered replication report $\widehat{\delta}$ can be expected to be equivalent to the mean of the Gaussien effect size distribution $\mu_d$ that is estimated within the SPEEC approach within specified equivalence bounds.
+
+$$
+\begin{gathered}
+\Delta_{\mu_d}=\widehat{\delta}-\widehat{\mu}_d \\
+\mathcal{H}_{01}: \Delta_{\mu_d} \leq \Delta_{L} \quad \cap \quad \mathcal{H}_{02}: \Delta_{\mu_d} \geq \Delta_{U} \\
+\mathcal{H}_1: \Delta_L >\Delta_{\mu_d} > \Delta_U
+\end{gathered}
+$${eq-h3}
+
+
+** Hypothesis IV**:
+
+
+when comparing "traditional" meta-analysis to multisite replication studies and registered replication reports 
+
+publication bias) in comparison to normal meta-analysis
+
+In statistical terms, when the regressor is a binary indicator of the type of research synthesis with the reference level being the publication biased absent multisite replication studies ($MR$) and the outcome is the estimated publication bias parameter $\omega_{\text{PBS}}$, the regression coefficient $\beta_{MR}$ can be expected to be greater than zero.
+
+$$
+\begin{gathered}
+\mathcal{H}_0: \quad \beta_{MR} \leq 0 \\
+\mathcal{H}_1: \quad \beta_{MR} > 0
+\end{gathered}
+$${eq-h4}
+
