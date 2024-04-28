@@ -59,11 +59,12 @@ knitr::include_graphics(here("figures/combine_hypotheses.png"))
 
 ```{r}
 #| message: false
+#| echo: false
 
 # Load beta-regression model
 mod_h1 <- read_rds(here("data/src/model_betareg_h1.rds"))
 
-std_mod_h1 <- datawizard::standardise(mod_h1)
+std_mod_h1 <- datawizard::standardise(mod_h1, verbose = FALSE)
 
 # APA-string (OR, CI, SE, z, p)
 b <- coef(mod_h1)
@@ -95,7 +96,7 @@ h1_ame_sd <- format_percent(avg_comparisons(mod_h1, variables = list(z_rs = "sd"
 
 ```
 
-Regarding hypothesis $\mathcal{H}_1$, panel A of figure 2 depicts the relationship between estimated publication bias parameter $\widehat{\omega}_{\text{PBS}}$ and the Fisher *z*-transformed Spearman correlation coefficients $z_{r_S}$ of the effect size sample size association in each meta-analysis. The observed slope was marginally positive, the sign of the coefficient was in the direction of the hypothesis, however statistically non-significant `r string_h1`. This indicates, that lower values of $z_{r_S}$ were not statistally significantly associated with lower publication bias parameter values $\widehat{\omega}_{\text{PBS}}$. Additionally, to enhance the interpretability of the regression slope, we refitted the model with standardized values of $z_{r_S}$ and computed the average marginal effects [@arel-bundock_marginaleffects_2024]. On average, for every standard deviation increase in the Fisher *z*-transformed correlation coefficient $z_{r_S}$ ($SD(z_{r_S})=$ `r sd_zrs`), the model only predicted an increase of `r h1_ame_sd` in the publication bias parameter $\widehat{\omega}_{\text{PBS}}$. In line with this, the general explanative power of the model as determined by the pseudo $R^2$ [@ferrari_beta_2004] was low, $R^2=$ `r r2_h1`.
+Regarding hypothesis $\mathcal{H}_1$, panel A of figure XXX depicts the relationship between estimated publication bias parameter $\epbs$ and the Fisher *z*-transformed Spearman correlation coefficients $z_{r_s}$ of the effect size sample size correlation in each meta-analysis. The observed slope was sign was positive in the direction of the hypothesis and statistically signifcant `r string_h1`. We reject null hypothesis $\mathcal{H}_{0}$, that the beta coefficient is $z_{r_s} \leq 0$. Lower values for $z_{r_s}$ were significantly associated with lower publication bias parameter values $\epbs$.  Additionally, to enhance the interpretability of the regression slope, we refitted the model with standardized values of $z_{r_s}$ and computed the average marginal effects AME [@arel-bundock_marginaleffects_2024]. On average, for every standard deviation increase in the Fisher *z*-transformed correlation coefficient ($SD(z_{r_s})=$ `r sd_zrs`), the model only predicted an increase of `r h1_ame_sd` in the publication bias parameter $\widehat{\omega}_{\text{PBS}}$. In line with this, the general explanative power of the model as determined by the pseudo $R^2$ [@ferrari_beta_2004] was low, $R^2=$ `r r2_h1`. Only `r format_percent(r2_fcn(mod_h1, "w_pbs"))` of the variance in $\eps$ could be explained by $z_{r_s}$.
 
 <!-- Hypotheses II -->
 

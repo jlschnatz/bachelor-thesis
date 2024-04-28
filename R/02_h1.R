@@ -22,8 +22,9 @@ data_optim <- read_csv(here("data/optim/processed/data_optim_merged.csv"))
 data_model <- data_meta |> 
   # Filter only normal Meta-Analysis
   filter(type_synthesis == "ma") |> 
+  # Compute unsigned effect sizes for correlation (as preregistered)
   mutate(abs_d = abs(d)) |>
-  # Fisher z-transformed Spearman correlation coefficient for each meta-analysi
+  # Fisher z-transformed Spearman correlation coefficient for each meta-analysis 
   group_by(id_meta) |> 
   summarise(z_rs = atanh(cor(n, abs_d, method = "spearman"))) |>
   # Join with optimization data

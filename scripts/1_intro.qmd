@@ -100,7 +100,7 @@ $$
 \mathcal{H}_0: \beta_{z_{r_s}} \leq 0 \\
 \mathcal{H}_1: \beta_{z_{r_s}} > 0
 \end{gathered}
-$$ {eq-h1}
+$$ {#eq-h1}
 
 **Hypothesis II**: 
 
@@ -111,7 +111,7 @@ $$
 \mathcal{H}_0: \quad \beta_{\Delta_{\mu_d}} \geq 0 \\ 
 \mathcal{H}_1: \quad \beta_{\Delta_{\mu_d}} < 0
 \end{gathered}
-$$ {eq-h2}
+$$ {#eq-h2}
 
 
 
@@ -126,7 +126,7 @@ $$
 \mathcal{H}_{01}: \Delta_{\mu_d} \leq \Delta_{L} \quad \cap \quad \mathcal{H}_{02}: \Delta_{\mu_d} \geq \Delta_{U} \\
 \mathcal{H}_1: \Delta_L >\Delta_{\mu_d} > \Delta_U
 \end{gathered}
-$$ {eq-h3}
+$$ {#eq-h3}
 
 **Hypothesis IV**:
 
@@ -137,7 +137,7 @@ $$
 \mathcal{H}_0: \quad \beta_{MR} \leq 0 \\
 \mathcal{H}_1: \quad \beta_{MR} > 0
 \end{gathered}
-$$ {eq-h4}
+$$ {#eq-h4}
 
 
 [^1]: The selected number of primary studies aims to visually highlight its inherent limitations. The claims would still hold true even with a significantly lower number of primary studies (more representative of primary studies of meta-analysis e.g., 100), albeit with increased variability.

@@ -9,7 +9,6 @@
 
 <!-- Discussion of Confirmatory Results -->
 
-- No evidence for a relationship between the Fisher-*z*-transformed correlation Spearman coefficients of the corrlation between effect size and sample size and the
 
 <!-- Limitations of study -->
 <!-- Future work -->
