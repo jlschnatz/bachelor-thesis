@@ -22,9 +22,10 @@ data_optim <- read_csv(here("data/optim/processed/data_optim_merged.csv"))
 data_model <- data_meta |> 
   # Filter only normal Meta-Analysis
   filter(type_synthesis == "ma") |> 
+  mutate(abs_d = abs(d)) |>
   # Fisher z-transformed Spearman correlation coefficient for each meta-analysi
   group_by(id_meta) |> 
-  summarise(z_rs = atanh(cor(n, d, method = "spearman"))) |>
+  summarise(z_rs = atanh(cor(n, abs_d, method = "spearman"))) |>
   # Join with optimization data
   left_join(data_optim) |> 
   select(id_meta, z_rs, w_pbs) 
@@ -133,6 +134,9 @@ str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{
 
 
 cat(table_h1, file = here("tables/h1_table.tex"))
+
+
+
 
 
 

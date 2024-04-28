@@ -1,6 +1,6 @@
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
 if(!"pacman" %in% installed.packages()) install.packages("pacman")
-pacman::p_load(sysfonts, showtext, here, tidyverse, fs, patchwork)
+pacman::p_load(sysfonts, showtext, here, tidyverse, fs, patchwork, grid, gridtext)
 source(here("R/00_functions.R"))
 showtext_opts(dpi = 1000)
 font_add_google("Inter", "font")
