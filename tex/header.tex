@@ -43,10 +43,6 @@
 
 \usepackage{units} % for nicefrac
 
-%\usepackage[margin=2.5cm
-  %,showframe% <- only to show the page layout
-%]{geometry}
-
 
 % remove dots from toc
 \usepackage[titles]{tocloft}
@@ -69,14 +65,12 @@
   }
 }
 
-\newcommand{\pbs}{
-  \pbs
-}
-
+% shortcuts for publication bias parameter
+\newcommand{\pbs}{\omega_{\text{PBS}}}
 \newcommand{\epbs}{\widehat{\omega}_{\text{PBS}}}
 
 \usepackage{tabu} % tabu env for tables
 \usepackage{multirow} % valign of table cells
-\usepackage{longtable}
-\usepackage{threeparttablex} 
-\usepackage{amsmath}
+\usepackage{longtable} % longtable
+\usepackage{threeparttablex} % threeparttable
+\usepackage{amsmath} % math font
