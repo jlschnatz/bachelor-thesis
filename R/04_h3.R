@@ -1,13 +1,10 @@
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
 if(!"pacman" %in% installed.packages()) install.packages("pacman")
-pacman::p_load(sysfonts, showtext, here, tidyverse, TOSTER, latex2exp,  systemfonts, kableExtra, ggrepel, sjPlot)
+pacman::p_load(sysfonts, showtext, here, tidyverse, TOSTER, latex2exp,  systemfonts, kableExtra, sjPlot, insight)
 source(here("R/00_functions.R"))
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
-fontname <- "CMU Serif"
-fontpath <- systemfonts::match_font(fontname)$path
-font_add(family = fontname, fontpath)
-font_add_google("Lato", "font")
+font_add_google("Noto Sans Math", "font")
 showtext_opts(dpi = 500)
 showtext_auto()
 
@@ -30,10 +27,10 @@ tost <- with(data_model, t_TOST(
   alpha = 0.05, rm_correction = TRUE, smd_ci = "goulet"
 ))
 
-write_rds(tost, here("data/src/model_tost_h3.rds"))
+write_rds(tost, here("data/src/model_h3.rds"))
 
 # Plot TOSTER Results ———————————————————————————————————————————————————————————————————————————————————————————————————————
-p <- plot_equ_tnull(tost, font = "Open Sans") 
+p <- plot_equ_tnull(tost, font = "Noto Sans Math") 
 write_rds(p, file = here("data/src/plot_h3.rds"))
 
 # Table TOSTER Results ———————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -58,5 +55,4 @@ table_h3 <- nice_table(
   general_fn = "NHST: Null Hypothesis Significance Test, TOST: Two One-Sided Test"
   ) 
 
-cat(table_h3, file = here("tables/h3_table.tex"))
-
+cat(table_h3, file = here("tables/table_h3.tex"))

@@ -12,9 +12,11 @@ pacman::p_load(tidyverse, insight, here)
 
 # Method
 
-## The `SPEEC` Approach
+## The $\mathsfup{SPEEC}$ Method
 
-### Overview
+In this section, provide more detailed walkthrough
+
+
 
 -   Simulation-based approach to estimate publication bias severity and correct potentially biased (inflated) effect sizes under present publication bias based on the joint distribution of effect size and sample size
 -   Simulation of theoretical data > joint distribution of effect size and sample size under marginal distributional assumptions > Application of publication bias > empirical kernel density estimation > comparison of empirical and simulated data > loss function
@@ -57,13 +59,15 @@ knitr::include_graphics(here("figures/speec_workflow.png"))
 
 ### Simulation Framework
 
-The marginal distribution for the total sample size $\mathrm{n}$ should be inherently modeled as a discrete distribution. Count data of this nature are commonly modeled using either a Poisson or Negative-Binomial distribution. In various psychological domains, sample size distributions often exhibit considerable variance and skewness [see for example @cafri_meta-meta-analysis_2010; @marszalek_sample_2011; @sassenberg_research_2019; @shen_samples_2011; @szucs_empirical_2017]. Considering this variability and skewness we opted for the Negative-Binomial distribution which can account for variance independently of the mean and thus handle overdispered data effectively. We use the mean-dispersion parametrization where the probability of sucess $p$ and the target number of sucesses $r$ are reparametrized to mean $\mu = r(1-p)/p$ and dispersion $\phi=r$ to model the study-specific total sample sizes $n_i$.
+Simulation of Random Samples from Theoretical Model -> Defining the marginal distributions for effect size and sample size to be sampled from
+
+The marginal distribution for the total sample size $\mathrm{n}$ of a study should be inherently modeled as a discrete distribution. Count data of this nature are commonly modeled using either a Poisson or Negative-Binomial distribution. In various psychological domains, sample size distributions often exhibit considerable variance and skewness [see for example @cafri_meta-meta-analysis_2010; @marszalek_sample_2011; @sassenberg_research_2019; @shen_samples_2011; @szucs_empirical_2017]. Considering this variability and skewness we opted for the Negative-Binomial distribution which can account for variance independently of the mean and thus handle overdispered data effectively. We use the mean-dispersion parametrization where the probability of sucess $p$ and the target number of sucesses $r$ are reparametrized to mean $\mu = r(1-p)/p$ and dispersion $\phi=r$ to model the study-specific total sample sizes $n_i$.
 
 $$
 n_1, \,n_2,\, \ldots, \,n_k \quad \text{where} \quad N\stackrel{\mathrm{i.i.d.}}{\sim} \mathcal{NB}(\phi_n, \mu_n) \quad \text{for } i = 1, \ldots, k
 $$ {#eq-nb-dist}
 
-Concerning the marginal distribution of the effect size $d$, we assume a normal distribution with mean $\mu_d$ and variance $\sigma^2_d$, where the effect size itself is assumed to originate from a common two-sample independent *t*-test design. To address the increasing precision in estimating the true effect size mean $\mu_d$ as sample size increases, contributing to the characteristic funnel shape of the effect size-sample size distribution, we compute the variance of the mean differences $\bar{x}_{i1} - \bar{x}_{i2}$, from which the effect sizes originate in this type of design. Subsequently, we derive a normalization factor $\gamma_i$ by dividing each individual variance $\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}$ with overall mean of those variances ensuring that $\bar{\gamma}=1$.
+Concerning the marginal distribution of the effect size $\mathrm{d}$, it is reasonable to assume a normal Gaussian distribution with mean $\mu_d$ and variance $\sigma^2_d$, where the effect size itself is assumed to originate from a common two-sample independent *t*-test design. To address the increasing precision in estimating the true effect size mean $\mu_d$ as sample size increases (i.e., the sampling error), that contributed to the characteristic funnel shaped effect size-sample size distribution, we compute the variance of the mean differences $\bar{x}_{i1} - \bar{x}_{i2}$, from which the effect sizes originate in this type of design. Subsequently, we derive a normalization factor $\gamma_i$ by dividing each individual variance $\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}$ with overall mean of those variances ensuring that $\bar{\gamma}=1$.
 
 $$
 \begin{gathered}
@@ -78,9 +82,11 @@ $$
 d_1, \,d_2, \,\ldots, \,d_k \quad \text{where} \quad D \stackrel{}{\sim} \mathcal{N}(\mu_d, \gamma_i\cdot\sigma_d^2) \quad \text{for} \quad i = 1, \ldots, k 
 $$ {#eq-norm-dist}
 
+Given the definitions of the marginal distributions, $k$ individual studies are sampled from the joint distribution of effect size and sample size. The selection of $k$ is user-defined, but generally the larger the number of random samples $k$, the lower the uncertainty of the joint effect size sample size distribution will be. In general, there is a tradeoff between increased computational resources and the reduced uncertainty of the joint distribution for higher values of $k$. We opted for $k=10^4$ random samples for each simulation iteration.
+
 ### Application of Publication Bias
 
-Following the simulation step of sampling $k$ individual studies from the joint distribution of effect size and sample size conditional on the parameters, the subsequent step entails applying publication bias to these samples. As mentioned in the introduction, we operationalize publication bias in terms of the likelihood of a study being published conditional on the statistical significance of its results. Translated to this simulation setting we can calculate the two-tailed *p*-value of each individual study $i$ from the random samples of effect size $d_i$ and sample size $n_i$. We presume that individual studies $i$ originate from a balanced sample size design, where the group sample sizes $n_{1i}$ and $n_{2i}$ are defined as $n_i/2$ when the total sample size is even. If the total sample size is odd, the group sample sizes are determined as the ceilinged $\lceil n_i/2 \rceil$ and and floored $\lfloor n_i/2 \rfloor$ values, respectively. To calculate the *p*-value $p_i$ of each simulated study, derived from *t*-value $t_i$
+Following the simulation step of sampling $k$ individual studies from the joint distribution of effect size and sample size conditional on the distributional parameters, the subsequent step entails the application of publication bias to these random samples. As mentioned in the introduction, we operationalize publication bias in terms of the likelihood of a study being published conditional on the statistical significance of its results. Translated to this simulation setting we can calculate the two-tailed *p*-value of each individual study $i$ from the random samples of effect size $d_i$ and sample size $n_i$. We presume that individual studies $i$ originate from a balanced sample size design, where the group sample sizes $n_{1i}$ and $n_{2i}$ are defined as $n_i/2$ when the total sample size is even. If the total sample size is odd, the group sample sizes are determined as the ceilinged $\lceil n_i/2 \rceil$ and and floored $\lfloor n_i/2 \rfloor$ values, respectively. To calculate the *p*-value $p_i$ of each simulated study, derived from *t*-value $t_i$
 
 $$
 t_i=\Big\lvert \frac{d_i}{\sqrt{1/n_{1i} +1/n_{2i}}} \Big\rvert 
@@ -98,9 +104,9 @@ $$
 1 & \text{otherwise}\end{cases}
 $$ {#eq-pbs}
 
-given $\pbs \in \mathbb{R} : 0 \leq \pbs \leq 1$. This weight denotes the probability of a study $i$ being selected conditional on the *p*-value and the type I error rate $\alpha$. If a study $i$ was not statistically significant ($p_i \geq \alpha$), a publication bias weight $\pbs$ is assigned, else the probability of a study being selected is 1, indicating no publication bias. Thus, the publication bias parameter $\pbs$ denotes the relative probability of a nonsignificant study being selected relative relative to a significant study being selected.We assume a fixed type I error rate for all simulated studies at the common threshold of $\alpha = .05$.
+where $\pbs \in \mathbb{R} : 0 \leq \pbs \leq 1$. This weight denotes the probability of a study $i$ being selected conditional on the *p*-value and the type I error rate $\alpha$. If a study $i$ was not statistically significant ($p_i \geq \alpha$), a publication bias weight $\pbs$ is assigned, else the probability of a study being selected is 1, indicating no publication bias. Thus, the publication bias parameter $\pbs$ denotes the relative probability of a nonsignificant study being selected relative relative to a significant study being selected. We assume a fixed type I error rate for all simulated studies at the commonly chosen significance threshold of $\alpha = .05$ for the analysis of the hypotheses. However, user may define a different $\alpha$-level depending on their specific needs.
 
-Following the computation of publication bias weight $\omega_{\text{PBS}_i}$ for each study $i$, the likelihood of a study being selected can be expressed as $\mathbb{P}(S_i = 1)= \omega_{\text{PBS}_i}$. Here, $S_i$ serves as a binary indicator function, signifying whether study $i$ is selected during the publication bias process.
+Following the computation of publication bias weight $\omega_{\text{PBS}_i}$ for each study $i$, the likelihood of a study being selected can be expressed as $\mathbb{P}(S_i = 1)= \omega_{\text{PBS}_i}$. Here, $S_i$ is a binary indicator function, signifying whether study $i$ is selected during the publication bias process.
 
 $$
 S_i = 

@@ -23,7 +23,8 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[LE,RO]{\thepage}
-\fancyhead[RE,LO]{Publication Bias}
+\fancyhead[RE,LO]{}
+
 \usepackage{tabularx} % automatic line break in a table
 
 \addtokomafont{disposition}{\rmfamily} % use roman font for section headers
@@ -74,3 +75,6 @@
 \usepackage{longtable} % longtable
 \usepackage{threeparttablex} % threeparttable
 \usepackage{amsmath} % math font
+
+% shortcut for hypothesis naming [number hypothesis, type hypothesis (null: 0, alternative: 1)]
+\newcommand{\hypothesis}[2]{\mathcal{H}^{\text{#1}}_{\text{#2}}}

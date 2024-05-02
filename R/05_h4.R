@@ -8,10 +8,7 @@ pacman::p_load(
 source(here("R/00_functions.R"))
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
-fontname <- "CMU Sans Serif"
-fontpath <- match_font(fontname)$path
-font_add(family = fontname, fontpath)
-font_add_google("Inter", "font")
+font_add_google("Noto Sans Math", "font")
 showtext_opts(dpi = 500)
 showtext_auto()
 
@@ -38,7 +35,7 @@ mod_h4 <- betareg(
   ) 
 
 summary(mod_h4)
-write_rds(mod_h4, here("data/src/model_betareg_h4.rds"))
+write_rds(mod_h4, here("data/src/model_h4.rds"))
 
 # Plot model predictions ————————————————————————————————————————————————————————————————————————————————————————————————————
 set.seed(42)
@@ -133,4 +130,4 @@ table_h4 <- nice_table(
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
   group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") 
 
-cat(table_h4, file = here("tables/h4_table.tex"))
+cat(table_h4, file = here("tables/table_h4.tex"))

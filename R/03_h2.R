@@ -7,9 +7,7 @@ pacman::p_load(
 source(here("R/00_functions.R"))
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
-fontname <- "CMU Sans Serif"
-fontpath <- systemfonts::match_font(fontname)$path
-font_add(family = fontname, fontpath)
+font_add_google("Noto Sans Math", "font")
 showtext_opts(dpi = 500)
 showtext_auto()
 
@@ -32,12 +30,9 @@ mod_h2 <- betareg(
   data = data_model,
   control = betareg.control(method = "BFGS", trace = TRUE)
 )
-
 summary(mod_h2)
 
-library(marginaleffects)
-avg_slopes(mod_h2)
-avg_comparisons(mod_h2, variables = list(Delta = "sd"))
+write_rds(mod_h2, here("data/src/model_h2.rds"))
 
 
 # Plot model predictions ———————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -59,7 +54,7 @@ p <- ggeffect(mod_h2, "Delta [-.7:.7, by = 0.01]") |>
     expand = expansion(),
   ) +
   scale_x_continuous(
-    name = latex2exp::TeX("Difference $\\Delta_{\\widehat{\\mu}_d, \\widehat{\\delta}}$"),
+    name = latex2exp::TeX("Difference $\\Delta_{\\widehat{\\mu}_d}$"),
     limits = c(-.8, .8),
     breaks = seq(-.8, .8, .2),
     expand = expansion()
@@ -67,7 +62,7 @@ p <- ggeffect(mod_h2, "Delta [-.7:.7, by = 0.01]") |>
   coord_cartesian(clip = "off") +
   theme_sjplot() +
   theme(
-    text = element_text(family = fontname),
+    text = element_text(family = "font"),
     plot.margin = margin(5, 5, 5, 5, "mm"),
     axis.title.y = element_text(margin = margin(r = 0, unit = "mm")),
     axis.text.y = element_text(margin = margin(l = 0, unit = "mm")),
@@ -77,7 +72,6 @@ p <- ggeffect(mod_h2, "Delta [-.7:.7, by = 0.01]") |>
 write_rds(p, file = here("data/src/plot_h2.rds"))
 
 # Generate table with model results ————————————————————————————————————————————————————————————————————————————————————
-
 z <- coef(mod_h2) / sqrt(diag(vcov(mod_h2)))
 p_b2 <- pnorm(z[2], lower.tail = TRUE)
 
@@ -109,10 +103,9 @@ table_h2 <- nice_table(
   group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") 
 
 
-cat(table_h2, file = here("tables/h2_table.tex"))  
+cat(table_h2, file = here("tables/table_h2.tex"))  
 
 # Exploratory model ———————————————————————————————————————————————————————————————————————————————————————————————————————
-
 # Fit
 mod_h2_exploratory <- betareg(
   formula = w_pbs ~ I(Delta**2) | I(Delta**2),
@@ -131,3 +124,5 @@ model_comp <- lrtest(mod_h2, mod_h2_exploratory) |>
   mutate(across(everything(), as.character)) |> 
   mutate(across(everything(), ~replace_na(.x, "")))  |> 
   select(-df)
+
+# n.s.

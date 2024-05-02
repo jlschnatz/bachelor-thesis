@@ -12,6 +12,6 @@ plots <- (reduce(map(file_paths, read_rds), `+`) + plot_annotation(tag_levels = 
     theme(plot.tag = element_text(face = "bold", family = "font"))
 
 ggsave(
-  filename = here("figures/combine_hypotheses.png"),
+  filename = here("figures/hypotheses_multipanel.png"),
   plot = plots, width = 9, height = 6.5, dpi = 1000
   )

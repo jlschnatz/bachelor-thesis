@@ -14,8 +14,7 @@ pacman::p_load(
 )
 # Source custom functions
 source(here("R/00_functions.R"))
-font_add_google("Noto Sans", "font")
-font_add_google("Inter", "font")
+font_add_google("Noto Sans Math", "font")
 showtext_auto()
 showtext_opts(dpi = 500)
 set.seed(42)
@@ -50,15 +49,6 @@ ml_optim2 <- data_meta |>
   unnest(nb) |>
   mutate(parameter = case_match(parameter, "parameter1" ~ "ml_phi_n", "parameter2" ~ "ml_mu_n")) |>
   pivot_wider(names_from = parameter, values_from = value)
-
-inner_join(ml_optim1, ml_optim2, by = join_by(id_meta)) |>
-  pivot_longer(-id_meta, names_to = "parameter") |>
-  summarise(min = min(value), max = max(value), .by = parameter)
-
-
-data_meta |>
-group_by(id_meta) |>
-summarise(n = mean(n)) |> slice_max(n)
 
 # k primary studies
 data_k <- summarise(data_meta, k = n(), .by = id_meta)
@@ -137,7 +127,7 @@ cor_table <- nice_table(
   kableExtra::column_spec(column = 6, width = "2.2cm") 
 
 
-cat(cor_table, file = here("tables/ml_speec_diff_cor.tex"))
+cat(cor_table, file = here("tables/table_diagnostic_cormat.tex"))
 
 # Desriptives Statistics: Quartile of the parameter estiamtes ————————————————————————————————————————————————————————————————————————————————————————————————————
 
@@ -156,7 +146,7 @@ table_descr_discr <- data_ml_speec |>
   )) |>
   nice_table(caption = caption_descr, col_names = c("Parameter", paste0("$Q_", 0:4, "$")), digits = 2)
 
-cat(table_descr_discr, file = here("tables/table_descr_discrepancy_ml_speec.tex"))
+#cat(table_descr_discr, file = here("tables/table_descr_discrepancy_ml_speec.tex"))
 
 data_ml_speec |> 
   select(starts_with("delta")) |>
@@ -168,18 +158,52 @@ data_ml_speec |>
     q10 = quantile(value, .1), q25 = quantile(value, .25), q75 = quantile(value, .75), q90 = quantile(value, .9)
     ) |>
   mutate(across(where(is.numeric), \(x) round(x, 2))) |>
-  write_rds(here("data/src/data_descr_discrepancy_ml_speec.rds"))
+  write_rds(here("data/src/method_comparison_descr.rds"))
 
 # Pairwise comparison plots: ML vs SPEEC
 
 minor_breaks <- rep(1:9, 21)*(10^rep(-10:10, each=9))
+
+plot_comparison <- function(data, x, y, color, scales) {
+  enquo_x <- rlang::enquo(x)
+  enquo_y <- rlang::enquo(y)
+  enquo_color <- rlang::enquo(color)
+  data |>
+    filter(id_meta %in% id_mr) |>
+    ggplot(aes(!!enquo_x, !!enquo_y)) +
+    geom_point(
+      aes(color = !!enquo_color),
+      size = 2.5,
+      alpha = .6
+    ) +
+    scale_y_continuous(
+      name = scales$y$name,
+      limits = scales$y$limits,
+      breaks = scales$y$breaks,
+      expand = expansion()
+    ) +
+    scale_x_continuous(
+      name = scales$x$name,
+      limits = scales$x$limits,
+      breaks = scales$x$breaks,
+      expand = expansion()
+    ) +
+    coord_equal() +
+    scale_colour_paletteer_c(
+    name = scales$color$name,
+    palette = "pals::kovesi.linear_bmy_10_95_c78",
+    limits = scales$color$limits,
+    breaks = scales$color$breaks
+    ) +
+    theme_comparison()
+}
 
 # mu_n
 p_mu_n <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_mu_n, mu_n)) +
   geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
-  geom_point(aes(color = abs_delta_mu_n), size = 2.5, alpha = .6) +
+  geom_point(aes(color = abs_delta_mu_n), size = 2.5, alpha = .5) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\mu}_{n_{ML}}$"),
     limits = c(0, 400),
@@ -194,9 +218,10 @@ p_mu_n <- data_ml_speec |>
   ) +
   coord_equal() +
   scale_colour_paletteer_c(
-    name = TeX("$|\\widehat{\\mu}_{n_{SPEEC}} - \\widehat{\\mu}_{n_{ML}} |$"),
+    name = TeX(r"($\Delta_{\mu_n}^{*}=|\widehat{\mu}_{n_{SPEEC}} - \widehat{\mu}_{n_{ML}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
-    limits = c(0, 200)
+    limits = c(0, 180),
+    breaks = seq(0, 180, 60)
   ) +
   theme_comparison()
 
@@ -205,7 +230,7 @@ p_phi_n <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_phi_n, phi_n)) +
   geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
-  geom_point(aes(color = abs_delta_phi_n), size = 2.5, alpha = .6) +
+  geom_point(aes(color = abs_delta_phi_n), size = 2.5, alpha = .5) +
   scale_x_continuous(
     name = TeX("$\\widehat{\\phi}^2_{n_{ML}}$"),
     trans = log10_trans(),
@@ -226,7 +251,7 @@ p_phi_n <- data_ml_speec |>
   ) +
   coord_equal() +
   scale_colour_paletteer_c(
-    name = TeX("$|\\widehat{\\phi}_{n_{SPEEC}} - \\widehat{\\phi}_{n_{ML}} |$"),
+    name = TeX(r"($\Delta_{\phi_n}^{*}=|\widehat{\phi}_{n_{SPEEC}} - \widehat{\phi}_{n_{ML}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = 10**c(-1, 2),
     breaks = 10**seq(-1, 2), 
@@ -240,7 +265,7 @@ p_phi_n <- data_ml_speec |>
 p_mu_d <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_mu_d, mu_d, color = abs_delta_mu_d)) +
-  geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
+  geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .5) +
   geom_point(
     size = 2.5,
     alpha = .6
@@ -259,9 +284,10 @@ p_mu_d <- data_ml_speec |>
   ) +
   coord_equal() +
   scale_colour_paletteer_c(
-    name = TeX("$|\\widehat{\\mu}_{d_{SPEEC}} - \\widehat{\\mu}_{d_{ML}} |$"),
+    name = TeX(r"($\Delta_{\mu_d}^{*}=|\widehat{\mu}_{d_{SPEEC}} - \widehat{\mu}_{d_{ML}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
-    limits = c(0, .5)
+    limits = c(0, .3),
+    breaks = seq(0, 0.3, 0.1)
   ) +
   theme_comparison()
 
@@ -269,7 +295,7 @@ p_mu_d <- data_ml_speec |>
 p_sigma2_d <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
   ggplot(aes(ml_sigma2_d, sigma2_d)) +
-  geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
+  geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .5) +
   geom_point(
     aes(color = abs_delta_sigma2_d),
     size = 2.5,
@@ -295,7 +321,7 @@ p_sigma2_d <- data_ml_speec |>
   ) +
   coord_fixed() +
   scale_colour_paletteer_c(
-    name = TeX("$|\\widehat{\\sigma}^2_{d_{SPEEC}} - \\widehat{\\sigma}^2_{d_{ML}} |$"),
+    name = TeX(r"($\Delta_{\sigma^2_d}^{*}=|\widehat{\sigma}^2_{d_{SPEEC}} - \widehat{\sigma}^2_{d_{ML}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = 10**c(-4, 1),
     breaks = 10**seq(-4, 1),
@@ -313,7 +339,7 @@ p_comb <- (p_mu_d | p_sigma2_d | p_mu_n | p_phi_n) +
 # Save
 ggsave(
   plot = p_comb, 
-  filename = here("figures/ml_speec_comparison.png"), 
+  filename = here("figures/method_comparison.png"), 
   width = 11, height = 3.5, 
   bg = "white", dpi = 500
   )

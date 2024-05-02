@@ -11,7 +11,7 @@ fontname <- "CMU Sans Serif"
 fontpath <- systemfonts::match_font(fontname)$path
 font_add(family = fontname, fontpath)
 showtext_opts(dpi = 500)
-font_add_google("Inter", "font")
+font_add_google("Noto Sans Math", "font")
 showtext_auto()
 
 # Load data ————————————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -44,20 +44,7 @@ std_mod_h1 <- standardise(mod_h1)
 summary(mod_h1)
 summary(std_mod_h1)
 
-# 1-SD increases in the predictor results in change in w_wpbs
-format_percent(plogis(coef(std_mod_h1)[1] + 1 * coef(std_mod_h1)[2]) - plogis(coef(std_mod_h1)[1]))
-
-exp(predict(std_mod_h1, newdata = data.frame(z_rs = 0), type = "link")) * exp(coef(std_mod_h1))[2]
-
-
-avg_slopes(std_mod_h1)
-plogis((coef(std_mod_h1)[1] + 1 * coef(std_mod_h1)[2])) - plogis(coef(std_mod_h1)[1])
-
-exp(predict(std_mod_h1, newdata = data.frame(z_rs = 0), type = "link")) * exp(coef(std_mod_h1))[2]
-exp(predict(std_mod_h1, newdata = data.frame(z_rs = 1), type = "link"))
-
-
-write_rds(mod_h1, here("data/src/model_betareg_h1.rds"))
+write_rds(mod_h1, here("data/src/model_h1.rds"))
 
 # Generate scatter plot with model predictions —————————————————————————————————————————————————————————————————————————
 predictions(mod_h1, by  = "z_rs", type = "response", conf_level = 0.95) |> 
@@ -125,16 +112,13 @@ table_h1 <- nice_table(
   digits = 2,
   col_names = c("Term", "Estimate", "$CI$ (95\\%)", "$SE$", "$z$", "$p$"),
   general_fn = report_fit(mod_h1, "w_pbs"),
-  alphabet_fn = c("$OR$", "Identity coefficient"),
-  #remove_para = FALSE
+  alphabet_fn = c("$OR$", "Identity coefficient")
 ) |>
 group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
 group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
 str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
 
-
-
-cat(table_h1, file = here("tables/h1_table.tex"))
+cat(table_h1, file = here("tables/table_h1.tex"))
 
 
 

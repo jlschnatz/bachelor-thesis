@@ -9,3 +9,6 @@ if (interactive() && Sys.getenv("TERM_PROGRAM") == "vscode") {
     })
   }
 }
+
+options(renv.verbose = FALSE)
+

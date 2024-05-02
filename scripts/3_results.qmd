@@ -15,7 +15,7 @@ source(here("R/00_functions.R"))
 
 # Results
 
-## Variable Dispersion of $\pbs$
+## Evaluation the Assumptions for the SESOIs
 
 ```{r dispersion-w-wpbs}
 
@@ -31,7 +31,8 @@ string_phi <- glue("$\\widehat{\\phi}$ = {{m_phi$b}}, {{m_phi$ci}}, $SE$ = {{m_p
 
 ```
 
-As an initial step, the assumptions made to determine the Smallest Effect Sizes of Interest (SESOI) for the four hypotheses were assessed. In the simulations-based sensitivity power analyses aimed at ascertaining the SESOIs (refer to the Appendix for details), three dispersion parameter conditions $\phi:\{10, 20, 30\}$ for the distribution of the publication bias parameter $\pbs$ were simulated. Employing an intercept-only beta regression model with the complete dataset, the estimated dispersion parameter was `r string_phi`. This finding contradicts our initial assumptions regarding the dispersion parameter's magnitude, rendering the interpretation of SESOIs for our hypotheses untenable. Consequently, it is appropriate to refrain from interpreting SESOIs in the subsequent analyses.
+As an initial step, the assumptions made to determine the Smallest Effect Sizes of Interest (SESOI) for the four hypotheses were assessed. In the simulations-based sensitivity power analyses aimed to determine the SESOIs (see the Appendix for detailed explanations), three dispersion parameter conditions $\phi:\{10, 20, 30\}$ for the distribution of the publication bias parameter $\pbs$ were simulated. Employing an intercept-only beta regression model with the complete dataset, the estimated dispersion parameter was `r string_phi`. This finding contradicts our initial assumptions regarding the dispersion parameter's magnitude, rendering the interpretation of SESOIs for our hypotheses untenable. Consequently, it is appropriate to refrain from interpreting SESOIs that were determined from the simulation-based sensitivty power analyses in the subsequent analyses.
+
 
 <!-- Multi-Panel Figure for Hypotheses -->
 
@@ -43,7 +44,7 @@ As an initial step, the assumptions made to determine the Smallest Effect Sizes 
 ```{r hypotheses}
 #| out-width: 90%
 #| fig-align: center
-knitr::include_graphics(here("figures/combine_hypotheses.png"))
+knitr::include_graphics(here("figures/hypotheses_multipanel.png"))
 ```
 
 ```{=latex}
@@ -62,7 +63,7 @@ knitr::include_graphics(here("figures/combine_hypotheses.png"))
 #| echo: false
 
 # Load beta-regression model
-mod_h1 <- read_rds(here("data/src/model_betareg_h1.rds"))
+mod_h1 <- read_rds(here("data/src/model_h1.rds"))
 
 std_mod_h1 <- datawizard::standardise(mod_h1, verbose = FALSE)
 
@@ -94,15 +95,17 @@ r2_h1 <- format_value(r2_fcn(mod_h1, "w_pbs"), digits = 3)
 # Calculate AME (1-sd increases) -> probability scale
 h1_ame_sd <- format_percent(avg_comparisons(mod_h1, variables = list(z_rs = "sd"))$estimate)
 
+r2_percent <- str_replace(format_percent(r2_fcn(mod_h1, "w_pbs")), "\\%", "\\\\%")
+
 ```
 
-Regarding hypothesis $\mathcal{H}_1$, panel A of figure XXX depicts the relationship between estimated publication bias parameter $\epbs$ and the Fisher *z*-transformed Spearman correlation coefficients $z_{r_s}$ of the effect size sample size correlation in each meta-analysis. The observed slope was sign was positive in the direction of the hypothesis and statistically signifcant `r string_h1`. We reject null hypothesis $\mathcal{H}_{0}$, that the beta coefficient is $z_{r_s} \leq 0$. Lower values for $z_{r_s}$ were significantly associated with lower publication bias parameter values $\epbs$.  Additionally, to enhance the interpretability of the regression slope, we refitted the model with standardized values of $z_{r_s}$ and computed the average marginal effects AME [@arel-bundock_marginaleffects_2024]. On average, for every standard deviation increase in the Fisher *z*-transformed correlation coefficient ($SD(z_{r_s})=$ `r sd_zrs`), the model only predicted an increase of `r h1_ame_sd` in the publication bias parameter $\widehat{\omega}_{\text{PBS}}$. In line with this, the general explanative power of the model as determined by the pseudo $R^2$ [@ferrari_beta_2004] was low, $R^2=$ `r r2_h1`. Only `r format_percent(r2_fcn(mod_h1, "w_pbs"))` of the variance in $\eps$ could be explained by $z_{r_s}$.
+Regarding hypothesis $\mathcal{H}_1$, panel A of figure XXX depicts the relationship between estimated publication bias parameter $\epbs$ and the Fisher *z*-transformed Spearman correlation coefficients $z_{r_s}$ of the effect size sample size correlation in each meta-analysis. The observed slope was sign was positive in the direction of the hypothesis and statistically signifcant `r string_h1`. We reject null hypothesis $\mathcal{H}_{0}$, that the beta coefficient is $z_{r_s} \leq 0$. Lower values for $z_{r_s}$ were significantly associated with lower publication bias parameter values $\epbs$.  Additionally, to enhance the interpretability of the regression slope, we refitted the model with standardized values of $z_{r_s}$ and computed the average marginal effects using the *marginaleffects* package [@arel-bundock_marginaleffects_2024]. On average, for every standard deviation increase in the Fisher *z*-transformed correlation coefficient, $SD(z_{r_s})=$ `r sd_zrs`, the model only predicted an increase of `r h1_ame_sd` in the publication bias parameter $\widehat{\omega}_{\text{PBS}}$. In line with this, the general explanative power of the model as determined by the pseudo $R^2$ [@ferrari_beta_2004] was low, $R^2=$ `r r2_h1`. Thus, only `r r2_percent` of the variance in $\pbs$ could be explained by the variance  of $z_{r_s}$.
 
 <!-- Hypotheses II -->
 
 ```{r}
 # Load beta-regression model
-mod_h2 <- read_rds(here("data/src/model_betareg_h2.rds"))
+mod_h2 <- read_rds(here("data/src/model_h2.rds"))
 std_mod_h2 <- standardise(mod_h2)
 
 # APA-string (OR, CI, SE, z, p)
@@ -148,7 +151,7 @@ Concerning $\mathcal{H}_2$, panel B of figure 1 depicts the relationship between
 ```{r}
 #| results: asis
 
-tost_model <- read_rds(here::here("data/src/model_tost_h3.rds"))
+tost_model <- read_rds(here::here("data/src/model_h3.rds"))
 tidy_tost <- tost_model |>
     pluck("TOST") |>
     as.data.frame() |>
@@ -184,7 +187,7 @@ In relation to hypothesis $\mathcal{H}_3$, panel C of Figure 2 illustrate the me
 
 ```{r}
 
-mod_h4 <- read_rds(here("data/src/model_betareg_h4.rds"))
+mod_h4 <- read_rds(here("data/src/model_h4.rds"))
 
 # Descriptives
 descr_h4 <- summarise(mod_h4$model, w_pbs = format_value(mean(w_pbs), digits = 2), .by = type_synthesis)
@@ -217,22 +220,6 @@ Finally, regarding hypothesis $\mathcal{H}_4$, panel D of Figure 2 illustrates t
 
 ## Diagnostic Evaluation of Parameter Estimation in SPEEC
 
-```{r}
-discr_ml_speec <- as.data.frame(read_rds(here("data/src/data_descr_discrepancy_ml_speec.rds")))
-rownames(discr_ml_speec) <- discr_ml_speec$parameter
-
-str_discr <- function(x, parameter) {
-    x$parameter <- dplyr::case_match(x$parameter,
-    "delta_mu_d" ~ "({\\Delta_{\\mu_d}})",
-    "delta_sigma2_d" ~ "({\\Delta_{\\sigma^2_d}})",
-    "delta_phi_n" ~ "({\\Delta_{\\phi_n}})",
-    "delta_mu_n" ~ "({\\Delta_{\\mu_n}})"
-    )
-    subs <- x[parameter, ]
-    glue::glue('$M{subs$parameter}$ = {subs$mean}, $Mdn{subs$parameter}$ = {subs$median}')
-}
-
-```
 
 As this study relies on empirical data to preliminarily assess the proposed SPEEC approach, the true values for the distributional parameters and the publication bias parameter are unknown. However, as discussed previously, publication bias is inherently absent by design in multisite replication studies and registered reports. Thus, the four distributional parameters ($\mu_d$, $\sigma^2_d$, $\mu_n$, $\phi_n$) within the SPEEC approach cannot be biased due to publication bias (especially the mean and variance of the effect size distribution). Leveraging this fact, we can use a subset of the data encompassing the multisite replication studies and registered reports for a diagnostic evaluation of the parameter estimation within the SPEEC approach. More specifically, we can derive Maximum Likelihood estimates for the distributional parameters to compare them with the corresponding values estimated by the SPEEC approach, anticipating approximate equivalence between the two approaches. This part was of the analysis was not preregistered and conceived after the confirmatory analyses were conducted. Based on this comparative approach between ML and SPEEC, we formulated five diagnostic questions to assess parameter estimation:
 
@@ -252,7 +239,7 @@ The Maximum Likelihood estimates for the distributional parameters were obtained
 #| out-width: 100%
 #| fig-align: center
 #| layout-align: center
-knitr::include_graphics(here("figures/ml_speec_comparison.png"))
+knitr::include_graphics(here("figures/method_comparison.png"))
 ```
 
 ```{=latex}
@@ -263,6 +250,16 @@ knitr::include_graphics(here("figures/ml_speec_comparison.png"))
 \end{figure}
 ```
 
+
+```{r}
+#| echo: false
+
+
+discr_ml_speec <- as.data.frame(read_rds(here("data/src/method_comparison_descr.rds")))
+rownames(discr_ml_speec) <- discr_ml_speec$parameter
+
+```
+
 Regarding question one, Figure 3 provides a visual summary of the analysis comparing the distributional parameters estimated by the SPEEC method against those estimated by Maximum Likelihood Estimation (MLE). The diagonal line signifies perfect alignment between MLE and SPEEC estimates. Values below the diagonal indicate higher values for MLE compared to SPEEC, while values above the diagonal indicate the opposite. 
 
 Panel A of figure XX reiterates the findings of the analysis of $\mathcal{H}_3$, suggesting a small discrepancy between the two methods in estimating the mean of the Gaussian effect size distribution, `r str_discr(discr_ml_speec, "delta_mu_d")`. This discrepancy can be deemed practically negligible according to the equivalence test of $\mathcal{H}_3$. However, the other panels indicate contrasting outcomes.Panel B reveils a systematic discepancy in the estimation of the variance parameter of the Gaussien effect size distribution between SPEEC and MLE, `r str_discr(discr_ml_speec, "delta_sigma2_d")`. Descriptively, this suggests that on average, the variance was estimated to be greater in the SPEEC approach compared to MLE. Furthermore, this discrepancy increases in exponential trend and displays substantial heteroscedasticity with rising variance estimates from the MLE approach. Similarly, Panel C also illustrates a systematic overestimation of the mean parameter of the Negative-Binomial sample size distribution by SPEEC in comparison to MLE (`r str_discr(discr_ml_speec, "delta_mu_n")`), which again increases in an exponential trend with higher mean parameter estimates from MLE. Lastly, Panel D shows that the SPEEC approach generally understimates dispersion parameter of the sample size distribution in comparison to the ML estimate (`r str_discr(discr_ml_speec, "delta_phi_n")`) and also furthermore indicates a systematic relationship in the discrepancy between the two approaches.
@@ -270,7 +267,7 @@ Panel A of figure XX reiterates the findings of the analysis of $\mathcal{H}_3$,
 ```{r tab-ml-speec}
 #| results: asis
 
-table_ml_speec <- read_tex(here("tables/ml_speec_diff_cor.tex"))
+table_ml_speec <- read_tex(here("tables/table_diagnostic_cormat.tex"))
 cat(table_ml_speec, sep = "\n")
 
 ```

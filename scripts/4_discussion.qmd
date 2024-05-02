@@ -2,16 +2,46 @@
 
 # Discussion
 
+<!-- Reiterating central purpose and scope of study -->
 
-<!-- Discussion of Approach -->
+<!-- Summary of key findings of confirmatory and exploratory analyses -->
+
+- Analysis four theoretical predictions that should hold true, if the approach works in principle -> or phrased oppositely, if we don´t find evidence for the hypotheses -> there are problems
+
+*Confirmatory findings:*:
+
+- Out of the four hypotheses, we found evidence for three predictions (speaking statistically) -> H1, H2, H3
+- No evidence that publication bias parameter is greater (less severe publication bias) in registered replication reports in comparison to traditional meta-analyses -> concerning result -> motivated the additional exploratory diagnostic analyses to assess potential problems of the parameter optimization
+
+*Exploratory findings:*:
+
+**Q1:** 
+
+- There are differences between the the ML and SPEEC estimates -> for variance of effect size distribution, and mean and dispersion parameter of sample size distribution
+- These differences are not unsystematic across the entire range of the distributional parameters estimated via ML but rather show systematic trends (e.g.,)
 
 
+  
 
-<!-- Discussion of Confirmatory Results -->
-
+<!-- Interpretation of results and implications of study -->
 
 <!-- Limitations of study -->
+
+
 <!-- Future work -->
 
+<!-- Conclusion -->
+
+- We did not find working approach for parameter optimization of the study -> this should/could be the focus of future studies
+
+- Framework has several areas which could be responsible for optimization problems
+  - The choice of grid size
 - Need for larger simulations study
-- 
+  - Systematically vary: heterogeneity, true effect size, publication bias severity, meta-analysis study size $k$
+  - But also the control parameters of the SPEEC approach could be varied to see if systematic misestimation lies within here
+  - For example: grid size choice for KDE has direct influece on the the loss function (KL-divergence) for the optimization -> fine grid size for low sample size studies could be problematic (because of too much uncertainty), while very coarse grid size could be also problematic (because then differences between regarding publication bias parameter cannot be captured anymore)
+
+- Flexibility of SPEEC approach (extending SPEEC):
+  - Possibility to include heterogeneity parameter (deviations from the true effect size not only due to sampling error but)
+  - Possibility to include other influences on the sample size distribution -> sample size planning
+  - Possibility to use other marginal distribution for sample size distribution (depending on the data)

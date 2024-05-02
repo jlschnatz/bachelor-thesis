@@ -69,7 +69,6 @@ R package dependencies and version management using *renv* [@ushey_renv_2024].
 
 
 
-
 ## Appendix D: Test
 
 ```{r}
@@ -97,7 +96,7 @@ df_lims |>
 ```{r h1_table}
 #| results: asis
 
-table_h1 <- read_tex(here("tables/h1_table.tex"))
+table_h1 <- read_tex(here("tables/table_h1.tex"))
 cat(table_h1, sep = "\n")
 
 ```
@@ -105,7 +104,7 @@ cat(table_h1, sep = "\n")
 ```{r h2_table}
 #| results: asis
 
-table_h2 <- read_tex(here("tables/h2_table.tex"))
+table_h2 <- read_tex(here("tables/table_h2.tex"))
 cat(table_h2, sep = "\n")
 
 ```
@@ -113,7 +112,7 @@ cat(table_h2, sep = "\n")
 ```{r h3_table}
 #| results: asis
 
-table_h3 <- read_tex(here("tables/h3_table.tex"))
+table_h3 <- read_tex(here("tables/table_h3.tex"))
 cat(table_h3, sep = "\n")
 
 ```
@@ -121,7 +120,22 @@ cat(table_h3, sep = "\n")
 ```{r h4_table}
 #| results: asis
 
-table_h4 <- read_tex(here("tables/h4_table.tex"))
+table_h4 <- read_tex(here("tables/table_h4.tex"))
 cat(table_h4, sep = "\n")
 
 ```
+
+# Eidesstattliche Erklärung {.unlisted .unnumbered}
+
+Ich versichere hiermit, dass ich die vorliegende Arbeit selbständig und ohne Benutzung anderer als der angegebenen Quellen und Hilfsmittel verfasst habe. Wörtlich übernommene Sätze oder Satzteile sind als Zitat belegt, andere Anlehnungen, hinsichtlich Aussage und Umfang, unter Quellenangabe kenntlich gemacht. Die Aufgabenstellung habe ich alleine und ohne Besprechung mit anderen bearbeitet.
+
+Die Arbeit hat in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegen und ist nicht veröffentlicht. Sie wurde nicht, auch nicht auszugsweise, für eine andere Prüfungs- oder Studienleistung verwendet.
+
+\bigskip
+\bigskip
+
+\noindent{Datum: 18. Mai, 2024}
+
+\bigskip
+
+\noindent{Unterschrift:}
