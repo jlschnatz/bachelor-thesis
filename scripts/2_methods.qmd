@@ -67,7 +67,7 @@ $$
 n_1, \,n_2,\, \ldots, \,n_k \quad \text{where} \quad N\stackrel{\mathrm{i.i.d.}}{\sim} \mathcal{NB}(\phi_n, \mu_n) \quad \text{for } i = 1, \ldots, k
 $$ {#eq-nb-dist}
 
-Concerning the marginal distribution of the effect size $\mathrm{d}$, it is reasonable to assume a normal Gaussian distribution with mean $\mu_d$ and variance $\sigma^2_d$, where the effect size itself is assumed to originate from a common two-sample independent *t*-test design. To address the increasing precision in estimating the true effect size mean $\mu_d$ as sample size increases (i.e., the sampling error), that contributed to the characteristic funnel shaped effect size-sample size distribution, we compute the variance of the mean differences $\bar{x}_{i1} - \bar{x}_{i2}$, from which the effect sizes originate in this type of design. Subsequently, we derive a normalization factor $\gamma_i$ by dividing each individual variance $\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}$ with overall mean of those variances ensuring that $\bar{\gamma}=1$.
+Concerning the marginal distribution of the effect size $\mathrm{d}$, it is reasonable to assume a Gaussian distribution with mean $\mu_d$ and variance $\sigma^2_d$, where the effect size itself is assumed to originate from a common two-sample independent *t*-test design. To address the increasing precision in estimating the true effect size mean $\mu_d$ as the sample size increases (i.e., the sampling error), that contributes to the characteristic funnel shaped effect size-sample size distribution, we compute the variance of the mean differences $\bar{x}_{i1} - \bar{x}_{i2}$, from which the effect sizes originate in this type of design. Subsequently, we derive a normalization factor $\gamma_i$ by dividing each individual variance $\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}$ with overall mean of those variances ensuring that $\bar{\gamma}=1$.
 
 $$
 \begin{gathered}
@@ -82,20 +82,25 @@ $$
 d_1, \,d_2, \,\ldots, \,d_k \quad \text{where} \quad D \stackrel{}{\sim} \mathcal{N}(\mu_d, \gamma_i\cdot\sigma_d^2) \quad \text{for} \quad i = 1, \ldots, k 
 $$ {#eq-norm-dist}
 
-Given the definitions of the marginal distributions, $k$ individual studies are sampled from the joint distribution of effect size and sample size. The selection of $k$ is user-defined, but generally the larger the number of random samples $k$, the lower the uncertainty of the joint effect size sample size distribution will be. In general, there is a tradeoff between increased computational resources and the reduced uncertainty of the joint distribution for higher values of $k$. We opted for $k=10^4$ random samples for each simulation iteration.
+Applying this definition for the distribution of effect size, the SPEEC approach employs a fixed effects meta-analytical model, where the only source of effect size variation is explained by measurement error. However, the simulation model of the SPEEC method could be further extended to account for effect size heterogeneity. This could involve including an additional heterogeneity parameter $\tau^2$ in the simulation framework to account for additional variability that goes beyond sampling error.
+
+ Conditional on the marginal distributions, $k$ individual studies are sampled from the joint distribution of effect size and sample size. The selection of $k$ is user-defined, however, the larger the number of samples $k$, the lower the uncertainty of the joint distribution of effect size and sample size. In general, there is a trade-off between the increased computational cost and the reduced uncertainty of the joint distribution for increaasing values of $k$. We opted for $k=10^4$ samples for each simulation iteration.
 
 ### Application of Publication Bias
 
-Following the simulation step of sampling $k$ individual studies from the joint distribution of effect size and sample size conditional on the distributional parameters, the subsequent step entails the application of publication bias to these random samples. As mentioned in the introduction, we operationalize publication bias in terms of the likelihood of a study being published conditional on the statistical significance of its results. Translated to this simulation setting we can calculate the two-tailed *p*-value of each individual study $i$ from the random samples of effect size $d_i$ and sample size $n_i$. We presume that individual studies $i$ originate from a balanced sample size design, where the group sample sizes $n_{1i}$ and $n_{2i}$ are defined as $n_i/2$ when the total sample size is even. If the total sample size is odd, the group sample sizes are determined as the ceilinged $\lceil n_i/2 \rceil$ and and floored $\lfloor n_i/2 \rfloor$ values, respectively. To calculate the *p*-value $p_i$ of each simulated study, derived from *t*-value $t_i$
+Following the simulation step of sampling $k$ individual studies from the joint distribution of effect size and sample size, the subsequent stage involves the application of publication bias to the random samples. As previously discussed, publication bias is operationalizeed in terms of the likelihood of a study being published conditional on the statistical significance of its results. This significance is typically assessed by contrasting *p*-values against the conventional type I error rate cut-off regions in traditional null hypothesis significance testing (NHST) contexts [@andrade_p_2019; @mcshane_abandon_2019].Translated to this simulation setting, two-tailed *p*-values for each individual study *i* can be calculate from the corresponding effect size $d_i$ and sample size $n_i$.
+
+To implement this, we assume that the individual studies $i$ in the simulation originate form a balanced sample size design. This means that when the total sample size $n_i$ is even, the group sample sizes $n_{1i}$ and $n_{2i}$ are simply defined as $n_i/2$. Otherwise, when the total sample size $n_i$ is odd, the group sample sizes are determined as the ceilinged $\lceil n_i/2 \rceil$ and floored $\lfloor n_i/2 \rfloor$ values, respectively.Subsequently, the *p*-value $p_i$ of each simulated study can be derived from its corresponding *t*-value 
 
 $$
-t_i=\Big\lvert \frac{d_i}{\sqrt{1/n_{1i} +1/n_{2i}}} \Big\rvert 
+t_i=\Big\lvert \frac{d_i}{\sqrt{1/n_{1i} +1/n_{2i}}} \Big\rvert.
 $$ {#eq-t-value}
 
 $$
 p_i=2 \cdot P(t_i~|~df_i)
 $$ {#eq-p-value}
 
+\noindent
 where $P(t_i , \, df_i)$ is the cumulative central *t*-distribution with degrees of freedom $df_i=n_{1i}+n_{2i}-2$. Given each *p*-value $p_i$, publication bias is introduced by assigning each study $i$ a weight
 
 $$
@@ -104,9 +109,9 @@ $$
 1 & \text{otherwise}\end{cases}
 $$ {#eq-pbs}
 
-where $\pbs \in \mathbb{R} : 0 \leq \pbs \leq 1$. This weight denotes the probability of a study $i$ being selected conditional on the *p*-value and the type I error rate $\alpha$. If a study $i$ was not statistically significant ($p_i \geq \alpha$), a publication bias weight $\pbs$ is assigned, else the probability of a study being selected is 1, indicating no publication bias. Thus, the publication bias parameter $\pbs$ denotes the relative probability of a nonsignificant study being selected relative relative to a significant study being selected. We assume a fixed type I error rate for all simulated studies at the commonly chosen significance threshold of $\alpha = .05$ for the analysis of the hypotheses. However, user may define a different $\alpha$-level depending on their specific needs.
+with the constraint $\pbs \in \mathbb{R} : 0 \leq \pbs \leq 1$. This weight denotes the probability of a study $i$ being selected conditional on the *p*-value and the type I error rate $\alpha$. This definition of the publication bias weight is directly analogue to the step function of publication bias selection models [@hedges_modeling_1992; @iyengar_selection_1988]. If a study $i$ is not statistically significant (i.e., $p_i \geq \alpha$), a publication bias parameter $\pbs$ is assigned, else the probability of a study being selected is equal to one, indicating no publication bias. Thus, the publication bias parameter $\pbs$ denotes the probability the selection of a non-significant study relative to a statistiacally significant study. For instance, a publication bias parameter of $\pbs=0.5$ would indicate that simulated studies that are non-significant are half as likely to be selected in comparison to studies that are statistically significant. Importantly, the type I error rate needs to be fixed across all simulated studies and is set to the common significance threshold of $\alpha = 0.05$ for the analyses of the hypotheses. 
 
-Following the computation of publication bias weight $\omega_{\text{PBS}_i}$ for each study $i$, the likelihood of a study being selected can be expressed as $\mathbb{P}(S_i = 1)= \omega_{\text{PBS}_i}$. Here, $S_i$ is a binary indicator function, signifying whether study $i$ is selected during the publication bias process.
+Following the computation of publication bias weight $\omega_{\text{PBS}_i}$ for each study $i$, the likelihood of a study being selected can be expressed as $\mathbb{P}(S_i = 1)= \omega_{\text{PBS}_i}$. Here, $S_i$ is a binary indicator function, signifying whether an individual study $i$ is selected during the publication bias selection process.
 
 $$
 S_i = 
@@ -116,16 +121,16 @@ S_i =
 \end{cases}
 $$ {#eq-id-fun}
 
-Subsequently the two resulting subsets $(d_i^\prime, \,n_i^\prime)$ and $(d_i^{\prime\prime}, \,n_i^{\prime\prime})$ from the initial random sample can be defined as
+Subsequently the two resulting subsets $(d_i^\prime, \,n_i^\prime)$ and $(d_i^{\prime\prime}, \,n_i^{\prime\prime})$ from the initial  $k$ random samples of can be defined as
 
 $$
 \begin{gathered}
 (d_i^\prime, n_i^\prime) = (d_i, n_i ~ | ~ S_i = 1) \quad \text{for} \quad i = 1, \dots, k^\prime \quad \text{and} \\
-(d_i^\prime\prime, n_i^\prime\prime) = (d_i, n_i ~ | ~ S_i = 0) \quad \text{for} \quad i = 1, \dots, k^{\prime\prime}
+(d_i^{\prime\prime}, n_i^{\prime\prime}) = (d_i, n_i ~ | ~ S_i = 0) \quad \text{for} \quad i = 1, \dots, k^{\prime\prime}.
 \end{gathered}
 $$ {#eq-subsets}
 
-One challenge lies in the fact that, ceteris paribus, as publication bias becomes more severe (i.e., the lower values $\pbs$), the lower $k^\prime$ will be in comparison to the original number of simulations $k$ leading to a precision loss for the estimation of the parameters. The migitate this, the process outlined above (@eq-nb-dist - @eq-subsets) repeated a second time with an adjusted number of simulations $k_{\text{adj}} = \big\lceil {k^2}/{k'} \big\rceil$, ensuring that the number of selected studies $k^\prime_{\text{adj}}$ is roughly equal across the entire range of $\pbs$.
+One challenge of simulating a fixed number of $k$ random samples is that, all else being equal, as the severity of publication bias increases (i.e., lower values for $\pbs$), there are fewer remaining studies $k^\prime$ after the selection process compared to the original number of simulations $k$. This would result in a loss of precision for parameter estimation. To address this, the process outlined above (from  @eq-nb-dist - @eq-subsets) is repeated a second time with an adjusted number of simulations $k_{\text{adj}} = \big\lceil {k^2}/{k'} \big\rceil$, ensuring that the number of selected studies $k^\prime_{\text{adj}}$ is roughly equal across the entire range of $\pbs$.
 
 ### Formulation as an Optimization Problem
 

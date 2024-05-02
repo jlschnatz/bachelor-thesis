@@ -106,7 +106,7 @@ Regarding hypothesis $\mathcal{H}_1$, panel A of figure XXX depicts the relation
 ```{r}
 # Load beta-regression model
 mod_h2 <- read_rds(here("data/src/model_h2.rds"))
-std_mod_h2 <- standardise(mod_h2)
+std_mod_h2 <- standardise(mod_h2, verbose = FALSE)
 
 # APA-string (OR, CI, SE, z, p)
 b <- coef(mod_h2)
