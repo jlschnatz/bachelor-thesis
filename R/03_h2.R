@@ -1,9 +1,15 @@
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
-if(!"pacman" %in% installed.packages()) {install.packages("pacman")}
+if(!"pacman" %in% installed.packages()) install.packages("pacman")
 pacman::p_load(
-  sysfonts, showtext, here, tidyverse, betareg, latex2exp, broom, 
-  ggeffects, systemfonts, kableExtra, sjPlot, lmtest, insight
+  tidyverse,                                  # data manipulation
+  here,                                       # file management
+  sysfonts, showtext,                         # fonts
+  betareg, insight, broom, ggeffects, lmtest, # modeling
+  latex2exp,                                  # latex equation
+  kableExtra                                  # tables
+
 )
+# Load functions
 source(here("R/00_functions.R"))
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -34,7 +40,6 @@ summary(mod_h2)
 
 write_rds(mod_h2, here("data/src/model_h2.rds"))
 
-
 # Plot model predictions ———————————————————————————————————————————————————————————————————————————————————————————————————————
 p <- ggeffect(mod_h2, "Delta [-.7:.7, by = 0.01]") |> 
   as_tibble() |> 
@@ -60,7 +65,7 @@ p <- ggeffect(mod_h2, "Delta [-.7:.7, by = 0.01]") |>
     expand = expansion()
   ) +
   coord_cartesian(clip = "off") +
-  theme_sjplot() +
+  sjPlot::theme_sjplot() +
   theme(
     text = element_text(family = "font"),
     plot.margin = margin(5, 5, 5, 5, "mm"),
@@ -76,19 +81,24 @@ z <- coef(mod_h2) / sqrt(diag(vcov(mod_h2)))
 p_b2 <- pnorm(z[2], lower.tail = TRUE)
 
 data_table <- tidy(mod_h2, conf.int = TRUE) |>
-  # get OR for estimate and CIs for the mean parameter model
+  # one-sided confidence interval for Delta^2 -> upper limits is 0
+  mutate(conf.low = if_else(term == "I(Delta^2)", -Inf, conf.low)) |>
+  # recalculate high CI for Delta^2
+  mutate(conf.high = if_else(term == "I(Delta^2)", estimate + qnorm(0.95) * std.error, conf.high)) |>
+  # transform CIs and estimate for log-OR to ORs
   mutate(across(c(estimate, conf.low, conf.high), exp)) |>
-  # format confidence intervals
   mutate(ci = format_ci(conf.low, conf.high, ci_string = "", ci = NULL, digits = 2), .before = std.error) |>
   select(-starts_with("conf")) |>
-  # format and correct p-values
   mutate(p.value = if_else(term == "I(Delta^2)", p_b2, p.value)) |>
-  mutate(p.value = format_p(p.value, name = NULL, digits = "apa")) |>
-  # remove leading zero
-  mutate(p.value = str_remove(p.value, "^0")) |>
+  mutate(p.value = str_remove(format_p(p.value, name = NULL, digits = "apa"), "^0")) |>
   mutate(across(c(estimate, std.error, statistic), ~format_value(.x, digits = 2))) |>
   mutate(estimate = if_else(component == "mean", paste0("$", estimate, "^a$"), paste0("$", estimate, "^b$"))) |>
-  mutate(term = (case_match(term, "(phi)" ~ "Intercept", "(Intercept)" ~ "Intercept", "I(Delta^2)" ~ "Quadratic $\\Delta_{\\widehat{\\mu}_d, \\widehat{\\delta}}$"))) |> 
+  mutate(ci = if_else(term == "I(Delta^2)", glue::glue("${ci}^c$"), ci)) |>
+  mutate(term = case_match(term, 
+    "(phi)" ~ "Intercept", 
+    "(Intercept)" ~ "Intercept",
+    "I(Delta^2)" ~ "$\\Delta_{\\mu_d}^2$")
+    ) |> 
   select(-component) 
 
 table_h2 <- nice_table(
@@ -96,12 +106,12 @@ table_h2 <- nice_table(
   caption = "Beta Regression Results for $\\mathcal{H}_2$",
   digits = 2,
   col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$"),
-  alphabet_fn = c("$OR$", "Identity"),
+  alphabet_fn = c("$OR$", "Identity", "One-sided Confidence interval in direction of the hypothesis"),
   general_fn = report_fit(mod_h2, "w_pbs")
 ) |>
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
-  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") 
-
+  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
+  str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
 
 cat(table_h2, file = here("tables/table_h2.tex"))  
 
@@ -115,14 +125,6 @@ mod_h2_exploratory <- betareg(
   control = betareg.control(method = "BFGS", trace = TRUE)
 )
 
-summary(mod_h2_exploratory)
-
 # Likelihood Ratio Test
-model_comp <- lrtest(mod_h2, mod_h2_exploratory) |> 
-  tidy() |> 
-  mutate(across(where(is.numeric), ~round(.x, 3))) |> 
-  mutate(across(everything(), as.character)) |> 
-  mutate(across(everything(), ~replace_na(.x, "")))  |> 
-  select(-df)
-
-# n.s.
+model_comp <- lrtest(mod_h2, mod_h2_exploratory) 
+print(model_comp) # n.s.

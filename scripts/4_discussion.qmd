@@ -21,19 +21,25 @@
 - These differences are not unsystematic across the entire range of the distributional parameters estimated via ML but rather show systematic trends (e.g.,)
 
 
-  
-
 <!-- Interpretation of results and implications of study -->
 
 <!-- Limitations of study -->
 
+- Proof of concept study -> not an comprehensive assessement of SPEEC appraoch
+
 
 <!-- Future work -->
+
+- Possibility of including:
+  - Heterogeneity parameter $\tau^2$ -> this could be very valuable 
+  - Different effect size and thus different marginal distributions (thats the flexible aspect of SPEEC) -> odds ratio (log odds ratio), R2 variance
+  - Sample size planning parameter -> publiction bias not the only thing affecting n-es distribution
+  
+  ```
 
 <!-- Conclusion -->
 
 - We did not find working approach for parameter optimization of the study -> this should/could be the focus of future studies
-
 - Framework has several areas which could be responsible for optimization problems
   - The choice of grid size
 - Need for larger simulations study

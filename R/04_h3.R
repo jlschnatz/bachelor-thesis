@@ -1,6 +1,13 @@
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
 if(!"pacman" %in% installed.packages()) install.packages("pacman")
-pacman::p_load(sysfonts, showtext, here, tidyverse, TOSTER, latex2exp,  systemfonts, kableExtra, sjPlot, insight)
+pacman::p_load(
+  tidyverse,          # data manipulation
+  sysfonts, showtext, # fonts
+  here,               # file management
+  latex2exp,          # latex formula
+  kableExtra,         # tables
+  TOSTER, insight     # modeling
+  )
 source(here("R/00_functions.R"))
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -20,11 +27,16 @@ data_model <- data_meta |>
   left_join(data_optim, join_by(id_meta)) |> 
   select(id_meta, mean_d, mu_d)
 
-tost <- with(data_model, t_TOST(
-  mu_d, mean_d, eqb = c(-0.17, 0.17), 
-  paired = TRUE, var.equal = TRUE,
-  hypothesis = "EQU", eqbound_type = "raw",
-  alpha = 0.05, rm_correction = TRUE, smd_ci = "goulet"
+tost <- with(data = data_model, expr = t_TOST(
+  x = mu_d, y = mean_d, # Variables
+  eqb = c(-0.17, 0.17), # Equivalence bounds
+  paired = TRUE,        # Paired t-test
+  var.equal = FALSE,    # Welch test
+  hypothesis = "EQU",   # Equivalence test
+  eqbound_type = "raw", # Raw bounds
+  alpha = 0.05,         # Alpha level
+  rm_correction = TRUE, # Repeated measure effect size correction
+  smd_ci = "goulet"     # Goulet method to calculate CIs for SMD
 ))
 
 write_rds(tost, here("data/src/model_h3.rds"))
@@ -36,7 +48,6 @@ write_rds(p, file = here("data/src/plot_h3.rds"))
 # Table TOSTER Results ———————————————————————————————————————————————————————————————————————————————————————————————————————
 data_table <- chuck(tost, "TOST") |> 
   rownames_to_column("type") |> 
-  as_tibble() |>
   mutate(type = case_when(
     type == "t-test" ~ "NHST",
     type == "TOST Lower" ~ "TOST $\\Delta < \\Delta_L$",
@@ -53,6 +64,8 @@ table_h3 <- nice_table(
   digits = 2,
   col_names = c("Type", "$t$", "$SE$", "$df$", "$p$"),
   general_fn = "NHST: Null Hypothesis Significance Test, TOST: Two One-Sided Test"
-  ) 
+  ) |>
+  str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
+
 
 cat(table_h3, file = here("tables/table_h3.tex"))

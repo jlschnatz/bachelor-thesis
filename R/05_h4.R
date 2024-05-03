@@ -1,9 +1,11 @@
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
 if(!"pacman" %in% installed.packages()) install.packages("pacman")
 pacman::p_load(
-  tidyverse, betareg, here, sysfonts, showtext,
-  marginaleffects, ggdist, latex2exp, systemfonts, kableExtra,
-  sjPlot, insight
+  tidyverse,                                      # data manipulation
+  here,                                           # file management
+  betareg, insight, marginaleffects,              # modeling
+  sysfonts, showtext, ggdist, latex2exp, sjPlot,  # plotting
+  kableExtra                                      # tables
 )
 source(here("R/00_functions.R"))
 
@@ -45,7 +47,6 @@ p <- avg_predictions(mod_h4, by = "type_synthesis") |>
   geom_jitter(
     data = data_model, 
     mapping = aes(y = w_pbs),
-    #color = "#051088",
     width = 0.025,
     alpha = 0.2,
     size = 1
@@ -55,7 +56,6 @@ p <- avg_predictions(mod_h4, by = "type_synthesis") |>
     mapping = aes(y = w_pbs, fill = type_synthesis),
     alpha = .6,
     normalize = "groups",
-    #fill = "#051088",
     adjust = .8,
     trim = TRUE,
     color = NA,
@@ -65,17 +65,15 @@ p <- avg_predictions(mod_h4, by = "type_synthesis") |>
   geom_linerange(
     mapping = aes(ymin = conf.low, ymax = conf.high, color = type_synthesis),
     linewidth = .7,
-    #color = "#051088",
     position = position_nudge(x = -0.15)
     ) +
   geom_point(
     size = 2,
-    #color = "#051088",
     mapping = aes(color = type_synthesis),
     position = position_nudge(x = -0.15)
     ) +
   scale_y_continuous(
-    name = latex2exp::TeX("$\\widehat{\\omega}_{PBS}$"),
+    name = TeX("$\\widehat{\\omega}_{PBS}$"),
     limits = c(0, 1),
     expand = expansion()
   ) +
@@ -101,23 +99,26 @@ write_rds(p, file = here("data/src/plot_h4.rds"))
 
 # Generate table with model results ————————————————————————————————————————————————————————————————————————————————————————————
 z <- coef(mod_h4) / sqrt(diag(vcov(mod_h4)))
-p_b1 <- pnorm(z[2], lower.tail = FALSE)
+p_b1 <- pnorm(z[2], lower.tail = FALSE) # one-tailed p-value
 
 data_table <- tidy(mod_h4, conf.int = TRUE) |>
-  # get OR for estimate and CIs for the mean parameter model
+  # one-sided confidence interval -> upper limits is Inf
+  mutate(conf.high = if_else(str_starts(term, "type_synthesis"), Inf, conf.high)) |>
+  # recalculate lower CI 
+  mutate(conf.low = if_else(str_starts(term, "type_synthesis"), estimate + qnorm(.05) * std.error, conf.low)) |>
+  # transform CIs and estimate for log-OR to ORs
   mutate(across(c(estimate, conf.low, conf.high), exp)) |>
-  # format confidence intervals
   mutate(ci = format_ci(conf.low, conf.high, ci_string = "", ci = NULL, digits = 2), .before = std.error) |>
   select(-starts_with("conf")) |>
-  # format and correct p-values
-  mutate(p.value = if_else(term == "type_synthesisMultisite Replications", p_b1, p.value)) |> 
-  mutate(p.value = format_p(p.value, name = NULL, digits = "apa")) |>
-  # remove leading zero
-  mutate(p.value = str_remove(p.value, "^0")) |>
+  mutate(p.value = if_else(str_starts(term, "type_synthesis"), p_b1, p.value)) |>
+  mutate(p.value = str_remove(format_p(p.value, name = NULL, digits = "apa"), "^0")) |>
   mutate(across(c(estimate, std.error, statistic), ~format_value(.x, digits = 2))) |>
   mutate(estimate = if_else(component == "mean", paste0("$", estimate, "^a$"), paste0("$", estimate, "^b$"))) |>
-  mutate(term = case_match(term, "(Intercept)" ~ "Intercept", "type_synthesisMultisite Replications" ~ "Research Synthesis Type (MR)", "(phi)" ~ "Intercept")) |>  
-  select(-component) 
+  mutate(ci = if_else(str_starts(term, "type_synthesis"), glue::glue("${ci}^c$"), ci)) |>
+  mutate(term = case_match(term, "(Intercept)" ~ "Intercept", "type_synthesisMultisite Replications" ~ "RRR", "(phi)" ~ "Intercept")) |>  
+  select(-component) |>
+  add_row(term = "Meta-Analyses", estimate = "", ci = "", std.error = "", statistic = "", p.value = "", .after = 1)
+
 
 table_h4 <- nice_table(
   x = data_table, 
@@ -125,9 +126,11 @@ table_h4 <- nice_table(
   col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$"),
   digits = 2,
   general_fn = glue::glue("MR: Multisite Replication; {report_fit(mod_h4, 'w_pbs')}"),
-  alphabet_fn = c("$OR$", "Identity coefficient")
+  alphabet_fn = c("$OR$", "Identity", "One-sided Confidence interval in direction of the hypothesis")
 ) |> 
-  group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
-  group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") 
-
+  group_rows("Mean model component: $\\mu$", 1, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
+  group_rows("Research Synthesis Type", 2, 3, escape = FALSE, bold = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
+  group_rows("Precision model component: $\\phi$", 4, 4, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
+  str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
+ 
 cat(table_h4, file = here("tables/table_h4.tex"))

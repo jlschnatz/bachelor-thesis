@@ -351,9 +351,3 @@ str_discr <- function(x, parameter) {
     subs <- x[parameter, ]
     glue::glue('$M{subs$parameter}$ = {subs$mean}, $Mdn{subs$parameter}$ = {subs$median}')
 }
-
-
-
-
-
-

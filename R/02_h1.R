@@ -2,14 +2,11 @@
 if(!"pacman" %in% installed.packages()) {install.packages("pacman")}
 pacman::p_load(
   sysfonts, showtext, here, tidyverse, betareg, latex2exp, broom, 
-  marginaleffects, systemfonts, kableExtra, sjPlot, insight, datawizard
+  marginaleffects, kableExtra,  insight, datawizard
   )
 source(here("R/00_functions.R"))
 
 # Add fonts ————————————————————————————————————————————————————————————————————————————————————————————————————————————
-fontname <- "CMU Sans Serif"
-fontpath <- systemfonts::match_font(fontname)$path
-font_add(family = fontname, fontpath)
 showtext_opts(dpi = 500)
 font_add_google("Noto Sans Math", "font")
 showtext_auto()
@@ -22,13 +19,11 @@ data_optim <- read_csv(here("data/optim/processed/data_optim_merged.csv"))
 data_model <- data_meta |> 
   # Filter only normal Meta-Analysis
   filter(type_synthesis == "ma") |> 
-  # Compute unsigned effect sizes for correlation (as preregistered)
-  mutate(abs_d = abs(d)) |>
   # Fisher z-transformed Spearman correlation coefficient for each meta-analysis 
   group_by(id_meta) |> 
-  summarise(z_rs = atanh(cor(n, abs_d, method = "spearman"))) |>
+  summarise(z_rs = atanh(cor(n, abs(d), method = "spearman"))) |>
   # Join with optimization data
-  left_join(data_optim) |> 
+  left_join(data_optim, join_by(id_meta)) |> 
   select(id_meta, z_rs, w_pbs) 
 
 # Fit model
@@ -41,6 +36,7 @@ mod_h1 <- betareg(
   ) 
 
 std_mod_h1 <- standardise(mod_h1)
+
 summary(mod_h1)
 summary(std_mod_h1)
 
@@ -103,27 +99,40 @@ data_table <- tidy(mod_h1, conf.int = TRUE) |>
   mutate(p.value = str_remove(p.value, "^0")) |>
   mutate(across(c(estimate, std.error, statistic), ~format_value(.x, digits = 2))) |>
   mutate(estimate = if_else(component == "mean", paste0("$", estimate, "^a$"), paste0("$", estimate, "^b$"))) |>
-  mutate(term = (case_match(term, "(phi)" ~ "$b_0$", "(Intercept)" ~ "Intercept", "z_rs" ~ "$z_{r_S}$"))) |> 
+  mutate(term = (case_match(term, "(phi)" ~ "Intercept", "(Intercept)" ~ "Intercept", "z_rs" ~ "$z_{r_s}$"))) |> 
   select(-component) 
-  
+
+data_table <- tidy(mod_h1, conf.int = TRUE) |>
+  # one-sided confidence interval for Delta^2 -> upper limits is 0
+  mutate(conf.high = if_else(term == "z_rs", Inf, conf.high)) |>
+  # recalculate lower CI for Delta^2
+  mutate(conf.low = if_else(term == "z_rs", estimate + qnorm(0.05) * std.error, conf.low)) |>
+  # transform CIs and estimate for log-OR to ORs
+  mutate(across(c(estimate, conf.low, conf.high), exp)) |>
+  mutate(ci = format_ci(conf.low, conf.high, ci_string = "", ci = NULL, digits = 2), .before = std.error) |>
+  select(-starts_with("conf")) |>
+  mutate(p.value = if_else(term == "z_rs", p_b2, p.value)) |>
+  mutate(p.value = str_remove(format_p(p.value, name = NULL, digits = "apa"), "^0")) |>
+  mutate(across(c(estimate, std.error, statistic), ~format_value(.x, digits = 2))) |>
+  mutate(estimate = if_else(component == "mean", paste0("$", estimate, "^a$"), paste0("$", estimate, "^b$"))) |>
+  mutate(ci = if_else(term == "z_rs", glue::glue("${ci}^c$"), ci)) |>
+    mutate(term = case_match(term, 
+  "(phi)" ~ "Intercept", 
+  "(Intercept)" ~ "Intercept",
+   "z_rs" ~ "$z_{r_s}$")
+   ) |> 
+  select(-component) 
+
 table_h1 <- nice_table(
   x = data_table,
   caption = "Beta Regression Results for $\\mathcal{H}_1$", 
   digits = 2,
   col_names = c("Term", "Estimate", "$CI$ (95\\%)", "$SE$", "$z$", "$p$"),
   general_fn = report_fit(mod_h1, "w_pbs"),
-  alphabet_fn = c("$OR$", "Identity coefficient")
+  alphabet_fn = c("$OR$", "Identity", "One-sided Confidence interval in direction of the hypothesis")
 ) |>
 group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
 group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
 str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
 
 cat(table_h1, file = here("tables/table_h1.tex"))
-
-
-
-
-
-
-
-

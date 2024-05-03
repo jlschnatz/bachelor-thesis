@@ -55,7 +55,7 @@ knitr::include_graphics(here("figures/power_sesoi.png"))
 
 ## Appendix B: Research Transparency Statement
 
-As transparent and reproducible as possible. The preregistration of study, the data needed to reproduce the results are open and  data analysis scripts that allow reproducing all reported results are all openly available at URL
+The present thesis project was aimed to to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available on the zugehörigen [OSF repository](https://osf.io/87m9k/?view_only=030c8d1c46474270b5886c4dfc491a78) of this thesis (https://osf.io/87m9k/?view_only=030c8d1c46474270b5886c4dfc491a78) and on [GitHub](https://github.com/jlschnatz/bachelor-thesis).To enhance the reproducability of this project, all analyses, figures, the thesis manuscript itself are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was explicitely management using *Snakemake* [@molder_sustainable_2021] and the R packages dependencies and version management used for the statistical analyses were managemed using *renv* [@ushey_renv_2024]. The thesis manuscript itself is dynamically generated and reproducible using the *Quarto* publishing system.
 
 - The project is fully st containerized using *Docker* [@merkel_docker_2014]
 - Software and operating system virtualization, fully containerized project using Docker
@@ -63,7 +63,7 @@ R package dependencies and version management using *renv* [@ushey_renv_2024].
 - Data analysis workflow management tool *Snakemake* [@molder_sustainable_2021] 
 - thesis is written using the *Quarto* [@allaire_quarto_2024] open-source scientific and technical publishing system
 
-
+CITE: All analyses, figures, and the final manuscript were generated using a makefile, bash scripts, and R and Rmarkdown. All relevant metadata, as well as analysis and manuscript code, are available on GitHub: https://github.com/ZimmermanLab/SF-metrosideros-endophytes/ and archived at Zenodo (https://doi.org/10.5281/zenodo.8075450). The complete computational environment for the analyses is documented in a Dockerfile based on rocker containers (Boettiger, 2014) and a renv.lock (Ushey, 2021) file in that same repository.
 
 ## Appendix C: Deviations of Preregistration
 

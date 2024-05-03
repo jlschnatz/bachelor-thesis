@@ -130,17 +130,32 @@ $$
 \end{gathered}
 $$ {#eq-subsets}
 
-One challenge of simulating a fixed number of $k$ random samples is that, all else being equal, as the severity of publication bias increases (i.e., lower values for $\pbs$), there are fewer remaining studies $k^\prime$ after the selection process compared to the original number of simulations $k$. This would result in a loss of precision for parameter estimation. To address this, the process outlined above (from  @eq-nb-dist - @eq-subsets) is repeated a second time with an adjusted number of simulations $k_{\text{adj}} = \big\lceil {k^2}/{k'} \big\rceil$, ensuring that the number of selected studies $k^\prime_{\text{adj}}$ is roughly equal across the entire range of $\pbs$.
+One challenge of simulating a fixed number of $k$ random samples is that, all else being equal, as the severity of publication bias increases (i.e., lower values for $\pbs$), there are fewer remaining studies $k^\prime$ after the selection process compared to the original number of simulations $k$. This would result in a loss of precision for parameter estimation. To address this, the process outlined above (from  @eq-nb-dist - @eq-subsets) is repeated a second time with an adjusted number of simulations $k_{\small{\text{adj}}} = \big\lceil {k^2}/{k'} \big\rceil$, ensuring that the number of selected studies $k^\prime_{\small{\text{adj}}}$ is roughly equal across the entire range of $\pbs$.
 
 ### Formulation as an Optimization Problem
+
+
+After the application of publication bias to the random samples to determine the subset $(d_i^\prime, \,n_i^\prime)$ for $i=1, \dots,i=k_{\small{\text{adj}}}^\prime$ conditional on the publication bias parameter $\pbs$ and the parameters of the marginal distribution for the effect size and sample size, the following step involves the statistical comparison between the subset generated from the publication bias model and the actual empirical meta-analytical data.
+
+More specifically, quantify the statistical divergence of the estimated kernel density of the simulated data from the estimated kernel density of the empirical data.
+
+
+
 
 After the selection of the subset $(d_i^\prime, \,n_i^\prime)$ from the simulated theoretical random samples conditional on the publication bias parameter $\pbs$ and the parameters of the marginal distributions for the effect size and sample size, the following step involves a statistical comparison between the this subset and the empirical meta-analytical data by means of the of the Kullback-Leibler divergence [@kullback_information_1951]. This assessment aims to quantify how closely the distributions of the theoretical samples align with the empirical data.
 
 In the subsequent phase, the statistical dissimilarity between the empirical meta-analytical data and the selected subset $(d_i^\prime, \,n_i^\prime)$ of the simulated theoretical samples is evaluated by means of the Kullback-Leibler divergence [@kullback_information_1951]. This assessment aims to quantify how closely the distributions of the theoretical samples align with the empirical data. To achieve this, the joint kernel density is estimated for both theoretical simulated and empirical data is estimated using a bivariate standard Gaussian kernel that is evaluated on a square grid, with a grid size of $n_{\text{grid}}=2^7+1$ equidistant grid points in each dimension. The bounds of the square grid are determined based on the empirical meta-analytical data. To the define these bounds the maximum likelihood estimates for the parameters of the marginal distribution of effect size ($\hat{\mu}_d,\hat{\sigma}^2_d$) and sample size ($\hat{\phi}_n, \hat{\mu}_n$) are computed. Then, utilizing these estimates, the quantiles derived from inner 99th percentile ($p_1 = .005, p_2=.995$) of the cumulative distribution are computed. Subsequently, the bounds are defined as the absolute minimum and maximum of these quantiles and then range of the empirical meta-analytical data, respectively.
 
-$[Q_n(p_1 \, | \, \hat{\phi}_n, \hat{\mu}_n), \, Q_n(p_2 \, | \, \hat{\phi}_n, \hat{\mu}_n)]$
 
-$[Q_d(p_1 \, | \, \hat{\mu}_d, \hat{\sigma}^2_d), \, Q_d(p_2 \, | \, \hat{\mu}_d, \hat{\sigma}^2_d)]$
+$p_1=0.005$ and $p_2 = 1-p_1$
+
+
+$\left[Q_d(p_1 ~ | ~ \hat{\mu}, \, \hat{\sigma}^2) \land \min(d), \, Q_d(p_2 ~ | ~ \hat{\mu}, \, \hat{\sigma}^2) \lor \max(d) \right]$
+
+$\left[Q_n(p_1 ~ | ~ \hat{\phi}, \, \hat{\mu}) \land \min(n), \, Q_n(p_2 ~ | ~ \hat{\phi}, \, \hat{\mu}) \lor \max(n) \right]$
+
+where $Q_n(p)$ and $Q_d(p)$ are the quantile function of the Negative-Binomial distribution (with MLE $\hat{\phi}$ and $\hat{\mu}$) and Normal distribution (with MLE $\hat{\mu}$ and $\hat{\sigma}^2$).
+
 
 Finally, KL-divergence is calculated from the kernel density estimates for both empirical and simulated data, providing a measure of their statistical distance.
 

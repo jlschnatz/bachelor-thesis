@@ -86,6 +86,24 @@ Thesis is strucured the following way, short introduction of the SPEEC method, t
 
 Short primer of SPEEC:
 
+The central idea of the SPEEC method is to explicitely define a generative model of publication bias that incorporates assumptions about the marginal distributions of effect size (Gaussian distribution) and sample size (Negative-Binomial) as well the impact of publication bias.
+
+More specifically, distributional parameters -> marginal distribution of effect size and sample size + publication bias parameter, gibt das ausmaß von publication bias an -> relative likelihood of statistically significant studies 
+
+Publication bias parameter
+
+Distributional parameters that control
+
+From this generative model, simulation of theoretical data 
+
+- Central idea: explicitely model generative process of publication bias -> with specific assumption about the marginal distributions of effect size and sample size and how publication bias operates
+- Generative model of publication bias -> simulate theoretical data from generative model (this generative model has distributional parameters that reflect the marginal distribution of sample size and effect size as well as publication bias parameter)
+- Compare simulared data from generative model to empirical meta-analytical data -> determine the divergence of the estimated bivariate kernel density of the theoretical data from the empirical data (KL-divergence) -> this serves as a loss function -> formulation as an optimization problem 
+- Find parameters for which the KL-divergence is minimized
+  
+
+
+
 Simulation framework: simulation of effect size-sample size data that is sampled from theoretical model conditional on marginal distributional assumptions of effect size (Gaussian distribution) and sample size (Negative_Binomial distribution). Introduction of publication bias parameter, which can be defined as the relative likelihood of a individual statistically non-significant study being published relative to a statistically significant study. Application of publication bias on the simulated joint distribution samples (effect size sample size). Comparison between empirial data and simulated samples from theoretical model in terms of the divergence between their respetice kernel density estimates. Using this framework -> formulation as an optimization problem -> parameter optimization regarding the marginal distributional parameters and the publication bias parameter to optimize the objective function.
 
 The central idea of the SPEEC method involves
