@@ -12,28 +12,11 @@ pacman::p_load(tidyverse, insight, here)
 
 # Method
 
-## The $\mathsfup{SPEEC}$ Method
+## The SPEEC Method
 
-In this section, provide more detailed walkthrough
+This section offers a comprehensive in-depth description and explanation of the SPEEC framework to assess the extent of publication bias and estimate effect sizes in the presence of publication bias in meta-analyses. Figure XXX offers an overview of the sequential steps of the SPEEC method. Currently, SPEEC is being developed as an open-source R package and is accessible on GitHub at <https://github.com/jlschnatz/speec>.
 
 
-
--   Simulation-based approach to estimate publication bias severity and correct potentially biased (inflated) effect sizes under present publication bias based on the joint distribution of effect size and sample size
--   Simulation of theoretical data > joint distribution of effect size and sample size under marginal distributional assumptions > Application of publication bias > empirical kernel density estimation > comparison of empirical and simulated data > loss function
--   Implementation as an open source R package (alpha version) that is already available on GitHub: <https://github.com/jlschnatz/speec>
--   General steps
-    -   Simulate samples of joint distribution of effect size and sample size from marginal distributional assumptions
-    -   Application of publication bias
-    -   KDE for Simulated and Empirical Data
-    -   Compare Distributions using KL Divergence
-    -   Parameter Optimization via Simulated Annealing
-
-(1) Simulation of random samples from joint probability distribution of effect size and sample size
-(2) Application of publication bias
-(3) Kernel Density Estimation of drawn theoretical samples and the empirical empirical samples
-(4) Compuation of the divergence between the estimated probability of empirical against theoretical data
-(5) Algorithmic optimization of bias and distributional parameters via simulated annealing
-Simulation of $k$ random samples from the joint distribution of effect size and sample size, subsequent application of publication bias resulting in a subset $(d_i^\prime, n_i^\prime)$ of the inital random samples. 
 
 ```{=latex}
 \begin{figure}[H]
@@ -58,6 +41,10 @@ knitr::include_graphics(here("figures/speec_workflow.png"))
 ```
 
 ### Simulation Framework
+
+Assumption how effect sizes and sample sizes were generated -> assumption of two-sample t-test design.
+
+however, the framework itself could also assume different study design that generated the data with other effect size measure rather than Cohen´s *d* (for instance correlational design producing correlation coefficients or Fisher z transformed correlation coefficients as effect size measure) -> adaption of the marginal distributions, and how p-values are calculated
 
 Simulation of Random Samples from Theoretical Model -> Defining the marginal distributions for effect size and sample size to be sampled from
 
@@ -121,7 +108,8 @@ S_i =
 \end{cases}
 $$ {#eq-id-fun}
 
-Subsequently the two resulting subsets $(d_i^\prime, \,n_i^\prime)$ and $(d_i^{\prime\prime}, \,n_i^{\prime\prime})$ from the initial  $k$ random samples of can be defined as
+\noindent
+Subsequently the two resulting subsets $(d_i^\prime, \,n_i^\prime)$ and $(d_i^{\prime\prime}, \,n_i^{\prime\prime})$ representing the selected and non-selected studies from the initial  $k$ random samples of can be defined as
 
 $$
 \begin{gathered}
@@ -134,41 +122,43 @@ One challenge of simulating a fixed number of $k$ random samples is that, all el
 
 ### Formulation as an Optimization Problem
 
+After the simulation of $k_{\small{\text{adj}}}$ samples from the publication bias model conditional on the marginal distribution parameter of effect size ($\mu_d$, $\sigma^2_d$) and sample size ($\phi_n$, $\mu_n$) and the publication bias parameter $\pbs$, the resulting subset after the application of publication bias After the application of publication bias to the random samples to determine the subset $(d_i^\prime, \,n_i^\prime)$ for $i=1, \dots,i=k_{\small{\text{adj}}}^\prime$ .
 
-After the application of publication bias to the random samples to determine the subset $(d_i^\prime, \,n_i^\prime)$ for $i=1, \dots,i=k_{\small{\text{adj}}}^\prime$ conditional on the publication bias parameter $\pbs$ and the parameters of the marginal distribution for the effect size and sample size, the following step involves the statistical comparison between the subset generated from the publication bias model and the actual empirical meta-analytical data.
+Following step...
 
-More specifically, quantify the statistical divergence of the estimated kernel density of the simulated data from the estimated kernel density of the empirical data.
+quantifiy how closely the simulated data from the publication bias model aligns with the empirical meta-analytical data. More specifically, we are interested in quantifying the statistical distance of the bivariate kernel density estimate of between the empirical meta-analytical data and the simulated data of the publication bias model.
 
+Different ways to define statistical distances between probablity distributions (or estimated kernel density), we use Kullback-Leibler Divergence [@kullback_information_1951], origins in information theory
 
+intuitive interpretation for this setting, how 
 
+estimated joint density of effect size and sample size of meta-analytical data $\widehat{f}_{e}$ assumed to be the true data generating distribution and the estimated kernel density from data simulated from the theoretical publication bias model $\widehat{f}_{t}$ is an approximate of $\widehat{f}_{e}$.
 
-After the selection of the subset $(d_i^\prime, \,n_i^\prime)$ from the simulated theoretical random samples conditional on the publication bias parameter $\pbs$ and the parameters of the marginal distributions for the effect size and sample size, the following step involves a statistical comparison between the this subset and the empirical meta-analytical data by means of the of the Kullback-Leibler divergence [@kullback_information_1951]. This assessment aims to quantify how closely the distributions of the theoretical samples align with the empirical data.
+To accomplish this, the joint kernel density distribution for both empirical data and simulated data is estimated using a bivariate standard Gaussian kernel that is evaluated on a square grid. The grid size was chosen to be $n_{\text{grid}}=2^7+1$ equidistant grid points in each dimension but is user-definable in the *speec* R package. The bandwidth of the kernel function was determined using the reliable plug-in method proposed by @sheather_reliable_1991, but the *speec* R package also offers other common bandwidth selection methods.
 
-In the subsequent phase, the statistical dissimilarity between the empirical meta-analytical data and the selected subset $(d_i^\prime, \,n_i^\prime)$ of the simulated theoretical samples is evaluated by means of the Kullback-Leibler divergence [@kullback_information_1951]. This assessment aims to quantify how closely the distributions of the theoretical samples align with the empirical data. To achieve this, the joint kernel density is estimated for both theoretical simulated and empirical data is estimated using a bivariate standard Gaussian kernel that is evaluated on a square grid, with a grid size of $n_{\text{grid}}=2^7+1$ equidistant grid points in each dimension. The bounds of the square grid are determined based on the empirical meta-analytical data. To the define these bounds the maximum likelihood estimates for the parameters of the marginal distribution of effect size ($\hat{\mu}_d,\hat{\sigma}^2_d$) and sample size ($\hat{\phi}_n, \hat{\mu}_n$) are computed. Then, utilizing these estimates, the quantiles derived from inner 99th percentile ($p_1 = .005, p_2=.995$) of the cumulative distribution are computed. Subsequently, the bounds are defined as the absolute minimum and maximum of these quantiles and then range of the empirical meta-analytical data, respectively.
-
-
-$p_1=0.005$ and $p_2 = 1-p_1$
-
-
-$\left[Q_d(p_1 ~ | ~ \hat{\mu}, \, \hat{\sigma}^2) \land \min(d), \, Q_d(p_2 ~ | ~ \hat{\mu}, \, \hat{\sigma}^2) \lor \max(d) \right]$
-
-$\left[Q_n(p_1 ~ | ~ \hat{\phi}, \, \hat{\mu}) \land \min(n), \, Q_n(p_2 ~ | ~ \hat{\phi}, \, \hat{\mu}) \lor \max(n) \right]$
-
-where $Q_n(p)$ and $Q_d(p)$ are the quantile function of the Negative-Binomial distribution (with MLE $\hat{\phi}$ and $\hat{\mu}$) and Normal distribution (with MLE $\hat{\mu}$ and $\hat{\sigma}^2$).
+The ensure the comparability of the estimated kernel densities between the empirical and simulated data, the bounds of the the square grid have to be exactly the same and are determined based on the empirical meta-analytical data.
 
 
-Finally, KL-divergence is calculated from the kernel density estimates for both empirical and simulated data, providing a measure of their statistical distance.
+To define the bounds, the maximum likelihood values for the parameters of the marginal distribution of effect size ($\hat{\mu}_d,\hat{\sigma}^2_d$) and sample size ($\hat{\phi}_n, \hat{\mu}_n$) are estimated. Using these estimates, the quantiles spanning the inner 99 percentile of the cumulative distribution function are obtained from the quantile functions $Q_d(p ~ | ~ \hat{\mu}_d, ~ \hat{\sigma}^2_d)$ and $Q_d(p ~ | ~ \hat{\phi}_n, ~ \hat{\mu}_n)$, where $p_1=0.005$ and $p_2 = 1-p_1$. Subsequently the bounds are defined as the extreme values of these quantiles and the range of the empirical data.
 
 $$
-D_{\text{KL}}(\widehat{f_e} ~ \lVert ~ \widehat{f_t})=\nsum_{u=1}^{g}\nsum_{v=1}^{g}\widehat{f_e}(u, v)\ln\left(\frac{\widehat{f_e}(u,v)}{\widehat{f_t}(u,v)}\right)
+\begin{gathered}
+b_d=\left\{Q_d(p_1 ~ | ~ \hat{\mu}_d, \, \hat{\sigma}_d^2) \land \min(d), \, Q_d(p_2 ~ | ~ \hat{\mu}_d, \, \hat{\sigma}_d^2) \lor \max(d) \right\} \\
+b_n = \left\{Q_n(p_1 ~ | ~ \hat{\phi}_n, \, \hat{\mu}_n) \land \min(n), \, Q_n(p_2 ~ | ~ \hat{\phi}_n, \, \hat{\mu}_n) \lor \max(n) \right\}
+\end{gathered}
+$$ {#bounds-kde}
+
+These ensures that the entire range of the empirical data is covered for the kernel density estimation. Finally, the Kullback-Leibler-Divergence is computed from the kernel density estimates of the empirical $\hat{f}_e$ and simulated theoretical $\hat{f}_t$ data.
+$$
+D_{\text{KL}}(\widehat{f}_e ~ \lVert ~ \widehat{f}_t)=\nsum_{u=1}^{n_{\text{grid}}}\nsum_{v=1}^{n_{\text{grid}}}\widehat{f}_e(u, v)\ln\left(\frac{\widehat{f}_e(u,v)}{\widehat{f}_t(u,v)}\right)
 $$ {#eq-kld}
 
 $$
 \begin{aligned}
-& \min_{\mu_d, \sigma^2_d, \mu_n, \phi_n, \omega_{PBS}} \Big\{ D_{\text{KL}}(\widehat{f_e} ~ \| ~ \widehat{f_t}) \Big\}, ~ \text{subject to:} ~ \mu_d, \sigma^2_d, \mu_n, \phi_n, \omega_{PBS} \in \mathbb{R} \\
+& \min_{\mu_d,  ~ \sigma^2_d,  ~ \mu_n, ~ \phi_n, ~ \omega_{PBS}} \Big\{ D_{\text{KL}}(\widehat{f_e} ~ \| ~ \widehat{f_t}) \Big\}, ~ \text{subject to:} ~ \mu_d, \sigma^2_d, \mu_n, \phi_n, \omega_{PBS} \in \mathbb{R} \\
 & -4 \leq \mu_d \leq 4, \quad 0 \leq \sigma^2_d \leq 6, 10 \leq \mu_n \leq 15000, \quad 0.01 \leq \phi_n \leq 1000, 0 \leq \omega_{PBS} \leq 1
 \end{aligned}
-$$
+$$ {eq-optim}
 
 constitute an optimization problem, where the aim is to find values for the four distributional parameters and the publication bias parameter such that the kullback-leibler loss function ... the divergence between the estimated joint kernel density of simulated theoretical data from the estimated joint kernel density of the empirical data
 

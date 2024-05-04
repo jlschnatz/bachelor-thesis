@@ -70,7 +70,8 @@ Apart from these more statistical challenges, there is also a more conceptual ch
 
 Research questions: - How does publication bias influence the joint probability distribution of effect size and sample size‚? - How can the magnitude of publication bias in meta-analyses be estimated and effect sizes under publication bias be corrected from the joint distribution of sample size and effect size
 
-The present study introduces $\mathrm{SPEEC}$ ($\mathbfsfup{S}\text{imulation-based}~\mathbfsfup{P}\text{ublication bias}~\mathbfsfup{E}\text{stimation and} ~ \mathbfsfup{E}\text{ffect size} ~ \mathbfsfup{C} \text{orrection}$), a novel simulation-based framework to assess the extent of publication bias in meta-analyses and estimate and correct effect sizes under the presence of publication bias. 
+
+The present study introduces $\mathrm{SPEEC}$ ($\mathbfsfup{S}$imulation-based $\mathbfsfup{P}$ublication bias $\mathbfsfup{E}$stimation and $\mathbfsfup{E}$ffect size $\mathbfsfup{C}$orrection), a novel simulation-based framework to assess the extent of publication bias in meta-analyses and estimate and correct effect sizes under the presence of publication bias. 
 
 utilizing/leveraging the joint distribution effect size and sample size, and how publication bias influence the joint distribution
 
@@ -86,22 +87,21 @@ Thesis is strucured the following way, short introduction of the SPEEC method, t
 
 Short primer of SPEEC:
 
-The central idea of the SPEEC method is to explicitely define a generative model of publication bias that incorporates assumptions about the marginal distributions of effect size (Gaussian distribution) and sample size (Negative-Binomial) as well the impact of publication bias.
+The central idea of the SPEEC method is the explicit formulation of a generative model of publication bias that incorporates assumptions about the marginal distributions of effect size and sample size as well as how publication bias impacts the their joint distribution. 
+
+The extent of publication bias is modeled by a publication bias parameter $\pbs$ that captures the probability of a statistically non-significant study being selected (i.e., published relative) relative to a significant study being selected.
+
+From this generative publication bias model, simulation of theoretical data 
 
 More specifically, distributional parameters -> marginal distribution of effect size and sample size + publication bias parameter, gibt das ausmaß von publication bias an -> relative likelihood of statistically significant studies 
 
 Publication bias parameter
 
-Distributional parameters that control
-
-From this generative model, simulation of theoretical data 
 
 - Central idea: explicitely model generative process of publication bias -> with specific assumption about the marginal distributions of effect size and sample size and how publication bias operates
 - Generative model of publication bias -> simulate theoretical data from generative model (this generative model has distributional parameters that reflect the marginal distribution of sample size and effect size as well as publication bias parameter)
 - Compare simulared data from generative model to empirical meta-analytical data -> determine the divergence of the estimated bivariate kernel density of the theoretical data from the empirical data (KL-divergence) -> this serves as a loss function -> formulation as an optimization problem 
 - Find parameters for which the KL-divergence is minimized
-  
-
 
 
 Simulation framework: simulation of effect size-sample size data that is sampled from theoretical model conditional on marginal distributional assumptions of effect size (Gaussian distribution) and sample size (Negative_Binomial distribution). Introduction of publication bias parameter, which can be defined as the relative likelihood of a individual statistically non-significant study being published relative to a statistically significant study. Application of publication bias on the simulated joint distribution samples (effect size sample size). Comparison between empirial data and simulated samples from theoretical model in terms of the divergence between their respetice kernel density estimates. Using this framework -> formulation as an optimization problem -> parameter optimization regarding the marginal distributional parameters and the publication bias parameter to optimize the objective function.
@@ -114,11 +114,14 @@ simulation of assumption how publication bias operates
 
 simulation of random samples from theoretical
 
+-   Simulation-based approach to estimate publication bias severity and correct potentially biased (inflated) effect sizes under present publication bias based on the joint distribution of effect size and sample size
+-   Simulation of theoretical data > joint distribution of effect size and sample size under marginal distributional assumptions > Application of publication bias > empirical kernel density estimation > comparison of empirical and simulated data > loss function
+
 - Simulation of random samples from theoretical publication bias model which integrates assumptions about the marginal distribution of effect size and sample size and how publication bias influences the joint distribution
 - Comparison between random samples for theoretical model to real data → compute loss function as the statistical divergence between the estimated joint density distribution
 - Iterative algorithmic optimization (differential evolution) of distributional parameters and publication bias parameter to minimize the loss function
 
-## Hypotheses
+## Confirmatory Hypotheses
    
 To assess the SPEEC method, a set of four theoretical predictions are derived, that constitute the hypotheses of this study. These hypotheses serve as benchmarks for assessing the viability of the proposed method and are therefore expected to hold true if the approach works in principle. If the predictions fail to be corroborated by the empirical meta-analytical data, this would raise concerns about the viability of the SPEEC method and necessitate a further review of its implementation.
 

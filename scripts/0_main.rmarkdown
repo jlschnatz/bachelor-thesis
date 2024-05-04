@@ -1,0 +1,78 @@
+```{=tex}
+\newpage
+\pagenumbering{roman}
+\thispagestyle{empty}
+```
+
+\newpage
+
+\mbox{}\thispagestyle{empty}\newpage
+
+# Abstract {.unnumbered}
+
+Test
+
+\newpage
+
+\pagenumbering{arabic}
+
+\tableofcontents
+
+
+```{r}
+#| echo: false
+#| results: "asis"
+
+intro <- knitr::knit_child("scripts/1_intro.qmd", quiet = TRUE)
+cat(intro, sep = "\n")
+```
+
+```{r}
+#| echo: false
+#| results: "asis"
+
+method <- knitr::knit_child("scripts/2_methods.qmd", quiet = TRUE)
+cat(method, sep = "\n")
+```
+
+```{r}
+#| echo: false
+#| results: "asis"
+
+results <- knitr::knit_child("scripts/3_results.qmd", quiet = TRUE)
+cat(results, sep = "\n")
+```
+
+```{r}
+#| echo: false
+#| results: "asis"
+
+discussion <- knitr::knit_child("scripts/4_discussion.qmd", quiet = TRUE)
+cat(discussion, sep = "\n")
+```
+
+```{r}
+#| echo: false
+#| results: "asis"
+
+references <- knitr::knit_child("scripts/5_references.qmd", quiet = TRUE)
+cat(references, sep = "\n")
+```
+
+```{r}
+#| echo: false
+#| results: "asis"
+
+appendix <- knitr::knit_child("scripts/6_appendix.qmd", quiet = TRUE)
+cat(appendix, sep = "\n")
+```
+
+```{r}
+#| echo: false
+
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  results = "asis"
+)
+```
