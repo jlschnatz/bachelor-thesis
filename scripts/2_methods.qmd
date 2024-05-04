@@ -57,6 +57,7 @@ $$
 \end{gathered}
 $$ {#eq-normalization}
 
+\noindent
 With this normalization factor, the total variance of the individual variances of the individual variances is $\text{Var}(\gamma \cdot \sigma^2_d) = \sigma^2_d$. The study-specific effect sizes $d_i$ are subsequently modeled as
 
 $$
@@ -65,7 +66,7 @@ $$ {#eq-norm-dist}
 
 Applying this definition for the distribution of effect size, the SPEEC approach employs a fixed effects meta-analytical model, where the only source of effect size variation is explained by measurement error. However, the simulation model of the SPEEC method could be further extended to account for effect size heterogeneity. This could involve including an additional heterogeneity parameter $\tau^2$ in the simulation framework to account for additional variability that goes beyond sampling error.
 
- Conditional on the marginal distributions, $k$ individual studies are sampled from the joint distribution of effect size and sample size. The selection of $k$ is user-defined, however, the larger the number of samples $k$, the lower the uncertainty of the joint distribution of effect size and sample size. In general, there is a trade-off between the increased computational cost and the reduced uncertainty of the joint distribution for increaasing values of $k$. We opted for $k=10^4$ samples for each simulation iteration.
+Conditional on the marginal distributions, $k$ individual studies are sampled from the joint distribution of effect size and sample size. The selection of $k$ is user-defined, however, the larger the number of samples $k$, the lower the uncertainty of the joint distribution of effect size and sample size. In general, there is a trade-off between the increased computational cost and the reduced uncertainty of the joint distribution for increaasing values of $k$. We opted for $k=10^4$ samples for each simulation iteration.
 
 ### Application of Publication Bias
 
@@ -90,6 +91,7 @@ $$
 1 & \text{otherwise}\end{cases}
 $$ {#eq-pbs}
 
+\noindent
 with the constraint $\pbs \in \mathbb{R} : 0 \leq \pbs \leq 1$. This weight denotes the probability of a study $i$ being selected conditional on the *p*-value and the type I error rate $\alpha$. This definition of the publication bias weight is directly analogue to the step function of publication bias selection models [@hedges_modeling_1992; @iyengar_selection_1988]. If a study $i$ is not statistically significant (i.e., $p_i \geq \alpha$), a publication bias parameter $\pbs$ is assigned, else the probability of a study being selected is equal to one, indicating no publication bias. Thus, the publication bias parameter $\pbs$ denotes the probability the selection of a non-significant study relative to a statistiacally significant study. For instance, a publication bias parameter of $\pbs=0.5$ would indicate that simulated studies that are non-significant are half as likely to be selected in comparison to studies that are statistically significant. Importantly, the type I error rate needs to be fixed across all simulated studies and is set to the common significance threshold of $\alpha = 0.05$ for the analyses of the hypotheses. 
 
 Following the computation of publication bias weight $\omega_{\text{PBS}_i}$ for each study $i$, the likelihood of a study being selected can be expressed as $\mathbb{P}(S_i = 1)= \omega_{\text{PBS}_i}$. Here, $S_i$ is a binary indicator function, signifying whether an individual study $i$ is selected during the publication bias selection process.
