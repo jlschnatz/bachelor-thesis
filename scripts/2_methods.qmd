@@ -14,19 +14,17 @@ pacman::p_load(tidyverse, insight, here)
 
 ## The SPEEC Method
 
-This section offers a comprehensive in-depth description and explanation of the SPEEC framework to assess the extent of publication bias and estimate effect sizes in the presence of publication bias in meta-analyses. Figure XXX offers an overview of the sequential steps of the SPEEC method. Currently, SPEEC is being developed as an open-source R package and is accessible on GitHub at <https://github.com/jlschnatz/speec>.
+This section offers a comprehensive in-depth description and explanation of the SPEEC framework to assess the extent of publication bias and estimate effect sizes in the presence of publication bias in meta-analyses. @fig-speec-workflow offers an overview of the sequential steps of the SPEEC method. Currently, SPEEC is being developed as an open-source R package and is accessible on GitHub at <https://github.com/jlschnatz/speec>.
 
 
-
-```{=latex}
-\begin{figure}[H]
-\caption{Overview of the SPEEC Approach\label{fig:speec}}
-```
-
-```{r speec-fig}
-#| fig-align: center
+```{r speec_workflow}
 #| out-width: 80%
 #| echo: false
+#| fig-cap-location: top
+#| fig-cap: Overview of the SPEEC Approach
+#| fig-pos: H
+#| label: fig-speec-workflow
+#| fig-align: center
 
 knitr::include_graphics(here("figures/speec_workflow.png"))
 
@@ -34,19 +32,15 @@ knitr::include_graphics(here("figures/speec_workflow.png"))
 
 ```{=latex}
 \begingroup
-\footnotesize
+\small
+\noindent
 \textit{Note.} Test.
 \endgroup
-\end{figure}
 ```
 
 ### Simulation Framework
 
-Assumption how effect sizes and sample sizes were generated -> assumption of two-sample t-test design.
-
-however, the framework itself could also assume different study design that generated the data with other effect size measure rather than Cohen´s *d* (for instance correlational design producing correlation coefficients or Fisher z transformed correlation coefficients as effect size measure) -> adaption of the marginal distributions, and how p-values are calculated
-
-Simulation of Random Samples from Theoretical Model -> Defining the marginal distributions for effect size and sample size to be sampled from
+The first step of the SPEEC method involves the definition of the marginal distributions of the effect size and sample size for the generative publication bias model. In defining these marginal distribution comes requires additional assumptions from which type of study design the effect sizes and samples sizes that are simulated were generated. For the purpose of this, because we work with Cohen´s *d* as a very popular effect size measure, we assume that the simulated effect sizes originate from a two-sample *t*-test design. However, the SPEEC framework itself could also apply if we would assume a different study design for which other effect size measures are typically reported (e.g., correlational effect sizes, effect sizes based on proportional data, ANOVA). This would require a potential adaption of the marginal distribution for the effect size and how the statistical significance of each simulated study is determined based on a difference effect size measure for the application of publication bias.
 
 The marginal distribution for the total sample size $\mathrm{n}$ of a study should be inherently modeled as a discrete distribution. Count data of this nature are commonly modeled using either a Poisson or Negative-Binomial distribution. In various psychological domains, sample size distributions often exhibit considerable variance and skewness [see for example @cafri_meta-meta-analysis_2010; @marszalek_sample_2011; @sassenberg_research_2019; @shen_samples_2011; @szucs_empirical_2017]. Considering this variability and skewness we opted for the Negative-Binomial distribution which can account for variance independently of the mean and thus handle overdispered data effectively. We use the mean-dispersion parametrization where the probability of sucess $p$ and the target number of sucesses $r$ are reparametrized to mean $\mu = r(1-p)/p$ and dispersion $\phi=r$ to model the study-specific total sample sizes $n_i$.
 
