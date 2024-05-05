@@ -3,8 +3,8 @@
 # Tidy bib-file (only used references)
 clean_bib() {
     folder="scripts"
-    input_ref="references.bib"
-    output_ref="tidy_references.bib"
+    input_ref="bibliography/references.bib"
+    output_ref="bibliography/tidy_references.bib"
 
     # Extract unique entry names from files in the folder
     entries=$(cat "$folder"/* | grep -o '@[a-zA-Z0-9_-]\+' | sed 's/@//g' | sort -u)

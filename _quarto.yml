@@ -28,7 +28,7 @@ format:
     toc: false
     fig-align: center
     fig-cap-location: top
-    bibliography: tidy_references.bib
+    bibliography: bibliography/tidy_references.bib
     csl: apa.csl
     citecolor: black
     margin-left: 2.5cm

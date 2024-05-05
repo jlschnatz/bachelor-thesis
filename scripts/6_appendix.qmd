@@ -1,3 +1,7 @@
+---
+bibliography: ../bibliographyreferences.bib
+---
+
 ```{=latex}
 \newpage
 \renewcommand{\thetable}{\Alph{section}\arabic{table}}

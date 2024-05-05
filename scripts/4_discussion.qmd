@@ -1,3 +1,7 @@
+---
+bibliography: ../bibliographyreferences.bib
+---
+
 \newpage
 
 # Discussion
