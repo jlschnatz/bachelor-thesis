@@ -7,12 +7,14 @@ bibliography: ../references.bib
 ```{r}
 #| echo: false
 source(here::here("R/00_functions.R"))
-pacman::p_load(tidyverse, insight, here)
+pacman::p_load(tidyverse, insight, here, knitr, kableExtra)
 ```
 
 # Method
 
 ## The SPEEC Method
+
+<!-- Finished this section! -->
 
 This section offers a comprehensive in-depth description and explanation of the SPEEC framework to assess the extent of publication bias and estimate effect sizes in the presence of publication bias in meta-analyses. @fig-speec-workflow offers an overview of the sequential steps of the SPEEC method. Currently, SPEEC is being developed as an open-source R package and is accessible on GitHub at <https://github.com/jlschnatz/speec>.
 
@@ -26,7 +28,7 @@ This section offers a comprehensive in-depth description and explanation of the 
 #| label: fig-speec-workflow
 #| fig-align: center
 
-knitr::include_graphics(here("figures/speec_workflow.png"))
+include_graphics(here("figures/speec_workflow.png"))
 
 ```
 
@@ -40,7 +42,9 @@ knitr::include_graphics(here("figures/speec_workflow.png"))
 
 ### Simulation Framework
 
-The first step of the SPEEC method involves the definition of the marginal distributions of the effect size and sample size for the generative publication bias model. In defining these marginal distribution comes requires additional assumptions from which type of study design the effect sizes and samples sizes that are simulated were generated. For the purpose of this, because we work with Cohen´s *d* as a very popular effect size measure, we assume that the simulated effect sizes originate from a two-sample *t*-test design. However, the SPEEC framework itself could also apply if we would assume a different study design for which other effect size measures are typically reported (e.g., correlational effect sizes, effect sizes based on proportional data, ANOVA). This would require a potential adaption of the marginal distribution for the effect size and how the statistical significance of each simulated study is determined based on a difference effect size measure for the application of publication bias.
+<!-- Finished! -->
+
+The initial step in the SPEEC method entails defining the marginal distributions of effect size and sample size for the generative publication bias model. This requires additional assumptions regarding the type of study design from which the simulated effect sizes and sample sizes originate. For this study, Cohen´s *d* is adopted as a widely used effect sizes measure for mean differences[@lakens_calculating_2013] as the effect size for simulation. For this reason, we assume that the simulated effect sizes originate from a between-subjects two-sample *t*-test study design. However, it is worth noting that the SPEEC framework remains adaptable to different study designs where alternative effect size measures are typically employed (e.g., correlational effect sizes, effect sizes derived from proportional data). Depending on the effect size, this would require a potential adaption of the marginal distribution for the effect size and how statistical significance for each simulated study based on a different effect sizes is determined for the application of publication bias.
 
 The marginal distribution for the total sample size $\mathrm{n}$ of a study should be inherently modeled as a discrete distribution. Count data of this nature are commonly modeled using either a Poisson or Negative-Binomial distribution. In various psychological domains, sample size distributions often exhibit considerable variance and skewness [see for example @cafri_meta-meta-analysis_2010; @marszalek_sample_2011; @sassenberg_research_2019; @shen_samples_2011; @szucs_empirical_2017]. Considering this variability and skewness we opted for the Negative-Binomial distribution which can account for variance independently of the mean and thus handle overdispered data effectively. We use the mean-dispersion parametrization where the probability of sucess $p$ and the target number of sucesses $r$ are reparametrized to mean $\mu = r(1-p)/p$ and dispersion $\phi=r$ to model the study-specific total sample sizes $n_i$.
 
@@ -48,7 +52,7 @@ $$
 n_1, \,n_2,\, \ldots, \,n_k \quad \text{where} \quad N\stackrel{\mathrm{i.i.d.}}{\sim} \mathcal{NB}(\phi_n, \mu_n) \quad \text{for } i = 1, \ldots, k
 $$ {#eq-nb-dist}
 
-Concerning the marginal distribution of the effect size $\mathrm{d}$, it is reasonable to assume a Gaussian distribution with mean $\mu_d$ and variance $\sigma^2_d$, where the effect size itself is assumed to originate from a common two-sample independent *t*-test design. To address the increasing precision in estimating the true effect size mean $\mu_d$ as the sample size increases (i.e., the sampling error), that contributes to the characteristic funnel shaped effect size-sample size distribution, we compute the variance of the mean differences $\bar{x}_{i1} - \bar{x}_{i2}$, from which the effect sizes originate in this type of design. Subsequently, we derive a normalization factor $\gamma_i$ by dividing each individual variance $\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}$ with overall mean of those variances ensuring that $\bar{\gamma}=1$.
+Concerning the marginal distribution of the effect size $\mathrm{d}$, it is reasonable to assume a Gaussian distribution with mean $\mu_d$ and variance $\sigma^2_d$. To account for the increasing precision in estimating the true effect size mean $\mu_d$ as the sample size increases (i.e., the sampling error), that contributes to the characteristic funnel shaped effect size-sample size distribution, we compute the variance of the mean differences $\bar{x}_{i1} - \bar{x}_{i2}$, from which the effect sizes originate in this type of design. Subsequently,  a normalization factor $\gamma_i$ is derived by dividing each individual variance $\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}$ with the overall mean of those variances ensuring that $\bar{\gamma}=1$.
 
 $$
 \begin{gathered}
@@ -61,18 +65,16 @@ $$ {#eq-normalization}
 With this normalization factor, the total variance of the individual variances of the individual variances is $\text{Var}(\gamma \cdot \sigma^2_d) = \sigma^2_d$. The study-specific effect sizes $d_i$ are subsequently modeled as
 
 $$
-d_1, \,d_2, \,\ldots, \,d_k \quad \text{where} \quad D \stackrel{}{\sim} \mathcal{N}(\mu_d, \gamma_i\cdot\sigma_d^2) \quad \text{for} \quad i = 1, \ldots, k 
+d_1, \,d_2, \,\ldots, \,d_k \quad \text{where} \quad D \stackrel{}{\sim} \mathcal{N}(\mu_d, \gamma_i\cdot\sigma_d^2) \quad \text{for} \quad i = 1, \ldots, k.
 $$ {#eq-norm-dist}
 
-Applying this definition for the distribution of effect size, the SPEEC approach employs a fixed effects meta-analytical model, where the only source of effect size variation is explained by measurement error. However, the simulation model of the SPEEC method could be further extended to account for effect size heterogeneity. This could involve including an additional heterogeneity parameter $\tau^2$ in the simulation framework to account for additional variability that goes beyond sampling error.
+Using this definition for the marginal distribution of effect size, the SPEEC approach assumes a fixed effects meta-analytical model, where the only source of variation in effect size is explained by measurement error. However, it is worth noting that the publication bias simulation model of the SPEEC method could be further extended to account for effect size heterogeneity. This could involve including an additional heterogeneity parameter $\tau^2$ in the simulation framework to account for additional variability that goes beyond sampling error.
 
-Conditional on the marginal distributions, $k$ individual studies are sampled from the joint distribution of effect size and sample size. The selection of $k$ is user-defined, however, the larger the number of samples $k$, the lower the uncertainty of the joint distribution of effect size and sample size. In general, there is a trade-off between the increased computational cost and the reduced uncertainty of the joint distribution for increaasing values of $k$. We opted for $k=10^4$ samples for each simulation iteration.
+Conditional on the marginal distributions, $k$ individual studies are sampled from the joint distribution of effect size and sample size. The selection of $k$ is user-defined, however, the larger the number of samples $k$, the lower the uncertainty of the joint distribution of effect size and sample size. In general, there is a trade-off between the increased computational cost and the reduced uncertainty of the joint distribution for increasing values of $k$. We opted for $k=10^4$ samples for each simulation iteration for the analyses of the hypotheses.
 
 ### Application of Publication Bias
 
-Following the simulation step of sampling $k$ individual studies from the joint distribution of effect size and sample size, the subsequent stage involves the application of publication bias to the random samples. As previously discussed, publication bias is operationalizeed in terms of the likelihood of a study being published conditional on the statistical significance of its results. This significance is typically assessed by contrasting *p*-values against the conventional type I error rate cut-off regions in traditional null hypothesis significance testing (NHST) contexts [@andrade_p_2019; @mcshane_abandon_2019].Translated to this simulation setting, two-tailed *p*-values for each individual study *i* can be calculate from the corresponding effect size $d_i$ and sample size $n_i$.
-
-To implement this, we assume that the individual studies $i$ in the simulation originate form a balanced sample size design. This means that when the total sample size $n_i$ is even, the group sample sizes $n_{1i}$ and $n_{2i}$ are simply defined as $n_i/2$. Otherwise, when the total sample size $n_i$ is odd, the group sample sizes are determined as the ceilinged $\lceil n_i/2 \rceil$ and floored $\lfloor n_i/2 \rfloor$ values, respectively.Subsequently, the *p*-value $p_i$ of each simulated study can be derived from its corresponding *t*-value 
+Following the simulation step of sampling $k$ individual studies from the joint distribution of effect size and sample size, the subsequent stage involves the application of publication bias to the random samples. As previously discussed, publication bias is operationalizeed in terms of the likelihood of a study being published conditional on the statistical significance of its results. This significance is typically assessed by contrasting *p*-values against the conventional type I error rate cut-off regions in traditional null hypothesis significance testing (NHST) contexts [@andrade_p_2019; @mcshane_abandon_2019].Translated to this simulation setting, two-tailed *p*-values for each individual study *i* can be calculate from the corresponding effect size $d_i$ and sample size $n_i$. To implement this, we assume that the individual studies $i$ in the simulation originate form a balanced sample size design. This means that when the total sample size $n_i$ is even, the group sample sizes $n_{1i}$ and $n_{2i}$ are simply defined as $n_i/2$. Otherwise, when the total sample size $n_i$ is odd, the group sample sizes are determined as the ceilinged $\lceil n_i/2 \rceil$ and floored $\lfloor n_i/2 \rfloor$ values, respectively.Subsequently, the *p*-value $p_i$ of each simulated study can be derived from its corresponding *t*-value 
 
 $$
 t_i=\Big\lvert \frac{d_i}{\sqrt{1/n_{1i} +1/n_{2i}}} \Big\rvert.
@@ -92,9 +94,7 @@ $$
 $$ {#eq-pbs}
 
 \noindent
-with the constraint $\pbs \in \mathbb{R} : 0 \leq \pbs \leq 1$. This weight denotes the probability of a study $i$ being selected conditional on the *p*-value and the type I error rate $\alpha$. This definition of the publication bias weight is directly analogue to the step function of publication bias selection models [@hedges_modeling_1992; @iyengar_selection_1988]. If a study $i$ is not statistically significant (i.e., $p_i \geq \alpha$), a publication bias parameter $\pbs$ is assigned, else the probability of a study being selected is equal to one, indicating no publication bias. Thus, the publication bias parameter $\pbs$ denotes the probability the selection of a non-significant study relative to a statistiacally significant study. For instance, a publication bias parameter of $\pbs=0.5$ would indicate that simulated studies that are non-significant are half as likely to be selected in comparison to studies that are statistically significant. Importantly, the type I error rate needs to be fixed across all simulated studies and is set to the common significance threshold of $\alpha = 0.05$ for the analyses of the hypotheses. 
-
-Following the computation of publication bias weight $\omega_{\text{PBS}_i}$ for each study $i$, the likelihood of a study being selected can be expressed as $\mathbb{P}(S_i = 1)= \omega_{\text{PBS}_i}$. Here, $S_i$ is a binary indicator function, signifying whether an individual study $i$ is selected during the publication bias selection process.
+with the constraint $\pbs \in \mathbb{R} : 0 \leq \pbs \leq 1$. This weight denotes the probability of a study $i$ being selected conditional on the *p*-value and the type I error rate $\alpha$. This definition of the publication bias weight is directly analogue to the step function of publication bias selection models [@hedges_modeling_1992; @iyengar_selection_1988]. If a study $i$ is not statistically significant (i.e., $p_i \geq \alpha$), a publication bias parameter $\pbs$ is assigned, else the probability of a study being selected is equal to one, indicating no publication bias. Thus, the publication bias parameter $\pbs$ denotes the probability the selection of a non-significant study relative to a statistiacally significant study. For instance, a publication bias parameter of $\pbs=0.5$ would indicate that simulated studies that are non-significant are half as likely to be selected in comparison to studies that are statistically significant. Importantly, the type I error rate needs to be fixed across all simulated studies and is set to the common significance threshold of $\alpha = 0.05$ for the analyses of the hypotheses. Following the computation of publication bias weight $\omega_{\text{PBS}_i}$ for each study $i$, the likelihood of a study being selected can be expressed as $\mathbb{P}(S_i = 1)= \omega_{\text{PBS}_i}$. Here, $S_i$ is a binary indicator function, signifying whether an individual study $i$ is selected during the publication bias selection process.
 
 $$
 S_i = 
@@ -166,6 +166,8 @@ To utilize DE for optimization within the SPEEC approach, the R package *RcppDE*
 
 ## Secondary Data Description
 
+To analyse the confirmatory hypotheses of this study, assessement of the SPEEC method,
+
 The data used for the assement of the predictions of the four hypotheses stem from extensive meta-analytical dataset from previous work by @linden_heterogeneity_2021.
 
 The dataset contains a total of 207 research synthesis on 207 psychological phenomena. Subdivided into 150 "traditional" meta-analysis which contain 3 times 50 meta-analyses from different subfields of psychology (social psychology, organizational psychology and cognitive psychology).
@@ -210,15 +212,48 @@ For all four hypotheses, we will establish the smallest effect size of interest 
 
 ```{r}
 #| echo: false
-#| results: asis
-df_sesoi <- read.csv(here("preregistration/data/sesois.csv")) |>
+#| message: false
+#| tbl-cap: Smallest Effect Sizes of Interest of the Hypotheses
+#| label: tbl-sesoi
+#| tbl-cap-location: top
+
+df_sesoi <- read_csv(here("preregistration/data/sesois.csv")) |>
   mutate(hypothesis = paste0("$", gsub("H", "\\\\mathcal{H}_", hypothesis), "$")) |>
   mutate(unit = if_else(unit == "OR", glue::glue("${unit}$"), "raw unit")) 
 
-nice_table(
+general <- "\\\\noindent \\\\textit{Note.}  Except for $\\\\mathcal{H}_3$ all SESOIs are defined in terms of odds ratios (OR). The SESOI of $\\\\mathcal{H}_3$ is defined in raw units."
+
+kable(
   x = df_sesoi,
-  caption = "Smallest Effect Sizes of Interest of the Hypotheses",
-  col_names = c("Hypothesis", "SESOI", "Unit"),
-  general_fn = "$OR$ = Odds ratio"
-)
+  format = "latex",
+  threeparttable = TRUE,
+  booktabs = TRUE,
+  col.names = c("Hypothesis", "SESOI", "Unit"),
+  escape = FALSE,
+  align = "lcc"
+  ) |>
+  kable_styling(latex_options = c("scale_down"), full_width = FALSE) |>
+  footnote(
+      general = general,
+      general_title = "",
+      escape = FALSE,
+      threeparttable = TRUE
+    )  |>
+    column_spec(column = 1, width = "4cm") |>
+    column_spec(column = 2:3, width = "6cm")
+
+```
+
+@tbl-sesoi
+
+```{r}
+#| echo: false
+#| results: asis
+
+nice_table(
+  x = df_sesoi, col_names = c("Hypothesis", "SESOI", "Unit"), 
+  general_fn = "Except for $\\\\mathcal{H}_3$ all SESOIs are defined in terms of odds ratios (OR). The SESOI of $\\\\mathcal{H}_3$ is defined in raw units.",
+  caption = "Smallest Effect Sizes of Interest of the Hypotheses"
+  )
+
 ```
