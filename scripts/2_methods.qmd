@@ -160,29 +160,7 @@ To utilize DE for optimization within the SPEEC approach, the R package *RcppDE*
 
 ## Secondary Data Description
 
-To analyse the confirmatory hypotheses of this study which aims to give a broad assessment about the viability of the SPEEC method, we use secondary data from previus work by @linden_heterogeneity_2021.
-
-This extensive dataset containing both traditional meta-analyses  and large scale replication studies
-
-
-The dataset contains a total of 207 research synthesis on 207 psychological phenomena. Subdivided into 150 "traditional" meta-analysis which contain 3 times 50 meta-analyses from different subfields of psychology (social psychology, organizational psychology and cognitive psychology).
-
--   for each meta-analysis information about the total sample size and effect size of each primary study was collected
--   Random sampling to determine the meta-analysis for the study (within the inclusion criteria)
-
-Additionaly 57 large-scale replication studies and registered reports, which are important for the investigation of $\mathcal{H}_3$ and $\mathcal{H}_4$.
-
-
-
--   To investigate predictions of the hypotheses we use secondary data by Linden & Hönekopp (2021)
--   Extensive meta-analytical database, containing both traditional meta-analysis as well as multisite replication studies and registered reports (which are absent of publication bias)
--   The subset of traditional meta-analysis consists of 150 total meta-analyses
--   The subset of traditional meta-analysis from different subfields of psychology (Social psychology, organizational psychology and cognitive psychology; 50 each)
--   additionally 57 multisite replication studies and registered reports
--   for each meta-analysis information about the total sample size and effect size of each primary study was collected
--   Random sampling to determine the meta-analysis for the study (within the inclusion criteria)
--   One important inclusions criteria of Linden & Hönekopp (2021), effects had to be reported as standardized mean differences (Cohen´s d or Hedges´g) or as correlations (Pearson´s r or Fisher´s z)
--   In instances where a meta-analysis or replication study used a different effect size measure than Cohen’s d, the effect sizes were transformed accordingly
+To examine the confirmatory hypotheses of this study aiming to provide a preliminary assessment about the viability of the SPEEC method, we use secondary data sourced from previous research by @linden_heterogeneity_2021. The dataset can be accessed both from its original source (see https://osf.io/yr3xd/) and through the OSF and GitHub repositories associated with this project (see section XXX). Furthermore, detailed metadata about the dataset and a transparency statement regarding prior knowledge of the data are provided in the preregistration of this study. This comprehensive dataset comprises both "traditional" meta-analyses and publication bias free registered replication reports. The dataset encompasses a total of 207 research syntheses covering various psychological phenomena. Within this dataset, there are 150 meta-analyses, each subset consisting of 50 meta-analyses from different subfields of psychology (social psychology, organizational psychology, and cognitive psychology). Additionally, the dataset includes 57 registered replication reports, which are particularly relevant for investigating hypotheses $\mathcal{H}_3$ and $\mathcal{H}_4$. For each research synthesis, information on the total sample size and effect size of each primary study was compiled.  The meta-analyses were selected via random sampling, adhering to predefined inclusion criteria and prespecified journals from which the data was sampled from. One crucial inclusion criterion  by @linden_heterogeneity_2021 was that effects must be reported as standardized mean differences (Cohen´s *d* or Hedges´ *g*) or as correlations (Pearson´s *r* or Fisher´s *z*). In cases where a meta-analysis or replication study employed a different effect size measure than Cohen’s *d*, the effect sizes were transformed accordingly [@linden_heterogeneity_2021].
 
 ## Statistical Analysis
 
@@ -210,45 +188,15 @@ Hypothesis $\mathcal{H}_3$ was aimed at comparing the estimated means of the Gau
 
 For all four hypotheses, we will establish the smallest effect size of interest (SESOI) based on effect sizes that that can reliably detected, considering the constraints imposed by the sample size resources available for this secondary data analysis [@lakens_performing_2014; @lakens_equivalence_2018]. More specifically, we conducted three simulation-based ($\mathcal{H}_1$, $\mathcal{H}_3$, $\mathcal{H}_4$) and one analytical ($\mathcal{H}_2$) sensitivity power analysis to determine which effect sizes we have at least 80 percent power ($1-\beta=0.8$) to detect, taking into account the constraints of the sample size and a fixed type I error rate $\alpha = .05$ (details see Appendix XXX). We specified the SESOI for $\mathcal{H}_3$ in raw units and all other SESOIs in odds ratios. The SESOI for the equivalence hypothesis will define the equivalence bounds for the TOST procedure ($\Delta_{EQ} = (-0.17, 0.17)$). Table XXX summarises all four SESOIs of the hypotheses.
 
-```{r}
-#| echo: false
-#| message: false
-#| tbl-cap: Smallest Effect Sizes of Interest of the Hypotheses
-#| label: tbl-sesoi
-#| tbl-cap-location: top
 
-df_sesoi <- read_csv(here("preregistration/data/sesois.csv")) |>
-    mutate(hypothesis = paste0("$", gsub("H", "\\\\mathcal{H}_", hypothesis), "$")) |>
-    mutate(unit = if_else(unit == "OR", glue::glue("${unit}$"), "raw unit"))
-
-general <- "\\\\noindent \\\\textit{Note.}  Except for $\\\\mathcal{H}_3$ all SESOIs are defined in terms of odds ratios (OR). The SESOI of $\\\\mathcal{H}_3$ is defined in raw units."
-
-kable(
-    x = df_sesoi,
-    format = "latex",
-    threeparttable = TRUE,
-    booktabs = TRUE,
-    col.names = c("Hypothesis", "SESOI", "Unit"),
-    escape = FALSE,
-    align = "lcc"
-) |>
-    kable_styling(latex_options = c("scale_down"), full_width = FALSE) |>
-    footnote(
-        general = general,
-        general_title = "",
-        escape = FALSE,
-        threeparttable = TRUE
-    ) |>
-    column_spec(column = 1, width = "4cm") |>
-    column_spec(column = 2:3, width = "6cm")
-
-```
-
-@tbl-sesoi
 
 ```{r}
 #| echo: false
 #| results: asis
+
+df_sesoi <- read_csv(here("preregistration/data/sesois.csv")) |>
+    mutate(hypothesis = paste0("$", gsub("H", "\\\\mathcal{H}_", hypothesis), "$")) |>
+    mutate(unit = if_else(unit == "OR", glue::glue("${unit}$"), "raw unit"))
 
 nice_table(
     x = df_sesoi, col_names = c("Hypothesis", "SESOI", "Unit"),
