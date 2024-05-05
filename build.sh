@@ -12,7 +12,7 @@ clean_bib() {
     output=""
     # Iterate over each entry and find the first occurrence in the bibliography
     for entry in $entries; do
-        result=$(awk -v entry="$entry" 'BEGIN {RS="\n@"} $0 ~ entry {print "@" $0}' "$input_ref")
+        result=$(awk -v entry="$entry" 'BEGIN {RS="\n@"} $0 ~ "{"entry"," {print "@" $0}' "$input_ref")
         if [ -n "$result" ]; then
             output+="$result\n"
         fi
