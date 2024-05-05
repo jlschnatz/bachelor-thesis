@@ -36,24 +36,29 @@ As an initial step, the assumptions made to determine the Smallest Effect Sizes 
 
 <!-- Multi-Panel Figure for Hypotheses -->
 
-```{=latex}
-\begin{figure}[H]
-\caption{Visual Summary of Results from Four Hypotheses
-\label{fig:hypotheses}}
-```
-```{r hypotheses}
+
+```{r hypothesis_multipanel}
 #| out-width: 90%
+#| echo: false
+#| fig-cap-location: top
+#| fig-cap: Visual Summary of the Results from the Four Hypotheses
+#| fig-pos: H
+#| label: fig-hypotheses-multipanel
 #| fig-align: center
+
 knitr::include_graphics(here("figures/hypotheses_multipanel.png"))
+
 ```
 
 ```{=latex}
 \begingroup
-\scriptsize
+\small
+\noindent
 \textit{Note.} \textbf{A}. Estimated publication bias parameter vs. Fisher z-transformed correlation coefficients. Fitted line: regression coefficients with 95% CI. \textbf{B}. Estimated publication bias parameter vs. difference between mean parameter and average effect size. \textbf{C}. Mean difference between mean parameter and effect size, with 90% CI, compared to null t-distribution for equivalence bounds. \textbf{D}. Comparison of estimated publication bias parameter distribution between normal meta-analyses and multisite replications. Point range: marginal predicted values with 95% CI from regression.
 \endgroup
-\end{figure}
 ```
+
+
 ## Confirmatory Results of the Predictions from the Hypotheses
 
 <!-- Hypotheses I -->
@@ -99,7 +104,7 @@ r2_percent <- str_replace(format_percent(r2_fcn(mod_h1, "w_pbs")), "\\%", "\\\\%
 
 ```
 
-Regarding hypothesis $\mathcal{H}_1$, panel A of figure XXX depicts the relationship between estimated publication bias parameter $\epbs$ and the Fisher *z*-transformed Spearman correlation coefficients $z_{r_s}$ of the effect size sample size correlation in each meta-analysis. The observed slope was sign was positive in the direction of the hypothesis and statistically signifcant `r string_h1`. We reject null hypothesis $\mathcal{H}_{0}$, that the beta coefficient is $z_{r_s} \leq 0$. Lower values for $z_{r_s}$ were significantly associated with lower publication bias parameter values $\epbs$.  Additionally, to enhance the interpretability of the regression slope, we refitted the model with standardized values of $z_{r_s}$ and computed the average marginal effects using the *marginaleffects* package [@arel-bundock_marginaleffects_2024]. On average, for every standard deviation increase in the Fisher *z*-transformed correlation coefficient, $SD(z_{r_s})=$ `r sd_zrs`, the model only predicted an increase of `r h1_ame_sd` in the publication bias parameter $\widehat{\omega}_{\text{PBS}}$. In line with this, the general explanative power of the model as determined by the pseudo $R^2$ [@ferrari_beta_2004] was low, $R^2=$ `r r2_h1`. Thus, only `r r2_percent` of the variance in $\pbs$ could be explained by the variance  of $z_{r_s}$.
+Regarding hypothesis $\mathcal{H}_1$, panel A of @fig-hypotheses-multipanel depicts the relationship between estimated publication bias parameter $\epbs$ and the Fisher *z*-transformed Spearman correlation coefficients $z_{r_s}$ of the effect size sample size correlation in each meta-analysis. The observed slope was sign was positive in the direction of the hypothesis and statistically signifcant `r string_h1`. We reject null hypothesis $\mathcal{H}_{0}$, that the beta coefficient is $z_{r_s} \leq 0$. Lower values for $z_{r_s}$ were significantly associated with lower publication bias parameter values $\epbs$.  Additionally, to enhance the interpretability of the regression slope, we refitted the model with standardized values of $z_{r_s}$ and computed the average marginal effects using the *marginaleffects* package [@arel-bundock_marginaleffects_2024]. On average, for every standard deviation increase in the Fisher *z*-transformed correlation coefficient, $SD(z_{r_s})=$ `r sd_zrs`, the model only predicted an increase of `r h1_ame_sd` in the publication bias parameter $\widehat{\omega}_{\text{PBS}}$. In line with this, the general explanative power of the model as determined by the pseudo $R^2$ [@ferrari_beta_2004] was low, $R^2=$ `r r2_h1`. Thus, only `r r2_percent` of the variance in $\pbs$ could be explained by the variance  of $z_{r_s}$.
 
 <!-- Hypotheses II -->
 
@@ -144,7 +149,7 @@ h2_ame_sd <- format_percent(avg_comparisons(mod_h2, variables = list(Delta = "sd
 
 ```
 
-Concerning $\mathcal{H}_2$, panel B of figure 1 depicts the relationship between estimated publication bias parameter as a function of the difference between the average effect size $\widehat{\delta}$ and the estimated mean parameter of the Gaussian effect size distribution $\widehat{\mu}_d$. The corresponding estimated quadratic slope was negative as indicated by the predicted concave inverse u-shaped line and statistically significant at an $\alpha$-level of 5\\%, `r string_h2`. We again calculated the average marginal effect for improved interpretability. On average, for every standard deviation increase in $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ ($SD(\Delta_{\widehat{\mu}_d,\widehat{\delta}})=$ `r f_sd_delta`), the model only predicted an increase of `r h2_ame_sd` in the publication bias parameter $\widehat{\omega}_{\text{PBS}}$. The overall explained variation of $\pbs$ by $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ was low, $R^2_{\text{pseudo}}=$ `r r2_ferrari_cribari`.
+Concerning $\mathcal{H}_2$, panel B of @fig-hypotheses-multipanel depicts the relationship between estimated publication bias parameter as a function of the difference between the average effect size $\widehat{\delta}$ and the estimated mean parameter of the Gaussian effect size distribution $\widehat{\mu}_d$. The corresponding estimated quadratic slope was negative as indicated by the predicted concave inverse u-shaped line and statistically significant at an $\alpha$-level of 5\\%, `r string_h2`. We again calculated the average marginal effect for improved interpretability. On average, for every standard deviation increase in $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ ($SD(\Delta_{\widehat{\mu}_d,\widehat{\delta}})=$ `r f_sd_delta`), the model only predicted an increase of `r h2_ame_sd` in the publication bias parameter $\widehat{\omega}_{\text{PBS}}$. The overall explained variation of $\pbs$ by $\Delta_{\widehat{\mu}_d,\widehat{\delta}}$ was low, $R^2_{\text{pseudo}}=$ `r r2_ferrari_cribari`.
 
 <!--# Hypotheses III -->
 
@@ -181,7 +186,7 @@ string_tost <- glue("$t$({tost$df}) = {tost$t}, $SE$ = {tost$SE}, {format_p(tost
 
 ```
 
-In relation to hypothesis $\mathcal{H}_3$, panel C of Figure 2 illustrate the mean difference $\Delta_{\widehat{\mu}_d, \widehat{\delta}}$ between the estimated mean parameter of the Gaussian effect size distribution $\widehat{\mu}_d$ and the average effect size $\widehat{\delta}$, along with its corresponding confidence interval. Additionally, the null $t$-distributions of the Two One-Sided Tests (TOST) against the equivalence bounds $\Delta_{EQ}=(-0.17, 0.17)$ are illustrated. We only report the results of the t-test with the lower *t*-value in the main results as both tests must be significant to reject the null hypothesis [@lakens_equivalence_2017]. Both one-sided paired t-tests were statistically significant, `r string_tost`. This is also indicated by 90% confidence interval lying within the equivalence range in panel C of Figure 2. We additionally conducted an exploratory null hypothesis significance test to test the point hypothesis that the true mean difference of $\Delta_{\widehat{\mu}_d, \widehat{\delta}}$ is exactly zero. The mean difference significantly deviated from zero `r string_md`, `r string_tt`. This indicates that, despite the significant null hypothesis significance test, the difference was too small to be considered meaningful according to the equivalence range $\Delta_{EQ}=(-0.17, 0.17)$ of the equivalence test.
+In relation to hypothesis $\mathcal{H}_3$, panel C of @fig-hypotheses-multipanel illustrates the mean difference $\Delta_{\widehat{\mu}_d, \widehat{\delta}}$ between the estimated mean parameter of the Gaussian effect size distribution $\widehat{\mu}_d$ and the average effect size $\widehat{\delta}$, along with its corresponding confidence interval. Additionally, the null $t$-distributions of the Two One-Sided Tests (TOST) against the equivalence bounds $\Delta_{EQ}=(-0.17, 0.17)$ are illustrated. We only report the results of the t-test with the lower *t*-value in the main results as both tests must be significant to reject the null hypothesis [@lakens_equivalence_2017]. Both one-sided paired t-tests were statistically significant, `r string_tost`. This is also indicated by 90% confidence interval lying within the equivalence range in panel C of @fig-hypotheses-multipanel. We additionally conducted an exploratory null hypothesis significance test to test the point hypothesis that the true mean difference of $\Delta_{\widehat{\mu}_d, \widehat{\delta}}$ is exactly zero. The mean difference significantly deviated from zero `r string_md`, `r string_tt`. This indicates that, despite the significant null hypothesis significance test, the difference was too small to be considered meaningful according to the equivalence range $\Delta_{EQ}=(-0.17, 0.17)$ of the equivalence test.
 
 <!--# Hypotheses IV -->
 
@@ -212,11 +217,11 @@ string_h4 <- glue("$OR$ = {f_b}, {f_ci}, $SE$ = {f_se}, $z$ = {f_z}, $p$ {f_p}")
 r2_h1 <- format_value(r2_fcn(mod_h4, "w_pbs"), digits = 3)
 
 h4_ame <- format_percent(avg_comparisons(mod_h4)$estimate)
-h4_ame <-format_percent(plogis(coef(mod_h4)[1] + 1*coef(mod_h4)[2]) - plogis(coef(mod_h4)[1])) # same thing!
+h4_ame <- format_percent(plogis(coef(mod_h4)[1] + 1*coef(mod_h4)[2]) - plogis(coef(mod_h4)[1])) # same thing!
 
 ```
 
-Finally, regarding hypothesis $\mathcal{H}_4$, panel D of Figure 2 illustrates the comparison between the estimated publication bias parameters for typical meta-analysis in comparison to multisite replication studies / registered reports. Already descriptively, contrary to our expectation that the estimated puhblication bias parameters for multisite replication studies (MR) would be greater (i.e., lower publication bias) than for regular meta-analysis (MA), the mean of the estimated publication bias values $\pbs$ of the regular meta-analysis subset is greater than the mean of the multisite replication subset ($M_{\text{MA}}=$ `r m_ma`; $M_{\text{MR}}=$ `r m_mr`). In line with this, slope of the beta regression was non-significant, `r string_h4`, as also indicated by the overlappping confidence interval of the predicted marginal means in panel D. Once more, we computed the average marginal effect to examine how the estimated publication bias parameter $\widehat{\omega}_{\text{PBS}}$ changes with the discrete shift from the reference level (multisite replication studies / registered reports) to typical meta-analysis, as predicted by the regression model, reveiling a change of `r h4_ame` in the opposing direction of the hypothesis.
+Finally, regarding hypothesis $\mathcal{H}_4$, panel D of @fig-hypotheses-multipanel illustrates the comparison between the estimated publication bias parameters for typical meta-analysis in comparison to multisite replication studies / registered reports. Already descriptively, contrary to our expectation that the estimated puhblication bias parameters for multisite replication studies (MR) would be greater (i.e., lower publication bias) than for regular meta-analysis (MA), the mean of the estimated publication bias values $\pbs$ of the regular meta-analysis subset is greater than the mean of the multisite replication subset ($M_{\text{MA}}=$ `r m_ma`; $M_{\text{MR}}=$ `r m_mr`). In line with this, slope of the beta regression was non-significant, `r string_h4`, as also indicated by the overlappping confidence interval of the predicted marginal means in panel D. Once more, we computed the average marginal effect to examine how the estimated publication bias parameter $\widehat{\omega}_{\text{PBS}}$ changes with the discrete shift from the reference level (multisite replication studies / registered reports) to typical meta-analysis, as predicted by the regression model, reveiling a change of `r h4_ame` in the opposing direction of the hypothesis.
 
 ## Diagnostic Evaluation of Parameter Estimation in SPEEC
 
@@ -231,23 +236,25 @@ As this study relies on empirical data to preliminarily assess the proposed SPEE
 
 The Maximum Likelihood estimates for the distributional parameters were obtained using the Nelder-Mead optimization algorithm [@nelder_simplex_1965]. Additionally, the mean and median discrepancy between SPEEC and MLE were calculated to descriptively to assess the average difference between the two estimation methods.
 
-```{=latex}
-\begin{figure}[H]
-\caption{Scatter Plot comparing the estimated Distributional Parameters via SPEEC and Maximum Likelihood\label{fig:ml-speec-comparison}}
-```
-```{r ml-speec-cor}
+```{r diagnostics}
 #| out-width: 100%
 #| fig-align: center
 #| layout-align: center
+#| fig-pos: H
+#| fig-cap: Scatter Plot comparing the estimated Distributional Parameters via SPEEC and Maximum Likelihood
+#| fig-cap-location: bottom
+#| label: fig-diagnostics
+
 knitr::include_graphics(here("figures/method_comparison.png"))
+
 ```
 
 ```{=latex}
 \begingroup
-\scriptsize
+\small
+\noindent
 \textit{Note.} \textbf{A1}. Comparison of estimated mean parameter $\mu_d$ from Gaussian effect size distribution. \textbf{A2}. Comparison of estimated variance parameter $\sigma_d^2$ of Gaussian effect size distribution. Axes and colorbar are log (base 10) transformed. \textbf{B1}. Comparison of mean parameter $\mu_n$ of Negative-Binomial sample size distribution \textbf{B2}. Comparison of dispersion parameter $\phi_n$ of Negative-Binomial sample size distribution. Axes and colorbar are log (base 10) transformed.
 \endgroup
-\end{figure}
 ```
 
 
