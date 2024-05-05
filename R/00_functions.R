@@ -1,4 +1,3 @@
-
 #' @title Plot TOST Equivalence Test
 #' @description Plot the TOST equivalence test with the null hypothesis.
 #' @param tost An object of class `TOSTt`.
@@ -114,7 +113,7 @@ nice_table <- function(x, digits = 2, caption, align = NULL, col_names = NULL, g
   kableExtra::column_spec(column = seq_len(n_col), width = width_per_col)
 
   if (!is.null(general_fn) || !is.null(symbol_fn) || !is.null(number_fn) || !is.null(alphabet_fn)) {
-    general_fn <- paste0("\\\\textit{Note.} ", general_fn)
+    general_fn <- paste0("\\\\noindent \\\\textit{Note.} ", general_fn)
     out <- table_raw |>
       kableExtra::footnote(
         general = general_fn,
@@ -131,36 +130,6 @@ nice_table <- function(x, digits = 2, caption, align = NULL, col_names = NULL, g
   }
 }
   
-##' @title APA-7 formatted Latex Table
-##' @description Create a nice looking table for APA-7 formatted Latex
-##' @param x A data frame
-##' @param digits Number of digits to round to (default = 3)
-##' @param caption The table caption
-##' @param footnote The table footnote
-##' @param align The alignment of the columns (if NULL, the first column is left aligned and the rest are centered)
-##' @param col_names The column names
-##' @param font_size The font size (default = 12)
-##' @return A character vector of the table source code
-##' 
-#nice_table <- function(x, digits = 3, caption, footnote = NULL, align = NULL, col_names = NULL, font_size = 12, full_width = TRUE) {
-#  n_col <- ncol(x)
-#  center <- paste0(rep("c", n_col - 1), collapse = "")
-#  if (is.null(align)) align <- paste0("l", center, collape = "")
-#  if (is.null(col_names)) col_names <- colnames(x)
-#  knitr::kable(
-#    x = x, format = "latex", 
-#    escape = FALSE, booktabs = TRUE,
-#    align = align, caption = caption, 
-#    digits = digits, row.names = FALSE, col.names = col_names
-#  ) |> 
-#    kableExtra::kable_styling(
-#      full_width = full_width, font_size = font_size, 
-#      latex_options = c('HOLD_position', "scale_down")
-#      ) |> 
-#    kableExtra::footnote(footnote, footnote_as_chunk = TRUE, escape = FALSE, fixed_small_size = TRUE)
-#}
-
-
 #' @title Smithson-Verkuilen Transformation for Beta-Regression
 #' @param x A numeric vector
 #' @description
@@ -295,50 +264,11 @@ theme_comparison <- function(...) {
 #' @return A numeric scalar
 r2_fcn <- function(x, dependent) cor(qlogis(x$model[[dependent]]), predict(x, type = "link"))**2
 
-
 fivenum2 <- function(x) {
   fn <- fivenum(x)
   names(fn) <- paste0("q", 0:4)
   df <- as.data.frame(as.list(fn))
   return(df)
-}
-
-
-include_image <- function(path, caption, footnote, label_latex, label_r, size = "footnotesize", out_width = "100%") {
-  head <- glue::glue("
-  \```{=latex}
-  \\begin{figure}[H]
-  \\caption{[[caption]]\\label{fig:[[label_latex]]}}
-  \```
-  ", 
-  .open = "[[", .close = "]]"
-  )
-
-  main <- glue::glue(
-    "
-    \```{r [[label_r]]}
-    #| fig-align: center
-    #| out-width: [[out_width]]
-    #| echo: false
-    knitr::include_graphics('[[path]]')
-    \```
-    ", 
-    .open = "[[", .close = "]]"
-  )
-
-  tail <- glue::glue("
-  \```{=latex}
-  \\begingroup
-  \\[[size]]
-  \\textit{Note.} [[footnote]]
-  \\endgroup
-  \\end{figure}
-  \```
-  ", 
-  .open = "[[", .close = "]]"
-  )
-
- cat(head, main, tail, sep = "\n\n")
 }
 
 str_discr <- function(x, parameter) {
