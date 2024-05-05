@@ -46,7 +46,7 @@ include_graphics(here("figures/speec_workflow.png"))
 
 The initial step in the SPEEC method entails defining the marginal distributions of effect size and sample size for the generative publication bias model. This requires additional assumptions regarding the type of study design from which the simulated effect sizes and sample sizes originate. For this study, Cohen´s *d* is adopted as a widely used effect sizes measure for mean differences[@lakens_calculating_2013] as the effect size for simulation. For this reason, we assume that the simulated effect sizes originate from a between-subjects two-sample *t*-test study design. However, it is worth noting that the SPEEC framework remains adaptable to different study designs where alternative effect size measures are typically employed (e.g., correlational effect sizes, effect sizes derived from proportional data). Depending on the effect size, this would require a potential adaption of the marginal distribution for the effect size and how statistical significance for each simulated study based on a different effect sizes is determined for the application of publication bias.  
 
-The marginal distribution for the total sample size $\mathrm{n}$ of a study should be inherently modeled as a discrete distribution. Count data of this nature are commonly modeled using either a Poisson or Negative-Binomial distribution. In various psychological domains, sample size distributions often exhibit considerable variance and skewness [see for example @cafri_meta-meta-analysis_2010; @marszalek_sample_2011; @sassenberg_research_2019; @shen_samples_2011; @szucs_empirical_2017]. Considering this variability and skewness we opted for the Negative-Binomial distribution which can account for variance independently of the mean and thus handle overdispered data effectively. We use the mean-dispersion parametrization where the probability of sucess $p$ and the target number of sucesses $r$ are reparametrized to mean $\mu = r(1-p)/p$ and dispersion $\phi=r$ to model the study-specific total sample sizes $n_i$.
+The marginal distribution for the total sample size $\mathrm{n}$ of a study should be inherently modeled as a discrete distribution. Count data of this nature are commonly modeled using either a Poisson or Negative-Binomial distribution. In various psychological domains, sample size distributions often exhibit considerable variance and skewness [see for example @cafri_meta-meta-analysis_2010; @marszalek_sample_2011; @sassenberg_research_2019; @shen_samples_2011; @szucs_empirical_2017]. Considering this variability and skewness we opted for the Negative-Binomial distribution which can account for variance independently of the mean and thus handle overdispered data effectively. We use the mean-dispersion parametrization where the probability of sucess $p$ and the target number of sucesses $r$ are reparametrized to mean $\mu = \frac{r\cdot(1-p)}{p}$ and dispersion $\phi=r$ to model the study-specific total sample sizes $n_i$.
 
 $$
 n_1, \,n_2,\, \ldots, \,n_k \quad \text{where} \quad N\stackrel{\mathrm{i.i.d.}}{\sim} \mathcal{NB}(\phi_n, \mu_n) \quad \text{for } i = 1, \ldots, k
@@ -114,7 +114,8 @@ $$
 \end{gathered}
 $$ {#eq-subsets}
 
-One challenge of simulating a fixed number of $k$ random samples is that, all else being equal, as the severity of publication bias increases (i.e., lower values for $\pbs$), there are fewer remaining studies $k^\prime$ after the selection process compared to the original number of simulations $k$. This would result in a loss of precision for parameter estimation. To address this, the process outlined above (from  @eq-nb-dist - @eq-subsets) is repeated a second time with an adjusted number of simulations $k_{\small{\text{adj}}} = \big\lceil {k^2}/{k'} \big\rceil$, ensuring that the number of selected studies $k^\prime_{\small{\text{adj}}}$ is roughly equal across the entire range of $\pbs$.
+
+One challenge of simulating a fixed number of $k$ studies is that, all else being equal, as the severity of publication bias increases (i.e., lower values for $\pbs$), there are fewer remaining studies $k^\prime$ after the selection process compared to the original number of simulations $k$. This would result in a loss of precision in the parameter estimation for decreasing values of $\pbs$. To address this, the process outlined above (from  @eq-nb-dist - @eq-subsets) is repeated a second time with an adjusted number of simulations $k_{\small{\text{adj}}} = \big\lceil {k^2}/{k'} \big\rceil$, ensuring that the number of selected studies $k^\prime_{\small{\text{adj}}}$ is roughly equal across the entire range of $\pbs$. This adjusted number of of simulations $k_{\small{\text{adj}}}$ corresponds to the ceiling of the number of initial simulations $k$ divided by the proportion of "survived" studies $k^\prime/k$.
 
 ### Formulation as an Optimization Problem
 
@@ -124,25 +125,18 @@ Following step...
 
 quantifiy how closely the simulated data from the publication bias model aligns with the empirical meta-analytical data. More specifically, we are interested in quantifying the statistical distance of the bivariate kernel density estimate of between the empirical meta-analytical data and the simulated data of the publication bias model.
 
-Different ways to define statistical distances between probablity distributions (or estimated kernel density), we use Kullback-Leibler Divergence [@kullback_information_1951], origins in information theory
+Different ways to define statistical distances between probablity distributions (or estimated kernel density), we use Kullback-Leibler divergence [KL-divergence, @kullback_information_1951], origins in information theory.
 
-intuitive interpretation for this setting, how 
+In this context the KL-divergence has an intuitieve interpretation where the estimated joint density of effect size and sample size of meta-analytical data $\widehat{f}_{e}$ is assumed to be the true data generating distribution and the estimated kernel density from data simulated from the theoretical publication bias model $\widehat{f}_{t}$ is an approximate of $\widehat{f}_{e}$.
 
-estimated joint density of effect size and sample size of meta-analytical data $\widehat{f}_{e}$ assumed to be the true data generating distribution and the estimated kernel density from data simulated from the theoretical publication bias model $\widehat{f}_{t}$ is an approximate of $\widehat{f}_{e}$.
-
-To accomplish this, the joint kernel density distribution for both empirical data and simulated data is estimated using a bivariate standard Gaussian kernel that is evaluated on a square grid. The grid size was chosen to be $n_{\text{grid}}=2^7+1$ equidistant grid points in each dimension but is user-definable in the *speec* R package. The bandwidth of the kernel function was determined using the reliable plug-in method proposed by @sheather_reliable_1991, but the *speec* R package also offers other common bandwidth selection methods.
-
-The ensure the comparability of the estimated kernel densities between the empirical and simulated data, the bounds of the the square grid have to be exactly the same and are determined based on the empirical meta-analytical data.
-
-
-To define the bounds, the maximum likelihood values for the parameters of the marginal distribution of effect size ($\hat{\mu}_d,\hat{\sigma}^2_d$) and sample size ($\hat{\phi}_n, \hat{\mu}_n$) are estimated. Using these estimates, the quantiles spanning the inner 99 percentile of the cumulative distribution function are obtained from the quantile functions $Q_d(p ~ | ~ \hat{\mu}_d, ~ \hat{\sigma}^2_d)$ and $Q_d(p ~ | ~ \hat{\phi}_n, ~ \hat{\mu}_n)$, where $p_1=0.005$ and $p_2 = 1-p_1$. Subsequently the bounds are defined as the extreme values of these quantiles and the range of the empirical data.
+To accomplish this, the *KernSmooth* R package [@wand_kernsmooth_2023] was used to estimate the joint kernel density distribution for both empirical data and simulated  using a bivariate standard Gaussian kernel that is evaluated on a linearly-binned square grid [see @wand_fast_1994; @wand_kernel_1994]. The grid size was chosen to be $n_{\text{grid}}=2^7+1$ equidistant grid points in each dimension but is user-definable in the *speec* R package. The bandwidth of the kernel function was determined using the reliable plug-in method proposed by @sheather_reliable_1991, but the *speec* R package also offers other common bandwidth selection methods. The ensure the comparability of the estimated kernel densities between the empirical and simulated data, the bounds of the the square grid, $\mathbf{b}_\mathrm{n} \times \mathbf{b}_\mathrm{d}$, have to be exactly the same and are determined based on the empirical meta-analytical data. To define the bounds, the maximum likelihood values for the parameters of the marginal distribution of effect size ($\hat{\mu}_d,\hat{\sigma}^2_d$) and sample size ($\hat{\phi}_n, \hat{\mu}_n$) are estimated. Using these estimates, the quantiles spanning the inner 99 percentile of the cumulative distribution function are obtained from the quantile functions $Q_d(p ~ | ~ \hat{\mu}_d, ~ \hat{\sigma}^2_d)$ and $Q_d(p ~ | ~ \hat{\phi}_n, ~ \hat{\mu}_n)$, where $p_1=0.005$ and $p_2 = 1-p_1$. Subsequently the bounds for the effect size $\mathbf{b}_\mathrm{d}$ and sample size $\mathbf{b}_\mathrm{n}$ are defined as the minimum and maximum values of these quantiles and the range of the empirical data, respectively.
 
 $$
 \begin{gathered}
-b_d=\left\{Q_d(p_1 ~ | ~ \hat{\mu}_d, \, \hat{\sigma}_d^2) \land \min(d), \, Q_d(p_2 ~ | ~ \hat{\mu}_d, \, \hat{\sigma}_d^2) \lor \max(d) \right\} \\
-b_n = \left\{Q_n(p_1 ~ | ~ \hat{\phi}_n, \, \hat{\mu}_n) \land \min(n), \, Q_n(p_2 ~ | ~ \hat{\phi}_n, \, \hat{\mu}_n) \lor \max(n) \right\}
+ \mathbf{b}_\mathrm{d}=\left\{Q_d(p_1 ~ | ~ \hat{\mu}_d, \, \hat{\sigma}_d^2) \land \min(d), \, Q_d(p_2 ~ | ~ \hat{\mu}_d, \, \hat{\sigma}_d^2) \lor \max(d) \right\} \\
+\mathbf{b}_\mathrm{n} = \left\{Q_n(p_1 ~ | ~ \hat{\phi}_n, \, \hat{\mu}_n) \land \min(n), \, Q_n(p_2 ~ | ~ \hat{\phi}_n, \, \hat{\mu}_n) \lor \max(n) \right\}
 \end{gathered}
-$$ {#bounds-kde}
+$$ {#eq-bounds-kde}
 
 These ensures that the entire range of the empirical data is covered for the kernel density estimation. Finally, the Kullback-Leibler-Divergence is computed from the kernel density estimates of the empirical $\hat{f}_e$ and simulated theoretical $\hat{f}_t$ data.
 $$
@@ -166,13 +160,19 @@ To utilize DE for optimization within the SPEEC approach, the R package *RcppDE*
 
 ## Secondary Data Description
 
-To analyse the confirmatory hypotheses of this study, assessement of the SPEEC method,
+To analyse the confirmatory hypotheses of this study which aims to give a broad assessment about the viability of the SPEEC method, we use secondary data from previus work by @linden_heterogeneity_2021.
 
-The data used for the assement of the predictions of the four hypotheses stem from extensive meta-analytical dataset from previous work by @linden_heterogeneity_2021.
+This extensive dataset containing both traditional meta-analyses  and large scale replication studies
+
 
 The dataset contains a total of 207 research synthesis on 207 psychological phenomena. Subdivided into 150 "traditional" meta-analysis which contain 3 times 50 meta-analyses from different subfields of psychology (social psychology, organizational psychology and cognitive psychology).
 
+-   for each meta-analysis information about the total sample size and effect size of each primary study was collected
+-   Random sampling to determine the meta-analysis for the study (within the inclusion criteria)
+
 Additionaly 57 large-scale replication studies and registered reports, which are important for the investigation of $\mathcal{H}_3$ and $\mathcal{H}_4$.
+
+
 
 -   To investigate predictions of the hypotheses we use secondary data by Linden & Hönekopp (2021)
 -   Extensive meta-analytical database, containing both traditional meta-analysis as well as multisite replication studies and registered reports (which are absent of publication bias)
@@ -218,27 +218,27 @@ For all four hypotheses, we will establish the smallest effect size of interest 
 #| tbl-cap-location: top
 
 df_sesoi <- read_csv(here("preregistration/data/sesois.csv")) |>
-  mutate(hypothesis = paste0("$", gsub("H", "\\\\mathcal{H}_", hypothesis), "$")) |>
-  mutate(unit = if_else(unit == "OR", glue::glue("${unit}$"), "raw unit")) 
+    mutate(hypothesis = paste0("$", gsub("H", "\\\\mathcal{H}_", hypothesis), "$")) |>
+    mutate(unit = if_else(unit == "OR", glue::glue("${unit}$"), "raw unit"))
 
 general <- "\\\\noindent \\\\textit{Note.}  Except for $\\\\mathcal{H}_3$ all SESOIs are defined in terms of odds ratios (OR). The SESOI of $\\\\mathcal{H}_3$ is defined in raw units."
 
 kable(
-  x = df_sesoi,
-  format = "latex",
-  threeparttable = TRUE,
-  booktabs = TRUE,
-  col.names = c("Hypothesis", "SESOI", "Unit"),
-  escape = FALSE,
-  align = "lcc"
-  ) |>
-  kable_styling(latex_options = c("scale_down"), full_width = FALSE) |>
-  footnote(
-      general = general,
-      general_title = "",
-      escape = FALSE,
-      threeparttable = TRUE
-    )  |>
+    x = df_sesoi,
+    format = "latex",
+    threeparttable = TRUE,
+    booktabs = TRUE,
+    col.names = c("Hypothesis", "SESOI", "Unit"),
+    escape = FALSE,
+    align = "lcc"
+) |>
+    kable_styling(latex_options = c("scale_down"), full_width = FALSE) |>
+    footnote(
+        general = general,
+        general_title = "",
+        escape = FALSE,
+        threeparttable = TRUE
+    ) |>
     column_spec(column = 1, width = "4cm") |>
     column_spec(column = 2:3, width = "6cm")
 
@@ -251,9 +251,9 @@ kable(
 #| results: asis
 
 nice_table(
-  x = df_sesoi, col_names = c("Hypothesis", "SESOI", "Unit"), 
-  general_fn = "Except for $\\\\mathcal{H}_3$ all SESOIs are defined in terms of odds ratios (OR). The SESOI of $\\\\mathcal{H}_3$ is defined in raw units.",
-  caption = "Smallest Effect Sizes of Interest of the Hypotheses"
-  )
+    x = df_sesoi, col_names = c("Hypothesis", "SESOI", "Unit"),
+    general_fn = "Except for $\\\\mathcal{H}_3$ all SESOIs are defined in terms of odds ratios (OR). The SESOI of $\\\\mathcal{H}_3$ is defined in raw units.",
+    caption = "Smallest Effect Sizes of Interest of the Hypotheses"
+)
 
 ```
