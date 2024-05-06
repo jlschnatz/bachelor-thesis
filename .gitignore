@@ -7,3 +7,4 @@
 .Rbuildignore
 /**/.vdoc.r
 /data/optim/processed/data_optim_evolution.csv.gz
+scripts/0_main_cache/

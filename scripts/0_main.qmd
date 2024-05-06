@@ -20,7 +20,20 @@ Test
 
 ```{r}
 #| echo: false
+#| label: setup
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  results = "asis",
+  fig.align = "center"
+)
+
+```
+
+```{r}
+#| echo: false
 #| results: "asis"
+#| label: introcution
 
 intro <- knitr::knit_child("scripts/1_intro.qmd", quiet = TRUE)
 cat(intro, sep = "\n")
@@ -29,6 +42,7 @@ cat(intro, sep = "\n")
 ```{r}
 #| echo: false
 #| results: "asis"
+#| label: methods
 
 method <- knitr::knit_child("scripts/2_methods.qmd", quiet = TRUE)
 cat(method, sep = "\n")
@@ -37,6 +51,7 @@ cat(method, sep = "\n")
 ```{r}
 #| echo: false
 #| results: "asis"
+#| label: results
 
 results <- knitr::knit_child("scripts/3_results.qmd", quiet = TRUE)
 cat(results, sep = "\n")
@@ -45,6 +60,7 @@ cat(results, sep = "\n")
 ```{r}
 #| echo: false
 #| results: "asis"
+#| label: discussion
 
 discussion <- knitr::knit_child("scripts/4_discussion.qmd", quiet = TRUE)
 cat(discussion, sep = "\n")
@@ -53,6 +69,7 @@ cat(discussion, sep = "\n")
 ```{r}
 #| echo: false
 #| results: "asis"
+#| label: references
 
 references <- knitr::knit_child("scripts/5_references.qmd", quiet = TRUE)
 cat(references, sep = "\n")
@@ -61,17 +78,8 @@ cat(references, sep = "\n")
 ```{r}
 #| echo: false
 #| results: "asis"
+#| label: appendix
 
 appendix <- knitr::knit_child("scripts/6_appendix.qmd", quiet = TRUE)
 cat(appendix, sep = "\n")
-```
-
-```{r}
-#| echo: false
-
-
-knitr::opts_chunk$set(
-  echo = FALSE,
-  results = "asis"
-)
 ```

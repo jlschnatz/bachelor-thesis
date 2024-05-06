@@ -53,8 +53,7 @@ knitr::include_graphics(here("figures/hypotheses_multipanel.png"))
 ```{=latex}
 \begingroup
 \small
-\noindent
-\textit{Note.} \textbf{A}. Estimated publication bias parameter vs. Fisher z-transformed correlation coefficients. Fitted line: regression coefficients with 95% CI. \textbf{B}. Estimated publication bias parameter vs. difference between mean parameter and average effect size. \textbf{C}. Mean difference between mean parameter and effect size, with 90% CI, compared to null t-distribution for equivalence bounds. \textbf{D}. Comparison of estimated publication bias parameter distribution between normal meta-analyses and multisite replications. Point range: marginal predicted values with 95% CI from regression.
+\noindent\textit{Note.} \textbf{A}. Estimated publication bias parameter vs. Fisher z-transformed correlation coefficients. Fitted line: regression coefficients with 95% CI. \textbf{B}. Estimated publication bias parameter vs. difference between mean parameter and average effect size. \textbf{C}. Mean difference between mean parameter and effect size, with 90% CI, compared to null t-distribution for equivalence bounds. \textbf{D}. Comparison of estimated publication bias parameter distribution between normal meta-analyses and multisite replications. Point range: marginal predicted values with 95% CI from regression.
 \endgroup
 ```
 

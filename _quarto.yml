@@ -3,24 +3,29 @@ project:
   execute-dir: project
   render: 
     - scripts/0_main.qmd
+execute: 
+  cache: true
+  echo: false
+  warning: false
 format: 
   pdf:
+
+    # titlepage
     title: "Assessing Publication Bias in Meta-Analyses:"
     subtitle: "A Simulation-Based Estimation Approach Focusing on the Joint Distribution of Effect Size and Sample Size"
-    author:
-    - name: "Jan Luca Schnatz"
-      email: "janluca.schnatz@gmx.de"
-      acknowledgements: "7516898"       # Student ID 
-      phone: "Julia Beitner M.Sc."      # Second Supervisor
-      fax: "Prof. Dr. Martin Schultze"  # First Supervisor
-      affiliations:
-      - name: Goethe-Universität Frankfurt am Main
-        department: "Faculty 05: Psychology and Sports Sciences" 
-        city: "Department of Psychological Methods with Interdisciplinary Focus"
+    author: "Jan Luca Schnatz"
+    email: "janluca.schnatz@gmx.de"
+    student-id: "7516898"
+    affilitation: Department of Psychological Methods with Interdisciplinary Focus 
+    department: "Faculty 05: Psychology and Sports Sciences" 
+    university: Goethe-Universität Frankfurt am Main
+    promotor: Prof. Dr. Martin Schultze
+    copromotor: Julia Beitner M.Sc.
+    date: today
+    date-format: "MMMM, YYYY"
+
+    # document settings
     documentclass: scrartcl
-    include-in-header: tex/header.tex
-    template-partials: 
-      - tex/before-body.tex 
     link-citations : true
     urlcolor       : black
     linkcolor      : black
@@ -37,3 +42,8 @@ format:
     margin-bottom: 2cm
     cite-method: biblatex
     link-citation: true
+    engine: knitr
+    zotero: true
+    include-in-header: tex/header.tex
+    template-partials: 
+      - tex/before-body.tex 

@@ -3,7 +3,6 @@ $if(has-frontmatter)$
 $endif$
 
 $if(title)$
-%\cleardoublepage
 \thispagestyle{empty}
 {\centering
 Abschlussarbeit \\
@@ -21,32 +20,27 @@ $endif$
 \hrule
 \vspace*{10mm}
 vorgelegt von  \\ 
-$for(by-author)$
-{\large\bfseries $by-author.name.literal$ \par}
+{\large\bfseries $author$ \par}
 \smallskip
-{Matrikelnummer: $by-author.acknowledgements$ \par}
-{E-Mail: $by-author.email$ \par}
+{Matrikelnummer: $student-id$ \par}
+{E-Mail: $email$ \par}
 
 \bigskip 
 
+$if(date)$
 {\textmd\large $date$ \par}
+$endif$
 
-%$for(by-author.affiliations)$%
-$if(it.department)$
-{\textmd\large $it.name$ \par}
-{\textmd\large $it.department$ \par}
-{\textmd\large $it.city$ \par}
+{\textmd\large $university$ \par}
+{\textmd\large $department$ \par}
+{\textmd\large $affiliation$ \par}
 
 \bigskip\bigskip\bigskip
 
-{Erstgutachter: $by-author.fax$ \par}
-{Zweitgutachter: $by-author.phone$ \par}
-$endif$
-%$endfor$
-$endfor$
+{Erstgutachter: $promotor$ \par}
+{Zweitgutachter: $copromotor$ \par}
 
 \vspace*{10mm}
-
 
 }
 $endif$

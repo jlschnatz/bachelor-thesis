@@ -2,20 +2,21 @@
 
 # Tidy bib-file (only used references)
 clean_bib() {
+    # initialize variables
     folder="scripts"
     input_ref="bibliography/references.bib"
     output_ref="bibliography/tidy_references.bib"
 
     # Extract unique entry names from files in the folder
-    entries=$(cat "$folder"/* | grep -o '@[a-zA-Z0-9_-]\+' | sed 's/@//g' | sort -u)
+    entries=$(cat "$folder"/*.qmd | grep -o '@[a-zA-Z0-9_-]\+' | sed 's/@//g' | sort -u)
 
     output=""
     # Iterate over each entry and find the first occurrence in the bibliography
     for entry in $entries; do
-        #result=$(awk -v entry="$entry" 'BEGIN {RS="\n@"} $0 ~ "\\{"entry"," {print "@" $0}' "$input_ref")
         result=$(awk -v RS='\\n@' -v entry="$entry" '$0 ~ "{"entry"," {print "@" $0}' "$input_ref")
-        #result=$(awk -v RS='\\n@' -v entry="$entry" 'gsub(/\\t/, "\\\\t") && $0 ~ "{"entry"," {print "@" $0}' "$input_ref")
         if [ -n "$result" ]; then
+            # Make the URL field lowercase
+            result=$(echo "$result" | awk '{gsub(/url = \{([^}]*)\}/,tolower("&"))}1')
             output+="$result\n"
         fi
     done
@@ -24,8 +25,9 @@ clean_bib() {
     echo -e "$output" > "$output_ref"
 }
 
-clean_bib
+clean_bib 
 
+# Render Quarto Project
 render_quarto() {
     # render project
     DIR="manuscript"
@@ -56,4 +58,3 @@ render_quarto() {
 }
 
 render_quarto
-
