@@ -44,7 +44,6 @@
 
 \usepackage{units} % for nicefrac
 
-
 % remove dots from toc
 \usepackage[titles]{tocloft}
 \renewcommand{\cftdot}{}
@@ -78,3 +77,13 @@
 
 % shortcut for hypothesis naming [number hypothesis, type hypothesis (null: 0, alternative: 1)]
 \newcommand{\hypothesis}[2]{\mathcal{H}^{\text{#1}}_{\text{#2}}}
+
+% use biblatex for references with apa-7 format
+\usepackage[style=apa, backend=biber]{biblatex}
+\addbibresource{../bibliography/tidy_references.bib} % add references to header
+\DeclareFieldFormat{titlecase}{#1}
+\AtEveryBibitem{\clearfield{note}\clearfield{urlyear}\clearfield{urlmonth}\clearfield{urlday}} % exclude notes and urldate
+
+
+
+

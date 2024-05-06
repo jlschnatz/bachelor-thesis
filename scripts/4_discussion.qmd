@@ -1,5 +1,5 @@
 ---
-bibliography: ../bibliographyreferences.bib
+bibliography: ../bibliography/tidy_references.bib
 ---
 
 \newpage

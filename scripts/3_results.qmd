@@ -1,5 +1,5 @@
 ---
-bibliography: ../bibliographyreferences.bib
+bibliography: ../bibliography/tidy_references.bib
 ---
 
 \newpage
@@ -242,7 +242,7 @@ The Maximum Likelihood estimates for the distributional parameters were obtained
 #| layout-align: center
 #| fig-pos: H
 #| fig-cap: Scatter Plot comparing the estimated Distributional Parameters via SPEEC and Maximum Likelihood
-#| fig-cap-location: bottom
+#| fig-cap-location: top
 #| label: fig-diagnostics
 
 knitr::include_graphics(here("figures/method_comparison.png"))

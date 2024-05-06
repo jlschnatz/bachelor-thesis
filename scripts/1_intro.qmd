@@ -1,5 +1,5 @@
 ---
-bibliography: ../bibliographyreferences.bib
+bibliography: ../bibliography/tidy_references.bib
 ---
 
 \newpage
@@ -77,7 +77,7 @@ utilizing/leveraging the joint distribution effect size and sample size, and how
 
 Two-fold objective of study: first main goal, detailed description and introduction of SPEEC, second goal: proof of concept / feasability study to preliminary assess introduced method using empirical meta-analytical data.
 
-For this, we use existing secondary meta-analytical data that has been collected by @linden_heterogeneity_2019. Includes both traditional meta-analyses as well as registered replication reports.
+For this, we use existing secondary meta-analytical data that has been collected by @linden_heterogeneity_2021. Includes both traditional meta-analyses as well as registered replication reports.
 
 set of predictions/hypotheses that should hold true if the approach works in principle,
 

@@ -35,3 +35,5 @@ format:
     margin-right: 2.5cm
     margin-top: 2.5cm
     margin-bottom: 2cm
+    cite-method: biblatex
+    link-citation: true
