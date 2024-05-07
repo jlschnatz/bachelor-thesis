@@ -36,16 +36,37 @@ The data is generally structured into three subdirectories (meta, optim, src). T
 `scripts/`: Quarto scripts that are compiled into a reproducible report
 
 ```{r}
-fs::dir_tree("scripts/")
+fs::dir_tree("scripts/", type = "file")
 ```
 
-## Compilation
+## Reproducability
 
-To automatically compile the thesis, run the following bash script in the terminal:
+First, if not already installed, download `git` (https://git-scm.com/downloads). Then clone this repository from GitHub:
 
-``` bash
-./build.sh
+```bash
+
+cd to/your/directory
+git clone https://github.com/jlschnatz/bachelor-thesis.git 
+# or
+git clone git@github.com:jlschnatz/bachelor-thesis.git 
+
 ```
+
+```{r}
+#| include: false
+
+docker_version <- system("docker --version",  intern = TRUE)
+
+```
+
+Next, you need to install Docker (`r docker_version`). To build the Dockerfile for this project dynamically run:
+
+```bash
+
+bash ./build_dockerfile.sh 
+
+```
+
 
 
 # License
@@ -57,6 +78,7 @@ This work is licensed under a
 
 [![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
 
+[dag]: figures/dag.png
 [cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
 [cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
 [cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg

@@ -8,16 +8,16 @@
 `R/`: contains all R-scripts for data analysis and visualization
 
     #> R/
+    #> ├── check_convergence.R
+    #> ├── check_validity.R
+    #> ├── combine_plots.R
+    #> ├── dispersion.R
     #> ├── functions.R
-    #> ├── 01_process_data.R
-    #> ├── 02_h1.R
-    #> ├── 03_h2.R
-    #> ├── 04_h3.R
-    #> ├── 05_h4.R
-    #> ├── 06_combine_plots.R
-    #> ├── 07_check_validity.R
-    #> ├── 08_check_convergence.R
-    #> └── 09_dispersion.R
+    #> ├── h1.R
+    #> ├── h2.R
+    #> ├── h3.R
+    #> ├── h4.R
+    #> └── process_data.R
 
 The `R/functions.R` files contains all custom R-functions that are
 defined for the project. The file h\_\*(1-4).R containts the analysis of
@@ -59,14 +59,31 @@ file to compile the thesis.
     #> ├── 5_references.qmd
     #> └── 6_appendix.qmd
 
-## Compilation
+## Reproducability
 
-To automatically compile the thesis, run the following bash script in
-the terminal:
+First, if not already installed, download `git`
+(https://git-scm.com/downloads). Then clone this repository from GitHub:
 
 ``` bash
-./build.sh
+
+cd to/your/directory
+git clone https://github.com/jlschnatz/bachelor-thesis.git 
+# or
+git clone git@github.com:jlschnatz/bachelor-thesis.git 
 ```
+
+You need to install Docker (Docker version 24.0.6, build ed223bc)
+
+To reproduce the results of the thesis, To first build the Dockerfile
+for this project automatically run 
+
+```bash
+
+docker build -t thesis_project .
+
+```
+
+to build the Docker image.
 
 # License
 
