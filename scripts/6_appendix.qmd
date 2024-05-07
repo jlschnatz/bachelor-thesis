@@ -10,7 +10,7 @@ bibliography: ../bibliography/tidy_references.bib
 
 ```{r}
 pacman::p_load(here)
-source(here("R/00_functions.R"))
+source(here("R/functions.R"))
 
 ```
 

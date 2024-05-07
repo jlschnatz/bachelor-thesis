@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 fs::dir_tree("R/")
 ```
 
-The `R/00_functions.R` files contains all custom R-functions that are defined for the project. The file h_*(1-4).R containts the analysis of the four hypotheses. The `R/combine_plots.R` file combines all plots generated for each hypothesis into one large multi-panel figure. The `R/07_check_validity.R` script containts diagnostic code to assess the problems within the parameter estimation of SPEEC. The `R/08_check_convergence.R` file contains a shiny app to assess the parameter convergence for each study. Finally `R/09_dispersion.R` contains code to analyse the overall dispersion of the estimated publication bias parameter.
+The `R/functions.R` files contains all custom R-functions that are defined for the project. The file h_*(1-4).R containts the analysis of the four hypotheses. The `R/combine_plots.R` file combines all plots generated for each hypothesis into one large multi-panel figure. The `R/07_check_validity.R` script containts diagnostic code to assess the problems within the parameter estimation of SPEEC. The `R/08_check_convergence.R` file contains a shiny app to assess the parameter convergence for each study. Finally `R/09_dispersion.R` contains code to analyse the overall dispersion of the estimated publication bias parameter.
 
 `data/`: Data files
 

@@ -10,7 +10,7 @@ bibliography: ../bibliography/tidy_references.bib
 
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
 pacman::p_load(insight, glue, tidyverse, here, parameters, broom, betareg, performance, marginaleffects, datawizard)
-source(here("R/00_functions.R"))
+source(here("R/functions.R"))
 ```
 
 # Results

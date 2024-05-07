@@ -6,7 +6,7 @@ bibliography: ../bibliography/tidy_references.bib
 
 ```{r}
 #| echo: false
-source(here::here("R/00_functions.R"))
+source(here::here("R/functions.R"))
 pacman::p_load(tidyverse, insight, here, knitr, kableExtra)
 ```
 
@@ -139,6 +139,9 @@ $$ {#eq-kld}
 
 ### Parameter Optimization with Differential Evolution
 
+
+Description of complete left side of the @fig-speec-workflow, describing the publication bias model with inputs: distributional parameters and publication bias parameter and output, scalar value of the Kullback-Leibler divergence between estimated joint kernel density of the simulated theoretical data from and the empirical meta-analytical data. This framework constitutes an optimization problem where, to find parameter values for such that the 
+
 $$
 \begin{gathered}
 \min_{\mu_d,  ~ \sigma^2_d,  ~ \mu_n, ~ \phi_n, ~ \omega_{PBS}} \Big\{D_{\text{KL}}(\widehat{f}_e ~ \| ~ \widehat{f}_t) \Big\},  \\ \text{subject to:} ~ \mu_d, ~ \sigma^2_d, ~ \mu_n, ~ \phi_n,~ \omega_{PBS} \in \mathbb{R}, \quad \text{where}  \quad 0 \leq \omega_{PBS} \leq 1, \\
@@ -147,11 +150,10 @@ $$
 $$ {#eq-optim}
 
 
-Test, dannn hLloawedwinoi wefniowefin
-
 constitute an optimization problem, where the aim is to find values for the four distributional parameters and the publication bias parameter such that the kullback-leibler loss function ... the divergence between the estimated joint kernel density of simulated theoretical data from the estimated joint kernel density of the empirical data
 
-Objective of finding parameter values for which Kullback-Leibler divergence between the estimated joint kernel density of the simulated theoretical data from the empirical data is minimized, use differential evolution DE [see @storn_differential_1997], which is a simple metaheuristic algorithm for global optimization [@feoktistov_differential_2006]. DE is an evolutionary algorithm based on principles such as mutation, cross over and selection, and requires in comparison to other optimization algorithms only few control parameters that are generally straightforward to select to achieve favorable outcomes [@storn_differential_1997]. Importantly, all parameters of the DE algorithm including the control parameters, the stopping criterion and boundary constraints of the differential evolution algorithm were defined globally for the parameter estimation of all meta-analyses.
+
+For this purpose, we use the differential evolution [DE, @storn_differential_1997], which is a simple metaheuristic algorithm for global optimization [@feoktistov_differential_2006]. DE is an evolutionary algorithm based on principles such as mutation, cross over and selection, and requires in comparison to other optimization algorithms only few control parameters that are generally straightforward to select to achieve favorable outcomes [@storn_differential_1997]. Importantly, all parameters of the DE algorithm including the control parameters, the stopping criterion and boundary constraints of the differential evolution algorithm were defined globally for the parameter estimation of all meta-analyses.
 
 To utilize DE for optimization within the SPEEC approach, the R package *RcppDE* [@edelbuettel_rcppde_2022] was employed, implementing the classical algorithm *DE/rand/1* [@storn_differential_1997]. The control parameters for DE were chosen based on the recommendations of @storn_differential_1997 with additional adjustments informed by preliminary testing of simulated data from the simulation framework of SPEEC, setting the population size $NP$ to 150, the mutation constant $F$ to 0.9 and the crossover constant $CR$ to 0.1. In the application of the DE algorithm, we adopted a direct termination criteria approach [@jain_termination_2001; @ghoreishi_termination_2017], with the termination condition being the maximum number of generations. Since there are no universally applicable default values for the maximum number of generations, as it is contingent upon the optimization problem at hand [@jain_termination_2001], the choice for $t_{\text{max}}$ was also informed by preliminary testing of simulated data from the simulation framework of SPEEC. These tests suggested that $t_{\text{max}} = 1000$ is a reasonable decision. In determining the boundaries for the parameter search space, a balance was made between avoiding boundaries that are too wide, which could lead to inefficient exploration of the search space, and ensuring that the boundaries are not too narrow to ensure sufficient coverage of the potential parameters. More specifically, the minima and maxima for all distributional parameters were determined using Maximum Likelihood (see Table XXX), and the boundaries were set slightly above those values to ensure good coverage. 
 

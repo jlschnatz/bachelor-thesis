@@ -8,7 +8,7 @@
 `R/`: contains all R-scripts for data analysis and visualization
 
     #> R/
-    #> ├── 00_functions.R
+    #> ├── functions.R
     #> ├── 01_process_data.R
     #> ├── 02_h1.R
     #> ├── 03_h2.R
@@ -19,7 +19,7 @@
     #> ├── 08_check_convergence.R
     #> └── 09_dispersion.R
 
-The `R/00_functions.R` files contains all custom R-functions that are
+The `R/functions.R` files contains all custom R-functions that are
 defined for the project. The file h\_\*(1-4).R containts the analysis of
 the four hypotheses. The `R/combine_plots.R` file combines all plots
 generated for each hypothesis into one large multi-panel figure. The
