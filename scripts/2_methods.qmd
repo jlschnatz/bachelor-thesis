@@ -140,12 +140,15 @@ $$ {#eq-kld}
 ### Algorithmic Parameter Optimization with Differential Evolution
 
 $$
-\begin{aligned}
-& \min_{\mu_d,  ~ \sigma^2_d,  ~ \mu_n, ~ \phi_n, ~ \omega_{PBS}} \Big\{D_{\text{KL}}(\widehat{f}_e ~ \| ~ \widehat{f}_t) \Big\}, \quad \text{subject to:} ~ \mu_d, ~ \sigma^2_d, ~ \mu_n, ~ \phi_n,~ \omega_{PBS} \in \mathbb{R} \\
-& -4 \leq \mu_d \leq 4, \quad 0 \leq \sigma^2_d \leq 6, \\
-& 10 \leq \mu_n \leq 15000, \quad 0.01 \leq \phi_n \leq 1000, 0 \leq \omega_{PBS} \leq 1
-\end{aligned}
-$$ {eq-optim}
+
+\begin{gathered}
+\min_{\mu_d,  ~ \sigma^2_d,  ~ \mu_n, ~ \phi_n, ~ \omega_{PBS}} \Big\{D_{\text{KL}}(\widehat{f}_e ~ \| ~ \widehat{f}_t) \Big\},  \\ \text{subject to:} ~ \mu_d, ~ \sigma^2_d, ~ \mu_n, ~ \phi_n,~ \omega_{PBS} \in \mathbb{R}, \quad \text{where}  \quad 0 \leq \omega_{PBS} \leq 1, \\
+-4 \leq \mu_d \leq 4,, \quad 0 \leq \sigma^2_d \leq 6,,  10 \leq \mu_n \leq 15000, \quad 0.01 \leq \phi_n \leq 1000
+\end{gathered}
+$$ {#eq-optim}
+
+
+Test
 
 constitute an optimization problem, where the aim is to find values for the four distributional parameters and the publication bias parameter such that the kullback-leibler loss function ... the divergence between the estimated joint kernel density of simulated theoretical data from the estimated joint kernel density of the empirical data
 
