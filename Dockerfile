@@ -1,6 +1,5 @@
 FROM eddelbuettel/r2u:20.04 AS base
-RUN apt-get update -qq &&     apt-get install -y --no-install-recommends     - The project is out-of-sync -- use `renv::status()` for details. \
-cmake  \
+RUN apt-get update -qq &&     apt-get install -y --no-install-recommends     cmake  \
     curl  \
     gdebi-core  \
     git  \

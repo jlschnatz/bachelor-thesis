@@ -935,22 +935,6 @@
       ],
       "Hash": "4d0fc9fac431e2d8cbe51ef154b4cb74"
     },
-    "getsysreqs": {
-      "Package": "getsysreqs",
-      "Version": "0.0.0.9000",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteUsername": "mdneuzerling",
-      "RemoteRepo": "getsysreqs",
-      "RemoteRef": "main",
-      "RemoteSha": "395c45af521e6979b6f71b81ce2298c83f31682f",
-      "Requirements": [
-        "httr",
-        "jsonlite"
-      ],
-      "Hash": "bd71c652e1813908eccc010dc05955b0"
-    },
     "ggdist": {
       "Package": "ggdist",
       "Version": "3.3.2",
