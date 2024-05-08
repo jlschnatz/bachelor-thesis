@@ -5,6 +5,7 @@
 /.quarto/
 /.snakemake/
 .Rbuildignore
+.Renviron
 /**/.vdoc.r
 /data/optim/processed/data_optim_evolution.csv.gz
-scripts/0_main_cache/
+/scripts/0_main_cache/

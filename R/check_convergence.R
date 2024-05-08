@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 if (!"pacman" %in% installed.packages()) install.packages("pacman")
 pacman::p_load(
   # Data manipulation

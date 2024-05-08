@@ -17,7 +17,8 @@ RUN apt-get update -qq &&     apt-get install -y --no-install-recommends     cma
     make  \
     pandoc  \
     snakemake  \
-    zlib1g-dev \     &&     apt-get clean &&     rm -rf /var/lib/apt/lists/*
+    zlib1g-dev \ 
+    &&     apt-get clean &&     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /project 
 COPY . /project 
@@ -32,6 +33,7 @@ RUN R -e 'renv::restore()'
 
 RUN curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v0.9.522/quarto-0.9.522-linux-amd64.deb
 RUN gdebi --non-interactive quarto-linux-amd64.deb
+RUN rm -f quarto-linux-amd64.deb
 
 RUN quarto tools install tinytex
 

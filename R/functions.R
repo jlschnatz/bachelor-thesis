@@ -1,3 +1,6 @@
+#!/usr/bin/env Rscript
+
+
 #' @title Plot TOST Equivalence Test
 #' @description Plot the TOST equivalence test with the null hypothesis.
 #' @param tost An object of class `TOSTt`.

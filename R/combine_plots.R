@@ -1,3 +1,6 @@
+#!/usr/bin/env Rscript
+
+
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
 if(!"pacman" %in% installed.packages()) install.packages("pacman")
 pacman::p_load(sysfonts, showtext, here, tidyverse, fs, patchwork, grid, gridtext)

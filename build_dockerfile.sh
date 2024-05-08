@@ -16,7 +16,7 @@ build_dockerfile() {
     sysreqs=$(Rscript -e "cat(sort(unique(c(getsysreqs::get_sysreqs('$lock_file'), 'curl', 'gdebi-core', 'snakemake'))), sep = ' \n    ')" | sed 's/$/ \\/') 
     sysreqs="RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
-    "$sysreqs" \
+    "$sysreqs" 
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*"
@@ -41,6 +41,7 @@ RUN R -e 'renv::restore()'
 download_quarto="
 RUN curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v$quarto_version/quarto-$quarto_version-linux-amd64.deb
 RUN gdebi --non-interactive quarto-linux-amd64.deb
+RUN rm -f quarto-linux-amd64.deb
 "
 
     # Install TinyTex
