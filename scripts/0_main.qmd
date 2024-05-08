@@ -2,21 +2,23 @@
 \newpage
 \pagenumbering{roman}
 \thispagestyle{empty}
-
-```
 \newpage
-
-\mbox{}\thispagestyle{empty}\newpage
+\mbox{}\thispagestyle{empty}
+\newpage
+```
 
 # Abstract {.unnumbered}
 
-Test
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas cursus cursus tortor quis auctor. Ut eu consequat elit, sed fringilla nibh. Suspendisse accumsan mollis lacus eu luctus. Nunc efficitur elit vel orci faucibus ultricies. Quisque luctus dictum libero, a sagittis quam. Curabitur finibus a nunc a commodo. Vivamus ultricies, eros vel commodo vestibulum, ex magna elementum eros, vitae finibus magna sem in elit. Sed elementum condimentum tortor, a volutpat lacus ultrices eget. Nam interdum elit sed dolor mollis, id ornare tellus accumsan. Pellentesque nec semper lectus. Phasellus dapibus ut neque sed tristique. Morbi nec eros eget ex laoreet volutpat at eu est. Nullam elementum sagittis velit eu ultrices. Curabitur metus justo, pellentesque in velit ut, accumsan mattis metus. Fusce dignissim posuere accumsan. Etiam fringilla ante mi, eget congue tellus faucibus sit amet. Phasellus non laoreet diam, id rhoncus mauris. Morbi at cursus quam. Fusce cursus tellus id lectus tempus, nec facilisis lectus scelerisque. Donec sed arcu hendrerit lorem accumsan dapibus et eget neque. Duis rutrum tellus libero, ultricies vestibulum neque imperdiet porttitor. Donec tincidunt vitae quam ultricies malesuada. Etiam pharetra dolor ac velit egestas rutrum. Praesent molestie dictum nunc, non vestibulum dui congue quis. Proin sit amet magna neque. Sed lobortis velit in neque commodo, in molestie nulla interdum. Phasellus feugiat turpis odio, ac ornare est sodales vitae. Ut erat ante, tincidunt vitae lacus at, viverra iaculis quam. Donec est tortor, interdum non risus id, congue scelerisque eros. Mauris ultrices ullamcorper dapibus. Cras id tempor quam. Praesent auctor congue leo.
 
+
+```{=tex}
 \newpage
-
 \pagenumbering{arabic}
-
 \tableofcontents
+\newpage
+```
+
 
 ```{r}
 #| echo: false
@@ -30,12 +32,20 @@ knitr::opts_chunk$set(
 
 ```
 
+
+```{r}
+#| echo: true
+
+
+getwd()
+```
+
 ```{r}
 #| echo: false
 #| results: "asis"
-#| label: introcution
-
-intro <- knitr::knit_child("scripts/1_intro.qmd", quiet = TRUE)
+#| label: introduction
+#
+intro <- knitr::knit_child(here::here("scripts/1_introduction.qmd"), quiet = TRUE)
 cat(intro, sep = "\n")
 ```
 
@@ -44,7 +54,7 @@ cat(intro, sep = "\n")
 #| results: "asis"
 #| label: methods
 
-method <- knitr::knit_child("scripts/2_methods.qmd", quiet = TRUE)
+method <- knitr::knit_child(here::here("scripts/2_methods.qmd"), quiet = TRUE, envir)
 cat(method, sep = "\n")
 ```
 
@@ -53,7 +63,7 @@ cat(method, sep = "\n")
 #| results: "asis"
 #| label: results
 
-results <- knitr::knit_child("scripts/3_results.qmd", quiet = TRUE)
+results <- knitr::knit_child(here::here("scripts/3_results.qmd"), quiet = TRUE)
 cat(results, sep = "\n")
 ```
 
@@ -62,7 +72,7 @@ cat(results, sep = "\n")
 #| results: "asis"
 #| label: discussion
 
-discussion <- knitr::knit_child("scripts/4_discussion.qmd", quiet = TRUE)
+discussion <- knitr::knit_child(here::here("scripts/4_discussion.qmd"), quiet = TRUE)
 cat(discussion, sep = "\n")
 ```
 
@@ -71,7 +81,7 @@ cat(discussion, sep = "\n")
 #| results: "asis"
 #| label: references
 
-references <- knitr::knit_child("scripts/5_references.qmd", quiet = TRUE)
+references <- knitr::knit_child(here::here("scripts/5_references.qmd"), quiet = TRUE)
 cat(references, sep = "\n")
 ```
 
@@ -80,6 +90,6 @@ cat(references, sep = "\n")
 #| results: "asis"
 #| label: appendix
 
-appendix <- knitr::knit_child("scripts/6_appendix.qmd", quiet = TRUE)
+appendix <- knitr::knit_child(here::here("scripts/6_appendix.qmd"), quiet = TRUE)
 cat(appendix, sep = "\n")
 ```

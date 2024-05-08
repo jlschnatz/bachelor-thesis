@@ -16,7 +16,7 @@ rule thesis:
         "data/src/model_dispersion.rds",
         "tables/intercept_table.tex",
         "scripts/0_main.qmd",
-        "scripts/1_intro.qmd",
+        "scripts/1_introduction.qmd",
         "scripts/2_methods.qmd",
         "scripts/3_results.qmd",
         "scripts/4_discussion.qmd",

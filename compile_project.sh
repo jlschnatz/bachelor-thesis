@@ -22,7 +22,7 @@ clean_bib() {
     done
 
     # Write the tidy references to the output file
-    echo "Generating $output_ref"
+    echo "Generating $output_ref 📃"
     echo -e "$output" > "$output_ref"
 }
 
@@ -36,7 +36,7 @@ render_quarto() {
     rm -r ${DIR}
     mkdir ${DIR}
 
-    quarto render --quiet
+    quarto render 
 
     # remove unnecessary folders that are rendered (fails silently)
     mv ${DIR}/scripts/*.pdf ${DIR} 2>/dev/null
@@ -55,8 +55,9 @@ render_quarto() {
         LOG_FILE=$(find scripts -name "*.log" -type f)
         echo "An error occurred in the compilation of the document, please see ${LOG_FILE}"
     else
-        echo "Output created in ${DIR}/${FILENAME}"
+        echo "Output created in ${DIR}/${FILENAME} ✅"
     fi
+    open "${DIR}/${FILENAME}"
 }
 
 render_quarto

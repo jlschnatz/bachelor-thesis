@@ -6,6 +6,11 @@ bibliography: ../bibliography/tidy_references.bib
 
 # Discussion
 
+<!-- Intermediate Discussion after the Confirmatory Results -->
+
+
+
+
 <!-- Reiterating central purpose and scope of study -->
 
 <!-- Summary of key findings of confirmatory and exploratory analyses -->

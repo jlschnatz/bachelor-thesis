@@ -1,0 +1,147 @@
+---
+bibliography: ../bibliography/tidy_references.bib
+---
+
+\newpage
+
+- Cooper et al (1019): Only through the formal modes, however, can scientists achieve their true goal, which is recognition for claims of new knowledge in a cumulative enterprise.
+- Science perceived as a cumulative enterprise -> overarching goal of robust knowledge about phenoma [@kitcher_advancement_1993], maybe don´t include
+- Research often study the same phenomena -> idea of meta-analysis: generalizing and synthesising findings from individual studies contributes the the cumulative advancement of knowledge
+- Schmidt (1997): very important look into -> meta-analysis as a driver to foster cumulative science
+- Premise hinges on important assumption: available/published scientific literature is representative for all conduceted research [@song_dissemination_2010; @rothstein_publication_2005]
+- Contrary to this, scientists have pointed out for over half a century that results of published studies differ systematically from unpublished studies [@smart_importance_1964; @sterling_publication_1959; @bozarth_signifying_1972; @bakan_test_1966]
+- Introduction of publication bias -> publication of a study often hinges of the strength or direction of its findings [@dickersin_existence_1990; @dickersin_publication_1993] 
+- Especially in currently still present publishing culrture that prioritizes novelty and positive results  [@nosek_scientific_2012] --> many statistically non-significant studies end up in the "file-drawer" and never get published [@rosenthal_file_1979]
+
+---
+
+- Ramifications of publication bias are severe, culminating in 
+  - meta-analytical effect sizes [@stanley_detecting_2021; @franco_publication_2014] 
+  - heightened false-positive rate/risk [@kicinski_how_2014; @munafo_how_2010; @ioannidis_why_2005] 
+  - increasing the risk of erroneous conclusions that may jeopardize the validity of research [@begg_publication_1994]
+  - publication bias especially a major concern in the context of meta-analyses which are widely aknowledged as paramount method for objectively        appraising and synthesizing evidence across diverse fields [@rothstein_publication_2005]
+- These ramifications become especially relevant in the light of recent large-scale replication projects providing evidence for non-replicability of many psychological findings [@open_science_collaboration_estimating_2015; @klein_many_2018; @camerer_evaluating_2018; @klein_investigating_2014; @ebersole_many_2016; @ebersole_many_2020]
+- This underscores why publication bias identified as a major threat to replicable science [@munafo_manifesto_2017] and thus a considered as a significant contributor to the replication crisis [@renkewitz_how_2019]. 
+- Given the myriad of issues associated with publication bias and its widespread impact, there has been considerable attention directed towards investigating methodologies to detect publication bias. (it is not unsurprising that ... significant attention for methods to detect publication bias and correct...)
+
+---
+
+- In general overwhelming amount of statistical procedures developed over the passed decades
+
+- Many methods rely on the relationship betweem effect size and sample size -> small study effects -> explain the idea of small study effects shortly
+- Effect size and sample size (or other measures of sampling bias such as SE) used for publication bias assessment
+- Idea of small study-effects --> N-ES als Beispiel → PET-PEESE, Egger´s Regression, Begg´s Rank correlation, etc. → N-ES correlation exemplarisch hervorheben (und deren Probleme)
+
+- Only indirect assessment of publication bias methods in small-study effects
+- Publication bias selection methods -> Möglicherweise nochmal ein Abstecher zu Publication Selection Models (→ für Einführung des Publicationsbiasparameters?)
+
+@carter_correcting_2019, @van_aert_publication_2019, @renkewitz_how_2019
+
+
+Thema Flexibilität:
+- SPEEC Methode unterscheidet sich drastisch → durch Simulationsbasierte Schätzmethodik große Flexibilität
+- Important point -> framework within which specific assumptions can be changed regarding marginal distributions e.g.
+- Explicit statement of assumption of the publication bias model in the generative publication bias model
+
+
+- Overwhelming amount of methods -> but, problems: 
+    - Heterogeneity
+    - Disagreement between methods
+- Often the assumption of homogeneity of effect sizes for publication bias detection methods
+  
+
+---
+
+Research questions:
+
+- How does publication bias influence the joint probability distribution of effect size and sample size? 
+
+- How can the magnitude of publication bias in meta-analyses be estimated and effect sizes under publication bias be corrected from the joint distribution of sample size and effect size?
+
+## The Present Study
+
+The present study introduces $\mathrm{SPEEC}$ ($\mathbfsfup{S}$imulation-based $\mathbfsfup{P}$ublication bias $\mathbfsfup{E}$stimation and $\mathbfsfup{E}$ffect size $\mathbfsfup{C}$orrection), a novel simulation-based framework to assess the extent of publication bias in meta-analyses and estimate corrected effect sizes in the presence of publication bias based on the joint distribution of effect size and sample size. The thesis sets out with two primary objectives. Firstly, it aims to introduce the reader to the SPEEC method and provide a comphrensive description of its assumptions and its procedure. Secondly, it aims to assess the SPEEC method in a proof of concept using empirical meta-analytical data sourced from @linden_heterogeneity_2021 to preliminary assess the initial feasability of the introduced approach. For this purpose, four theoretically justifiable hypotheses involving predictions about the estimated parameters of the SPEEC method that should apply to the empirical data are derived in the section [Hypotheses](Hypotheses). The thesis is structured as follows: In this section, a brief primer on the central ideas of the SPEEC method is provided, followed by a detailed derivation of the hypotheses. Next, a detailed introduction to the SPEEC method itself is offered. This is followed by the empirical analyses of the hypotheses and a discussion and evaluation of the results of the empirical analyses.
+
+
+## Brief Introduction to SPEEC
+
+- Central idea of SPEEC: explicitely model generative process of publication bias in a simulation framework 
+- Publication bias model incorporates assumption of the marginal distributions of effect size and sample size -> effect size Gaussian with the mean parameter as the central corrected effect size under publication bias; as well as how publication bias impacts the their joint distribution. 
+- The extent of publication bias is modeled by a publication bias parameter $\pbs$ that captures the probability of a statistically non-significant study being selected (i.e., published relative) relative to a significant study being selected.
+- From this generative publication bias model, simulation of theoretical data 
+
+More specifically, distributional parameters -> marginal distribution of effect size and sample size + publication bias parameter, gibt das ausmaß von publication bias an -> relative likelihood of statistically significant studies 
+
+Publication bias parameter
+
+- Central idea: explicitely model generative process of publication bias -> with specific assumption about the marginal distributions of effect size and sample size and how publication bias operates
+- Generative model of publication bias -> simulate theoretical data from generative model (this generative model has distributional parameters that reflect the marginal distribution of sample size and effect size as well as publication bias parameter)
+- Compare simulared data from generative model to empirical meta-analytical data -> determine the divergence of the estimated bivariate kernel density of the theoretical data from the empirical data (KL-divergence) -> this serves as a loss function -> formulation as an optimization problem 
+- Find parameters for which the KL-divergence is minimized
+
+
+Simulation framework: simulation of effect size-sample size data that is sampled from theoretical model conditional on marginal distributional assumptions of effect size (Gaussian distribution) and sample size (Negative_Binomial distribution). Introduction of publication bias parameter, which can be defined as the relative likelihood of a individual statistically non-significant study being published relative to a statistically significant study. Application of publication bias on the simulated joint distribution samples (effect size sample size). Comparison between empirial data and simulated samples from theoretical model in terms of the divergence between their respetice kernel density estimates. Using this framework -> formulation as an optimization problem -> parameter optimization regarding the marginal distributional parameters and the publication bias parameter to optimize the objective function.
+
+The central idea of the SPEEC method involves
+
+simulation of theoretical model that integrates assumptions about the marginal distribution of effect size and sample size and how publication bias influences the joint distribution
+
+simulation of assumption how publication bias operates
+
+simulation of random samples from theoretical
+
+-   Simulation-based approach to estimate publication bias severity and correct potentially biased (inflated) effect sizes under present publication bias based on the joint distribution of effect size and sample size
+-   Simulation of theoretical data > joint distribution of effect size and sample size under marginal distributional assumptions > Application of publication bias > empirical kernel density estimation > comparison of empirical and simulated data > loss function
+
+- Simulation of random samples from theoretical publication bias model which integrates assumptions about the marginal distribution of effect size and sample size and how publication bias influences the joint distribution
+- Comparison between random samples for theoretical model to real data → compute loss function as the statistical divergence between the estimated joint density distribution
+- Iterative algorithmic optimization (differential evolution) of distributional parameters and publication bias parameter to minimize the loss function
+
+## Confirmatory Hypotheses
+   
+To assess the SPEEC method, a set of four theoretical predictions are derived, that constitute the hypotheses of this study. These hypotheses serve as benchmarks for assessing the viability of the proposed method and are therefore expected to hold true if the approach works in principle. If the predictions fail to be corroborated by the empirical meta-analytical data, this would raise concerns about the viability of the SPEEC method and necessitate a further review of its implementation.
+
+<!-- Hypothesis I (still open) -->
+
+Firstly, we conducted a direct comparison between the correlation of effect size and sample size, serving as an indicator of publication bias, and the publication bias parameter $\pbs$ estimated within the SPEEC method. It can be expected that the estimated publication bias parameter $\epbs$ is positively associated with the Fisher *z*-transformed Spearman correlation coefficients of the association between unsigned effect size and sample size in each meta-analysis. In other words, when the proposed method estimates high publication bias (i.e., low probabilities for $\epbs$ ) it is expected that the correlation coefficients for each meta-analysis to be more negative and conversely. In statistical terms, this implies that the regression coefficient $\beta_{z_{r_s}}$ is expected to be greater than zero.
+
+$$
+\begin{gathered}
+\hypothesis{i}{0}: \beta_{z_{r_s}} \leq 0 \\
+\hypothesis{i}{1}: \beta_{z_{r_s}} > 0
+\end{gathered}
+$$ {#eq-h1}
+
+<!-- Hypothesis II (finished!) -->
+
+In cases where substantial publication bias is present within the scientific literature of a particular research phenomenon, and the true effect size is precisely zero ($\delta=0$), the distribution of effect size and sample size exhibits increased symmetric sparsity around zero in areas where individual studies would not be statistically significant for a given effect size and sample size [@light_summing_1984]. This is explained by the fact that only studies with either large positive or large negative effects will be statistically significant and consequently have a higher likelihood of being published in the presence of publication bias. Because of this symmetry for a true effect size of zero, the average effect size $\widehat{\delta}$ should not be biased since negative and positive effects should, in theory, mutually cancel each other out. Consequently, the difference $\Delta_{\mu_d}$ between the average effect size $\widehat{\delta}$ and the estimated mean parameter $\mu_d$ of the effect size distribution from the SPEEC approach should remain invariant independent of the magnitude of publication bias. However, when the true effect size exceeds zero ($\delta>0$), publication bias leads to an overestimation of the true effect (i.e. $\widehat{\delta}>\delta$), and conversely, overestimation in the opposite direction (i.e., $\widehat{\delta} < \delta$) when $\delta<0$. If the estimated mean parameter $\widehat{\mu}_d$ of the Gaussian effect size distribution obtained from the *SPEEC* approach is a more accurate estimate of the true effect size $\delta$ in the presence of publication bias compared to the mean effect size $\widehat{\delta}$, it follows from the prior reasoning that a curvilinear, inverted U-shaped pattern can be expected between the difference $\delta_{\mu_d}$ of these two parameters and the publication bias parameter $\pbs$. In other words, when the mean difference $\Delta_{\mu_d}$ is approaching zero, publication bias severity is expected to decrease (indicated by larger values for $\pbs$). Conversely, when the difference $\Delta_{\mu_d}$ diverges from zero in both negative and positive directions, publication bias severity is expected to increase (i.e. lower values for $\pbs$). In statistical terms, for the second hypothesis of this study $\hypothesis{i}{}$, the quadratic regression term $\beta_{\Delta_{\mu_d}}$ is expected to be smaller than zero.
+
+$$
+\begin{gathered}
+\hypothesis{i}{0}: \quad \beta_{\Delta_{\mu_d}} \geq 0 \\ 
+\hypothesis{i}{1}: \quad \beta_{\Delta_{\mu_d}} < 0
+\end{gathered}
+$$ {#eq-h2}
+
+<!-- Hypothesis III -->
+
+Registered reports are an alternative two-stage publishing model, where study protocols are submitted, peer-reviewed and in-princple accepted prior to data collection [@chambers_past_2022; @nosek_registered_2014]. In-princple accepted studies are then published regardless of the outcome of the study, because the decision to publish was made before the results of the studies are known, which eliminates publication bias [@simons_introduction_2014; @chambers_past_2022]. Consequently, the effect sizes within these multisite replication projects and registered replication reports that are publishied within this framework cannot be biased by publication bias. Following this reasoning, in the third hypothesis of the present study $\hypothesis{iii}{}$, it can expected that the average effect size of a registered replication report $\widehat{\delta}$ to be equivalent to the mean parameter of the Gaussian effect size distribution $\mu_d$ that is estimated using the SPEEC approach within specified equivalence bounds $\Delta_{EQ} = \{\Delta_L, ~ \Delta_U\}$. The equivalence bounds are defined by the smallest effect size of interest for this study [@lakens_equivalence_2018] and are set to $\Delta_{EQ}=\{-0.18, 0.18\}$ (see section [Smallest Effect Size of Interest] for the rationale of this decision).
+
+$$
+\begin{gathered}
+\Delta_{\mu_d}=\widehat{\delta}-\widehat{\mu}_d \\
+\hypothesis{iii}{01}: \Delta_{\mu_d} \leq \Delta_{L} \quad \cap \quad \hypothesis{iii}{02}: \Delta_{\mu_d} \geq \Delta_{U} \\
+\hypothesis{iii}{1}: \Delta_L >\Delta_{\mu_d} > \Delta_U
+\end{gathered}
+$$ {#eq-h3}
+
+<!-- Hypothesis IV -->
+
+In theory, one could posit that the publication bias parameter $\pbs$ in registered replication reports should precicely equal one, as individual replication studies are almost always predetermined in the registration of the study and included in the final report independent of their statistical outcomes. However, due to the inherent upper limits of one for the publication bias parameter $\pbs$, testing this point prediction would not be sensible within a null hypothesis testing framework. Instead, a relative comparison between traditional meta-analyses and registered replication reports allows for making testable predictions. More specifically, it can be expected that the publication bias parameter $\pbs$ is greater for multisite replication studies in comparison to traditional meta-analysis. This indicates that relative to individual statistically non-significant primary studies within traditional meta-analyses, statistically non-significant individual replication studies should have a greater likelihood of being of being included in the the final registered replication report (and thus being published). In statistical terms, when the regressor is a binary indicator of the type of research synthesis with the reference level being the publication biased absent multisite replication studies ($MR$) and the outcome is the estimated publication bias parameter $\pbs$, the regression coefficient $\beta_{MR}$ can be expected to be greater than zero.
+
+$$
+\begin{gathered}
+\hypothesis{iv}{0}: \quad \beta_{MR} \leq 0 \\
+\hypothesis{iv}{1}: \quad \beta_{MR} > 0
+\end{gathered}
+$$ {#eq-h4}

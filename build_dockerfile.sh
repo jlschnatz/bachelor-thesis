@@ -22,7 +22,6 @@ build_dockerfile() {
     rm -rf /var/lib/apt/lists/*"
     
     # Create and copy folder into analysis/
-
     cc_analysis="
 WORKDIR /project 
 COPY . /project 
