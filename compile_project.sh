@@ -22,6 +22,7 @@ clean_bib() {
     done
 
     # Write the tidy references to the output file
+    echo "Generating $output_ref"
     echo -e "$output" > "$output_ref"
 }
 
