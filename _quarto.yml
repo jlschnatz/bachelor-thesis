@@ -9,7 +9,6 @@ execute:
   warning: false
 format: 
   pdf:
-
     # titlepage
     title: "Assessing Publication Bias in Meta-Analyses:"
     subtitle: "A Simulation-Based Estimation Approach Focusing on the Joint Distribution of Effect Size and Sample Size"
@@ -26,6 +25,18 @@ format:
 
     # document settings
     documentclass: scrartcl
+    classoption: twoside      
+    geometry:
+      - inner=2.5cm
+      - outer=3.5cm
+      - top=2.5cm
+      - bottom=3.5cm
+      #- headsep=22pt
+      #- headheight=11pt
+      #- footskip=33pt
+      #- ignorehead
+      #- ignorefoot
+      #- heightrounded
     link-citations : true
     urlcolor       : black
     linkcolor      : black
@@ -36,10 +47,10 @@ format:
     bibliography: bibliography/tidy_references.bib
     csl: apa.csl
     citecolor: black
-    margin-left: 2.5cm
-    margin-right: 2.5cm
-    margin-top: 2.5cm
-    margin-bottom: 2cm
+    #margin-left: 2.5cm
+    #margin-right: 2.5cm
+    #margin-top: 2.5cm
+    #margin-bottom: 2cm
     cite-method: biblatex
     link-citation: true
     engine: knitr

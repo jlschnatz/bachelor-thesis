@@ -27,75 +27,41 @@ bibliography: ../bibliography/tidy_references.bib
 ---
 
 - In general overwhelming amount of statistical procedures developed over the passed decades
-
-- Many methods rely on the relationship betweem effect size and sample size -> small study effects -> explain the idea of small study effects shortly
+- Many methods rely on the relationship betweem effect size and sample size  small study effects  explain the idea of small study effects shortly
 - Effect size and sample size (or other measures of sampling bias such as SE) used for publication bias assessment
-- Idea of small study-effects --> N-ES als Beispiel → PET-PEESE, Egger´s Regression, Begg´s Rank correlation, etc. → N-ES correlation exemplarisch hervorheben (und deren Probleme)
+- Idea of small study-effects N-ES als Beispiel  PET-PEESE, Egger´s Regression, Begg´s Rank correlation, etc.  N-ES correlation exemplarisch hervorheben (und deren Probleme)
 
 - Only indirect assessment of publication bias methods in small-study effects
-- Publication bias selection methods -> Möglicherweise nochmal ein Abstecher zu Publication Selection Models (→ für Einführung des Publicationsbiasparameters?)
+- Publication bias selection methods  Möglicherweise nochmal ein Abstecher zu Publication Selection Models (für Einführung des Publicationsbiasparameters?)
 
-@carter_correcting_2019, @van_aert_publication_2019, @renkewitz_how_2019
+[@carter_correcting_2019; @van_aert_publication_2019; @renkewitz_how_2019]
 
+---
 
 Thema Flexibilität:
-- SPEEC Methode unterscheidet sich drastisch → durch Simulationsbasierte Schätzmethodik große Flexibilität
-- Important point -> framework within which specific assumptions can be changed regarding marginal distributions e.g.
+- SPEEC Methode unterscheidet sich drastisch durch Simulationsbasierte Schätzmethodik große Flexibilität
+- Important point  framework within which specific assumptions can be changed regarding marginal distributions e.g.
 - Explicit statement of assumption of the publication bias model in the generative publication bias model
 
+---
 
-- Overwhelming amount of methods -> but, problems: 
+- Overwhelming amount of methods  but, problems: 
     - Heterogeneity
     - Disagreement between methods
 - Often the assumption of homogeneity of effect sizes for publication bias detection methods
   
-
----
-
 Research questions:
 
 - How does publication bias influence the joint probability distribution of effect size and sample size? 
-
 - How can the magnitude of publication bias in meta-analyses be estimated and effect sizes under publication bias be corrected from the joint distribution of sample size and effect size?
 
 ## The Present Study
 
-The present study introduces $\mathrm{SPEEC}$ ($\mathbfsfup{S}$imulation-based $\mathbfsfup{P}$ublication bias $\mathbfsfup{E}$stimation and $\mathbfsfup{E}$ffect size $\mathbfsfup{C}$orrection), a novel simulation-based framework to assess the extent of publication bias in meta-analyses and estimate corrected effect sizes in the presence of publication bias based on the joint distribution of effect size and sample size. The thesis sets out with two primary objectives. Firstly, it aims to introduce the reader to the SPEEC method and provide a comphrensive description of its assumptions and its procedure. Secondly, it aims to assess the SPEEC method in a proof of concept using empirical meta-analytical data sourced from @linden_heterogeneity_2021 to preliminary assess the initial feasability of the introduced approach. For this purpose, four theoretically justifiable hypotheses involving predictions about the estimated parameters of the SPEEC method that should apply to the empirical data are derived in the section [Hypotheses](Hypotheses). The thesis is structured as follows: In this section, a brief primer on the central ideas of the SPEEC method is provided, followed by a detailed derivation of the hypotheses. Next, a detailed introduction to the SPEEC method itself is offered. This is followed by the empirical analyses of the hypotheses and a discussion and evaluation of the results of the empirical analyses.
+The present study introduces $\mathrm{SPEEC}$ ($\mathbfsfup{S}$imulation-based $\mathbfsfup{P}$ublication bias $\mathbfsfup{E}$stimation and $\mathbfsfup{E}$ffect size $\mathbfsfup{C}$orrection), a novel simulation-based framework to assess the extent of publication bias in meta-analyses and estimate corrected effect sizes in the presence of publication bias based on the joint distribution of effect size and sample size. The thesis sets out with two primary objectives. Firstly, it aims to introduce the reader to the SPEEC method and provide a comphrensive description of its assumptions and its procedure. Secondly, it aims to assess the SPEEC method in a proof of concept using secondary empirical meta-analytical data sourced from @linden_heterogeneity_2021 to preliminary assess the initial feasability of the introduced approach. For this purpose, four theoretically justifiable hypotheses involving predictions about the estimated parameters of the SPEEC method that should apply to the empirical data are derived in the section [Hypotheses](Hypotheses). The thesis is structured as follows: In this section, a brief primer on the central ideas of the SPEEC method is provided, followed by a detailed derivation of the hypotheses. Next, a detailed introduction to the SPEEC method itself is offered. This is followed by the empirical analyses of the hypotheses and a discussion and evaluation of the results of the empirical analyses.
 
+## A Primer on SPEEC
 
-## Brief Introduction to SPEEC
-
-- Central idea of SPEEC: explicitely model generative process of publication bias in a simulation framework 
-- Publication bias model incorporates assumption of the marginal distributions of effect size and sample size -> effect size Gaussian with the mean parameter as the central corrected effect size under publication bias; as well as how publication bias impacts the their joint distribution. 
-- The extent of publication bias is modeled by a publication bias parameter $\pbs$ that captures the probability of a statistically non-significant study being selected (i.e., published relative) relative to a significant study being selected.
-- From this generative publication bias model, simulation of theoretical data 
-
-More specifically, distributional parameters -> marginal distribution of effect size and sample size + publication bias parameter, gibt das ausmaß von publication bias an -> relative likelihood of statistically significant studies 
-
-Publication bias parameter
-
-- Central idea: explicitely model generative process of publication bias -> with specific assumption about the marginal distributions of effect size and sample size and how publication bias operates
-- Generative model of publication bias -> simulate theoretical data from generative model (this generative model has distributional parameters that reflect the marginal distribution of sample size and effect size as well as publication bias parameter)
-- Compare simulared data from generative model to empirical meta-analytical data -> determine the divergence of the estimated bivariate kernel density of the theoretical data from the empirical data (KL-divergence) -> this serves as a loss function -> formulation as an optimization problem 
-- Find parameters for which the KL-divergence is minimized
-
-
-Simulation framework: simulation of effect size-sample size data that is sampled from theoretical model conditional on marginal distributional assumptions of effect size (Gaussian distribution) and sample size (Negative_Binomial distribution). Introduction of publication bias parameter, which can be defined as the relative likelihood of a individual statistically non-significant study being published relative to a statistically significant study. Application of publication bias on the simulated joint distribution samples (effect size sample size). Comparison between empirial data and simulated samples from theoretical model in terms of the divergence between their respetice kernel density estimates. Using this framework -> formulation as an optimization problem -> parameter optimization regarding the marginal distributional parameters and the publication bias parameter to optimize the objective function.
-
-The central idea of the SPEEC method involves
-
-simulation of theoretical model that integrates assumptions about the marginal distribution of effect size and sample size and how publication bias influences the joint distribution
-
-simulation of assumption how publication bias operates
-
-simulation of random samples from theoretical
-
--   Simulation-based approach to estimate publication bias severity and correct potentially biased (inflated) effect sizes under present publication bias based on the joint distribution of effect size and sample size
--   Simulation of theoretical data > joint distribution of effect size and sample size under marginal distributional assumptions > Application of publication bias > empirical kernel density estimation > comparison of empirical and simulated data > loss function
-
-- Simulation of random samples from theoretical publication bias model which integrates assumptions about the marginal distribution of effect size and sample size and how publication bias influences the joint distribution
-- Comparison between random samples for theoretical model to real data → compute loss function as the statistical divergence between the estimated joint density distribution
-- Iterative algorithmic optimization (differential evolution) of distributional parameters and publication bias parameter to minimize the loss function
+The fundamental concept underlying the SPEEC approach involves explicitely modeling the generative process of publication bias in a simulation framwork and iteratively comparing how the distribution of effect size and sample size of simulated studies diverges from the actual empircal meta-analytical data to estimate the parameters of the model. The publication bias model of the simulation framework integrates both asumption concerning the marginal distribution of effect size and sample size, as well as how publication bias influences their joint distribution. In terms of the former, the sample sizes are modeled by a Negative-Binomial distribution (with parameters $\mu_n$ and $\phi_n$) and the effect sizes are modeled by a Gaussian distribution (with parameters $\mu_d$ and $\sigma^2_d$), where mean parameter $\mu_d$ represents the publication bias corrected effect size estimate. Regarding the latter, the extent of publication bias is modeled by a publication bias parameter, $\pbs$,  which captures the probability of selecting a statistically non-significant simulated study relative to a significant one for publication. From this generative publication bias model, effect sizes and sample sizes of individual studies are simulated. Subsequently, the estimated kernel density distributions of the simulated data from the generative model are compared to those of the empirical meta-analytical data. This comparison serves to quantify the statistical divergence between the data generated by the model and the empirical data, functioning as a loss function. This framework can be conceptualized as an optimization problem aiming to find values for the distributional parameters and the publication bias parameter of the generative publication bias model such that the statistical divergences from the empirical data is minimized. Stochastic optimization algorithms can then be employed to estimate the parameters of the generative publication bias model.For this study, the method of choice is differential evolution.
 
 ## Confirmatory Hypotheses
    
@@ -137,7 +103,7 @@ $$ {#eq-h3}
 
 <!-- Hypothesis IV -->
 
-In theory, one could posit that the publication bias parameter $\pbs$ in registered replication reports should precicely equal one, as individual replication studies are almost always predetermined in the registration of the study and included in the final report independent of their statistical outcomes. However, due to the inherent upper limits of one for the publication bias parameter $\pbs$, testing this point prediction would not be sensible within a null hypothesis testing framework. Instead, a relative comparison between traditional meta-analyses and registered replication reports allows for making testable predictions. More specifically, it can be expected that the publication bias parameter $\pbs$ is greater for multisite replication studies in comparison to traditional meta-analysis. This indicates that relative to individual statistically non-significant primary studies within traditional meta-analyses, statistically non-significant individual replication studies should have a greater likelihood of being of being included in the the final registered replication report (and thus being published). In statistical terms, when the regressor is a binary indicator of the type of research synthesis with the reference level being the publication biased absent multisite replication studies ($MR$) and the outcome is the estimated publication bias parameter $\pbs$, the regression coefficient $\beta_{MR}$ can be expected to be greater than zero.
+In theory, one could posit that the publication bias parameter $\pbs$ in registered replication reports should precicely equal one, as individual replication studies are predetermined in the registration of the study and included in the final report independent of their statistical outcomes. However, due to the inherent upper limits of one for the publication bias parameter $\pbs$, testing this point prediction would not be sensible within a null hypothesis testing framework. Instead, a relative comparison between traditional meta-analyses and registered replication reports allows for making testable predictions. More specifically, it can be expected that the publication bias parameter $\pbs$ is greater for multisite replication studies in comparison to traditional meta-analysis. This indicates that relative to individual statistically non-significant primary studies within traditional meta-analyses, statistically non-significant individual replication studies should have a greater likelihood of being of being included in the the final registered replication report (and thus being published). In statistical terms, when the regressor is a binary indicator of the type of research synthesis with the reference level being the publication biased absent multisite replication studies ($MR$) and the outcome is the estimated publication bias parameter $\pbs$, the regression coefficient $\beta_{MR}$ can be expected to be greater than zero.
 
 $$
 \begin{gathered}

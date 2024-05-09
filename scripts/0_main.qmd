@@ -9,8 +9,7 @@
 
 # Abstract {.unnumbered}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas cursus cursus tortor quis auctor. Ut eu consequat elit, sed fringilla nibh. Suspendisse accumsan mollis lacus eu luctus. Nunc efficitur elit vel orci faucibus ultricies. Quisque luctus dictum libero, a sagittis quam. Curabitur finibus a nunc a commodo. Vivamus ultricies, eros vel commodo vestibulum, ex magna elementum eros, vitae finibus magna sem in elit. Sed elementum condimentum tortor, a volutpat lacus ultrices eget. Nam interdum elit sed dolor mollis, id ornare tellus accumsan. Pellentesque nec semper lectus. Phasellus dapibus ut neque sed tristique. Morbi nec eros eget ex laoreet volutpat at eu est. Nullam elementum sagittis velit eu ultrices. Curabitur metus justo, pellentesque in velit ut, accumsan mattis metus. Fusce dignissim posuere accumsan. Etiam fringilla ante mi, eget congue tellus faucibus sit amet. Phasellus non laoreet diam, id rhoncus mauris. Morbi at cursus quam. Fusce cursus tellus id lectus tempus, nec facilisis lectus scelerisque. Donec sed arcu hendrerit lorem accumsan dapibus et eget neque. Duis rutrum tellus libero, ultricies vestibulum neque imperdiet porttitor. Donec tincidunt vitae quam ultricies malesuada. Etiam pharetra dolor ac velit egestas rutrum. Praesent molestie dictum nunc, non vestibulum dui congue quis. Proin sit amet magna neque. Sed lobortis velit in neque commodo, in molestie nulla interdum. Phasellus feugiat turpis odio, ac ornare est sodales vitae. Ut erat ante, tincidunt vitae lacus at, viverra iaculis quam. Donec est tortor, interdum non risus id, congue scelerisque eros. Mauris ultrices ullamcorper dapibus. Cras id tempor quam. Praesent auctor congue leo.
-
+Test
 
 ```{=tex}
 \newpage
@@ -34,17 +33,10 @@ knitr::opts_chunk$set(
 
 
 ```{r}
-#| echo: true
-
-
-getwd()
-```
-
-```{r}
 #| echo: false
 #| results: "asis"
 #| label: introduction
-#
+
 intro <- knitr::knit_child(here::here("scripts/1_introduction.qmd"), quiet = TRUE)
 cat(intro, sep = "\n")
 ```
@@ -54,7 +46,7 @@ cat(intro, sep = "\n")
 #| results: "asis"
 #| label: methods
 
-method <- knitr::knit_child(here::here("scripts/2_methods.qmd"), quiet = TRUE, envir)
+method <- knitr::knit_child(here::here("scripts/2_methods.qmd"), quiet = TRUE)
 cat(method, sep = "\n")
 ```
 
@@ -93,3 +85,19 @@ cat(references, sep = "\n")
 appendix <- knitr::knit_child(here::here("scripts/6_appendix.qmd"), quiet = TRUE)
 cat(appendix, sep = "\n")
 ```
+
+# Eidesstattliche Erklärung {.unlisted .unnumbered}
+
+\thispagestyle{empty}
+
+Hiermit versichere ich, dass ich diese Abschlussarbeit selbständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe.
+Alle Stellen der Arbeit, die wortwörtlich oder sinngemäß aus anderen Quellen übernommen wurden, wurden als solche kenntlich gemacht.
+Die Arbeit hat in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegen und ist nicht veröffentlicht.
+Sie wurde nicht, auch nicht auszugsweise, für eine andere Prüfungs- oder Studienleistung verwendet.
+
+\vspace*{15mm}
+\noindent\makebox[3in]{\hrulefill}
+
+\noindent Jan Luca Schnatz
+
+\noindent Darmstadt, den r format(Sys.time(), '%d. %B %Y')

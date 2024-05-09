@@ -12,7 +12,7 @@ pacman::p_load(tidyverse, insight, here, knitr, kableExtra, glue)
 
 # Method
 
-## The SPEEC Method
+## Comprehensive Methodological Description of SPEEC
 
 <!-- Finished this section! -->
 
