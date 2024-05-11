@@ -96,7 +96,6 @@ df_lims |>
 
 ## Appendix E: Regression Tables of Confirmatory Analyses
 
-
 ```{r h1_table}
 #| results: asis
 
@@ -113,13 +112,58 @@ cat(table_h2, sep = "\n")
 
 ```
 
+
+```{r assumptions_h3}
+
+library(glue)
+library(insight)
+h3_levene <- read_rds(here("data/src/asmpt_levene_h3.rds"))
+
+fmt_h3_levene <- with(h3_levene, glue("$F$ = {format_value(statistic, digits = 3)}, $df_1$ = {df1}, $df_2$ = {df2}, {format_p(p, name = '$p$')}"))
+```
+
+
+**Testing the Assumptions of the t-test within the TOST procedure**:
+
+The homogeneity of variance assumption between the two population means was assessed using a Levene test [@levene_robust_1960]. The outcome was non-significant, indicating a failure to reject the null hypothesis of equal variances (`r fmt_h3_levene`). Subsequently, the assumption of normality was examined both inferentially and visually through the Shapiro-Wilk test [@shapiro_analysis_1965] and quantile-quantile plots, respectively. The inferential outcomes of the Shapiro test revealed deviations from normality for both distributions (see Table XXX). This finding was supported by the quantile-quantile plot depicted in Figure @fig-qqplot, where the empirical quantiles did not align with the theoretical quantiles expected under a normal distribution. This was especially the case for the lower and upper quantiles of the empirical distribution.
+
+```{r}
+#| results: asis
+
+
+table_shapiro_h3 <- read_tex(here("tables/table_shapiro_h3.tex"))
+cat(table_shapiro_h3, sep = "\n")
+```
+
+
+```{r qq-plot}
+#| out-width: 100%
+#| echo: false
+#| fig-cap-location: top
+#| fig-cap: QQ-Plot assessing the Normality Assumption for Hypothesis 3
+#| fig-pos: H
+#| label: fig-qqplot
+#| fig-align: center
+
+knitr::include_graphics(here("figures/h3_qqplot.png"))
+
+```
+
+
 ```{r h3_table}
 #| results: asis
 
 table_h3 <- read_tex(here("tables/table_h3.tex"))
 cat(table_h3, sep = "\n")
 
+table_h3_wilcox <- read_tex(here("tables/table_wilcox_h3.tex"))
+cat(table_h3_wilcox, sep = "\n")
+
+
+
 ```
+
+
 
 ```{r h4_table}
 #| results: asis
@@ -128,3 +172,4 @@ table_h4 <- read_tex(here("tables/table_h4.tex"))
 cat(table_h4, sep = "\n")
 
 ```
+
