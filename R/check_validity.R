@@ -12,7 +12,9 @@ pacman::p_load(
   # Latex Math Expression
   latex2exp,
   # Visualization
-  sjPlot, ggh4x, scales, paletteer, patchwork
+  sjPlot, ggh4x, scales, paletteer, patchwork,
+  # RMA
+  metafor
 )
 # Source custom functions
 source(here("R/functions.R"))
@@ -55,6 +57,20 @@ ml_optim2 <- data_meta |>
 # k primary studies
 data_k <- summarise(data_meta, k = n(), .by = id_meta)
 
+# estimate heterogeneity
+model_data <- data_meta |>
+  mutate(nsplit = map(n, ~if(.x %% 2 == 0) list(n1 = .x/2, n2 = .x/2) else list(n1 = floor(.x/2), n2 = ceiling(.x/2)))) |>
+  unnest_wider(nsplit) |>
+  mutate(vi = (((n1+n2)/(n1*n2))+(d^2/(2*(n1+n2))))) |>
+  select(id_meta, yi = d, vi) |>
+  group_nest(id_meta) |>
+  mutate(rma_mod = map(data, ~rma(yi, vi, data = .x, method = "DL"))) |>
+  mutate(glance_rma = map(rma_mod, broom::glance)) |>
+  select(id_meta, glance_rma) |>
+  unnest_wider(glance_rma) |>
+  select(id_meta, tau2 = tau.squared) |>
+  mutate(tau = sqrt(tau2), .keep = "unused")
+
 # Join Data
 data_ml_speec <- reduce(list(data_k, ml_optim1, ml_optim2, data_optim), inner_join, by = "id_meta")  |> 
   select(-c(runtime, bestval)) |>
@@ -65,17 +81,19 @@ data_ml_speec <- reduce(list(data_k, ml_optim1, ml_optim2, data_optim), inner_jo
     delta_mu_n = mu_n - ml_mu_n
   ) |>
   # Calculate absolute differences
-  mutate(across(starts_with("delta"), abs, .names = "abs_{.col}"))
+  mutate(across(starts_with("delta"), abs, .names = "abs_{.col}")) |>
+  inner_join(model_data, join_by(id_meta)) 
 
 # Correlation Data
 cor_data <- data_ml_speec |>
   filter(id_meta %in% id_mr) |>
-  select(starts_with("abs_delta"), w_pbs, k) |>
+  select(starts_with("abs_delta"), w_pbs, k, tau) |>
   rename_with(~ c(
     "\\Delta_{\\mu_d}", "\\Delta_{\\sigma^2_d}",
     "\\Delta_{\\phi_n}", "\\Delta_{\\mu_n}",
     "\\omega_{\\text{PBS}}",
-    "k"
+    "k",
+    "\\tau"
   )) |>
   rename_with(.cols = contains("Delta"), ~str_c("\\lvert", .x, "\\rvert")) |>
   rename_with(~glue("${.x}$")) |>
@@ -96,10 +114,10 @@ p_star <- matrix(
     as.vector(cor_data$p) < 0.01 ~ "**",
     as.vector(cor_data$p) < 0.05 ~ "*",
     TRUE ~ ""
-    ), nrow = 6, ncol = 6
+    ), nrow = 7, ncol = 7
   )
 
-cor_data_format <- matrix(paste0(round(cor_data$r, 2), p_star,  " [", round(lb_cor, 2), ", ", round(ub_cor, 2), "]"), 6, 6) |> 
+cor_data_format <- matrix(paste0(round(cor_data$r, 2), p_star,  " [", round(lb_cor, 2), ", ", round(ub_cor, 2), "]"), 7, 7) |> 
   as_cordf() |> 
   shave(upper = TRUE) |> 
   fashion()  
@@ -122,15 +140,54 @@ cor_table <- nice_table(
   general_fn = general,
   symbol_fn = c("Significance *** $p$ < .001; ** $p$ < .01; * $p$ < .05")
 ) |>
-  kableExtra::kable_styling(font_size = 10) |>
-  kableExtra::column_spec(column = 1, width = "1.3cm") |>
-  kableExtra::column_spec(column = 2:3, width = "3.5cm") |>
-  kableExtra::column_spec(column = 4:5, width = "2.75cm") |>
-  kableExtra::column_spec(column = 6, width = "2.2cm") 
+  kableExtra::kable_styling(font_size = 9) 
+  #kableExtra::column_spec(column = 1, width = "1.3cm") |>
+  #kableExtra::column_spec(column = 2:3, width = "3.5cm") |>
+  #kableExtra::column_spec(column = 4:5, width = "2.75cm") |>
+ # kableExtra::column_spec(column = 6, width = "2.2cm") 
 
 
 cat(cor_table, file = here("tables/table_diagnostic_cormat.tex"))
 
+library(kableExtra)
+
+data_table <- data_ml_speec |>
+  filter(id_meta %in% id_mr) |>
+  select(tau, w_pbs, k, starts_with("abs_delta")) |>
+  psych::corr.test(adjust = "BH", ci = TRUE, minlength = 50) |>
+  pluck("ci") |>
+  rownames_to_column("comparison") |>
+  as_tibble() |>
+  mutate(comparison = str_replace(comparison, "abs_delta_mu_d", "$\\\\lvert \\\\Delta_{\\\\mu_d} \\\\rvert$")) |>
+  mutate(comparison = str_replace(comparison, "abs_delta_sigma2_d", "$\\\\lvert \\\\Delta_{\\\\sigma^2_d} \\\\rvert$")) |>
+  mutate(comparison = str_replace(comparison, "abs_delta_mu_n", "$\\\\lvert \\\\Delta_{\\\\mu_n} \\\\rvert$")) |>
+  mutate(comparison = str_replace(comparison, "abs_delta_phi_n", "$\\\\lvert \\\\Delta_{\\\\phi_n} \\\\rvert$")) |>
+  mutate(comparison = str_replace(comparison, "w_pbs", "$\\\\omega_{\\\\text{PBS}}$")) |>
+  mutate(comparison = str_replace(comparison, "tau", "$\\\\tau$")) |>
+  mutate(comparison = str_replace(comparison, "-", " - ")) |>
+  mutate(p_adj = p.adjust(p, "BH")) |>
+  mutate(ci = glue("[{format_value(lower)}, {format_value(upper)}]")) |>
+  mutate(r = format_value(r, digits = 3)) |>
+  mutate(fmt_p = str_remove(format_p(p, digits = "apa", whitespace = FALSE, name = NULL), "^0")) |>
+  mutate(p_adj = str_remove(format_p(p_adj, digits = "apa", whitespace = FALSE, name = NULL), "^0")) |>
+  select(comparison, r, ci, p, fmt_p, p_adj)
+
+
+caption_descr <- "Descriptive Statistics of the Discrepancy in the Distributional Parameter Estimates between SPEEC and MLE"
+
+table_diagnostics <- data_table |>
+  mutate(r = cell_spec(r, bold = if_else(p < .05, TRUE, FALSE), format = "latex")) |>
+  select(-p) |>
+  nice_table(
+    x = _,
+    col_names = c("Comparison", "Pearson $r$", "95\\% CI", "$p$", "$p_{adj}$"), 
+    caption = caption_descr,
+    general_fn = "test"
+    ) |>
+  kable_styling(font_size = 12) 
+
+cat(table_diagnostics, file = here("tables/table_diagnostic_cormat.tex"))
+  
 # Desriptives Statistics: Quartile of the parameter estiamtes ————————————————————————————————————————————————————————————————————————————————————————————————————
 
 caption_descr <- "Descriptive Statistics of the Discrepancy in the Distributional Parameter Estimates between SPEEC and MLE"
@@ -148,8 +205,6 @@ table_descr_discr <- data_ml_speec |>
   )) |>
   nice_table(caption = caption_descr, col_names = c("Parameter", paste0("$Q_", 0:4, "$")), digits = 2)
 
-#cat(table_descr_discr, file = here("tables/table_descr_discrepancy_ml_speec.tex"))
-
 data_ml_speec |> 
   select(starts_with("delta")) |>
   pivot_longer(cols = everything(), names_to = "parameter") |>
@@ -165,40 +220,6 @@ data_ml_speec |>
 # Pairwise comparison plots: ML vs SPEEC
 
 minor_breaks <- rep(1:9, 21)*(10^rep(-10:10, each=9))
-
-plot_comparison <- function(data, x, y, color, scales) {
-  enquo_x <- rlang::enquo(x)
-  enquo_y <- rlang::enquo(y)
-  enquo_color <- rlang::enquo(color)
-  data |>
-    filter(id_meta %in% id_mr) |>
-    ggplot(aes(!!enquo_x, !!enquo_y)) +
-    geom_point(
-      aes(color = !!enquo_color),
-      size = 2.5,
-      alpha = .6
-    ) +
-    scale_y_continuous(
-      name = scales$y$name,
-      limits = scales$y$limits,
-      breaks = scales$y$breaks,
-      expand = expansion()
-    ) +
-    scale_x_continuous(
-      name = scales$x$name,
-      limits = scales$x$limits,
-      breaks = scales$x$breaks,
-      expand = expansion()
-    ) +
-    coord_equal() +
-    scale_colour_paletteer_c(
-    name = scales$color$name,
-    palette = "pals::kovesi.linear_bmy_10_95_c78",
-    limits = scales$color$limits,
-    breaks = scales$color$breaks
-    ) +
-    theme_comparison()
-}
 
 # mu_n
 p_mu_n <- data_ml_speec |>
