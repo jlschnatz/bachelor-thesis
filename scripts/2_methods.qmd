@@ -6,8 +6,8 @@ bibliography: ../bibliography/tidy_references.bib
 
 ```{r}
 #| echo: false
-source("R/functions.R")
 pacman::p_load(tidyverse, insight, here, knitr, kableExtra, glue)
+source(here("R/functions.R"))
 ```
 
 # Method
@@ -68,13 +68,21 @@ $$
 d_1, \,d_2, \,\ldots, \,d_k \quad \text{where} \quad D \stackrel{}{\sim} \mathcal{N}(\mu_d, \gamma_i\cdot\sigma_d^2) \quad \text{for} \quad i = 1, \ldots, k.
 $$ {#eq-norm-dist}
 
-Using this definition for the marginal distribution of effect size, the SPEEC method assumes a fixed effects meta-analytical model, where the only source of variation in effect size is explained by measurement error. However, it is worth noting that the publication bias simulation model of the SPEEC method could be further extended to account for effect size heterogeneity. This could involve including an additional heterogeneity parameter $\tau^2$ in the simulation framework to account for additional variability bayond sampling error.
+$$
+\begin{gathered}
+d_i = \mu_d + \epsilon_i \\
+\epsilon_1, \epsilon_2 \dots \epsilon_k \quad \text{where} \quad \epsilon \sim \mathcal{N}(0, \sigma_{\epsilon_i}^2)
+\end{gathered}
+$$
+
+
+Using this definition for the marginal distribution of effect size, the SPEEC method assumes a fixed effects meta-analytical model, where the only source of variation in effect size is explained by measurement error. However, it is worth noting that the publication bias simulation model of the SPEEC method could be further extended to account for effect size heterogeneity. This could involve including an additional heterogeneity parameter $\tau^2$ in the simulation framework to account for additional variability beyond sampling error.
 
 Conditional on the marginal distributions, $k$ individual studies are sampled from the joint distribution of effect size and sample size. The selection of $k$ is user-defined, however, the larger the number of samples $k$, the lower the uncertainty of the joint distribution of effect size and sample size. In general, there is a trade-off between the increased computational cost and the reduced uncertainty of the joint distribution for increasing values of $k$. We opted for $k=10^4$ samples for each simulation iteration for the analyses of the hypotheses.
 
 ### Application of Publication Bias
 
-<<!- Nochmal drüber schauen nach Einleitung -->
+<!-- Nochmal drüber schauen nach Einleitung -->
 
 Following the simulation step of sampling $k$ studies from the joint distribution of effect size and sample size, the subsequent stage involves the application of publication bias to the samples studies. As previously discussed, publication bias is operationalized in terms of the likelihood of a study being published conditional on the statistical significance of its results. Statistical significance in traditional null hypothesis significance testing (NHST) contexts is commonly determined using *p*-values, employing a dichotomous decision rule with conventional type I erro-rates set as cut-off values [@andrade_p_2019; @mcshane_abandon_2019]. Translated to this simulation setting, two-tailed *p*-values for each individual study *i* can be calculated from the corresponding effect size $d_i$ and sample size $n_i$. To implement this, it is assumed that the individual studies $i$ originate from a balanced sample size design. That is, when the total sample size $n_i$ is even, the between-subject group sample sizes $n_{1i}$ and $n_{2i}$ are defined as $n_i/2$. Otherwise, when the total sample size $n_i$ is odd, the group sample sizes are determined as the ceilinged $\lceil n_i/2 \rceil$ and floored $\lfloor n_i/2 \rfloor$ values, respectively. Subsequently, the *p*-value $p_i$ of each simulated study can be derived from its corresponding *t*-value 
 
@@ -170,7 +178,7 @@ r_ver <- glue("{version$major}.{version$minor} {version$nickname}")
 
 ```
 
-The confiromatory statistical analyses were preregistered and were performed using the R programming language [version `r r_ver`, @r_core_team_r_2023]. Any supplementary analyses not preregistered are explicitly labeled as such. All data and analysis scripts are made available for this thesis (see section [Appendix B: Research Transparency Statement](Appendix B: Research Transparency Statement))
+The confiromatory statistical analyses were preregistered and were performed using the R programming language [version `r r_ver`, @r_core_team_r_2023]. Any supplementary analyses not preregistered and deviations of the preregistered confirmatry analyses are explicitly labeled as such. All data and analysis scripts are made available for this thesis (see section [Appendix B: Research Transparency Statement](Appendix B: Research Transparency Statement)).
 
 Regarding the hypotheses, in which the publication bias parameter $\pbs$ was the dependent variable ($\hypothesis{i}{}$, $\hypothesis{ii}{}$, $\hypothesis{iv}{}$), beta regression as implemented in the *betareg* package [@zeileis_betareg_2021] was used to analyse the data. This choice was motivated by the restriction of the parameter space for the publication bias to the standard unit interval, whereby non-normality, skewness and heteroscedasticity can anticipated [@cribari-neto_beta_2010; @smithson_better_2006]. Beta regression is recognized for its adaptability in handling such deviations. Because the optimization approach permits $\widehat{\omega}_{\text{PBS}}$ values within the range $0 \leq \widehat{\omega}_{\text{PBS}} \leq 1$ in principle, and the beta-regression model assumes that $0 < \widehat{\omega}_{\text{PBS}} < 1$, a common transformation proposed by @smithson_better_2006 was employed. This transfoormation, denoted as  $\pbs^\prime=\frac{\pbs \cdot(n-1)+0.5}{n}$, subtly adjusts the bounds to sligthly narrow the range between zero and one. We used a logit link for the mean parameter $\mu$ and a identity link for the dispersion paramater that was fixed such that the beta regression model can be described as
  
@@ -184,7 +192,8 @@ $$ {#eq-beta-reg}
 
 The independent variables for these three hypotheses were as follows: regarding $\hypothesis{i}{}$, the independent variable was the Fisher *z*-transformed correlation coefficient of the correlation between effect size and sample size, where the transformation is defined as $z_r=\tanh^{-1}(r)$. The independent variable for $\hypothesis{ii}{}$, was the difference $\Delta_{\widehat{\mu}_d}$ between the average effect size estimate of each meta-analysis and the mean parameter of the Gaussian effect size distribution estimated with SPEEC. Lastly, the independent variable for $\hypothesis{iv}{}$, was a binary indicator specifying the research synthesis type (traditional meta-analysis or registered replication report), with registered replication reports set as the reference level for regression. The coefficients from the beta-regressions for these hypotheses were estimated using Maximum Likelihood estimation with the BFGS optimizer.
 
-Hypothesis $\hypothesis{iii}{}$ was aimed at comparing the estimated means of the Gaussian effect size distribution to the average effect sizes. This comparison aimed to assess whether the presence of effects in mean differences $\Delta_{\widehat{\mu}_d}$ deemed large enough to be considered meaningful, according to specified equivalence bounds $\Delta_{EQ}$, can be rejected [@lakens_improving_2020]. For this, we conducted an equivalence test using the Two One-Sided Tests procedure [@schuirmann_comparison_1987] as implemented in the *TOSTER* R package [@lakens_toster_2023]. We employed Welch´s two-sample *t*-tests for dependent samples with corrected degrees of freedom as the Welch's *t*-test generally offers better control of type I error rates when the samples are heteroscedastic, while maintaining robustness compared to Student's *t*-test when test assumptions are satisfied [@delacre_why_2017]. Furthermore, the choice of a dependent samples test was necessitated by the dependence between the pairs of samples originating from the same underlying data. The equivalence bounds $\Delta_{EQ}$ against which the data was tested were defined by the smallest effect size of interest.
+Hypothesis $\hypothesis{iii}{}$ was formulated to comparing the estimated means of the Gaussian effect size distribution to the average effect sizes. This comparison aimed at assessing whether the presence of effects in mean differences $\Delta_{\widehat{\mu}_d}$ deemed large enough to be considered meaningful, according to specified equivalence bounds $\Delta_{EQ}$, can be rejected [@lakens_improving_2020]. For this purpose, an equivalence test using the Two One-Sided Tests procedure [@schuirmann_comparison_1987] was conducted as implemented in the *TOSTER* R package [@lakens_toster_2023]. This involves conducting two one-tailed tests against the upper and lower equivalence bounds, both of which must yield significant results to claim statistical equivalence within the equivalence range $\Delta_{EQ}$. The preregistration specified that the *means* for both variables would compared for the TOST procedure, implying a Student *t*-test for dependent samples. However, upon analysis of the assumptions for the Student *t*-test, it was found that normality assumption was violated for both distributions. In general, parametric tests like the Student t-test are generally robust to violations of the normality assumption [@boneau_effects_1960; @knief_violating_2021], so we proceeded as preregistered. However, to assess the robustness of the findings, we also conducted sensitivity analyses using the nonparametric Wilcoxon signed-rank test as part of the TOST procedure (see Appendix XXX). Furthermore, the choice of a dependent samples test was necessitated by the dependence between the pairs of samples originating from the same underlying data. To obtain additional information about the magnitude of equivalence, calculation of effect size measures is beneficial (not preregistered analyses). However, traditional effect sizes metrics, such as Cohen´s *d* prove to be inadequate within equivalence testing as they don´t consider the equivalence range. Hence, the Proportional Distance $PD$, explicitely designed for equivalence testing, was utilized as an effect size metric [see @martinez_gutierrez_effect_2023]. The $PD$ quantifies the proportional distance from the observed effect ($\Delta_{\widehat{\mu}_d}$) to the bound of the equivalence range that is the same sign as the observed effect. 
+
 
 ## Smallest Effect Size of Interest
 
