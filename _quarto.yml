@@ -1,12 +1,13 @@
 project:
   output-dir: "manuscript"
-  execute-dir: project
+  execute-dir: file
   render: 
     - scripts/0_main.qmd
 execute: 
-  cache: true
+  #cache: true
   echo: false
   warning: false
+  
 format: 
   pdf:
     # titlepage
@@ -51,7 +52,7 @@ format:
     #margin-right: 2.5cm
     #margin-top: 2.5cm
     #margin-bottom: 2cm
-    cite-method: biblatex
+    cite-method: citeproc
     link-citation: true
     engine: knitr
     zotero: true
