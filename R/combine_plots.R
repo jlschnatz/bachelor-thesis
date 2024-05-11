@@ -1,6 +1,5 @@
 #!/usr/bin/env Rscript
 
-
 # Install, load packages & functions ———————————————————————————————————————————————————————————————————————————————————       
 if(!"pacman" %in% installed.packages()) install.packages("pacman")
 pacman::p_load(sysfonts, showtext, here, tidyverse, fs, patchwork, grid, gridtext)
@@ -16,5 +15,5 @@ plots <- (reduce(map(file_paths, read_rds), `+`) + plot_annotation(tag_levels = 
 
 ggsave(
   filename = here("figures/hypotheses_multipanel.png"),
-  plot = plots, width = 9, height = 6.5, dpi = 1000
+  plot = plots, width = 9.5, height = 6.5, dpi = 1000
   )

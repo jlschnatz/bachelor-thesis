@@ -37,7 +37,13 @@ mod_h1 <- betareg(
   control = betareg.control(method = "BFGS", trace = TRUE)
   ) 
 
-std_mod_h1 <- standardise(mod_h1)
+data.frame(epsilon = residuals(mod_h1, type = "sweighted2"), yhat = predict(mod_h1, type = "link")) |>
+  ggplot(aes(yhat, epsilon)) +
+  geom_point() +
+  geom_hline(yintercept = 0) -> ptest 
+
+ggsave(plot = ptest, filename = "test.pdf")
+
 
 summary(mod_h1)
 summary(std_mod_h1)

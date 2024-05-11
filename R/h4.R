@@ -41,8 +41,14 @@ mod_h4 <- betareg(
 summary(mod_h4)
 write_rds(mod_h4, here("data/src/model_h4.rds"))
 
+# get quantiles of data by group
+summarise(data_model, fivenum2(w_pbs), .by = type_synthesis)
+
+
 # Plot model predictions ————————————————————————————————————————————————————————————————————————————————————————————————————
 set.seed(42)
+
+
 p <- avg_predictions(mod_h4, by = "type_synthesis") |> 
   as_tibble() |> 
   ggplot(aes(type_synthesis, estimate, color = type_synthesis)) +
@@ -80,6 +86,7 @@ p <- avg_predictions(mod_h4, by = "type_synthesis") |>
     expand = expansion()
   ) +
   xlab(NULL) +
+  scale_x_discrete(labels = c("Traditional\nMeta-Analyses", "Registered\nReplication Reports")) +
   coord_cartesian(clip = "off") +
   guides(color = "none", fill = "none") +
   scale_fill_manual(
