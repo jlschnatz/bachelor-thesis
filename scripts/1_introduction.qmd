@@ -2,8 +2,6 @@
 bibliography: ../bibliography/tidy_references.bib
 ---
 
-\newpage
-
 - Cooper et al (1019): Only through the formal modes, however, can scientists achieve their true goal, which is recognition for claims of new knowledge in a cumulative enterprise.
 - Science perceived as a cumulative enterprise -> overarching goal of robust knowledge about phenoma [@kitcher_advancement_1993], maybe don´t include
 - Research often study the same phenomena -> idea of meta-analysis: generalizing and synthesising findings from individual studies contributes the the cumulative advancement of knowledge

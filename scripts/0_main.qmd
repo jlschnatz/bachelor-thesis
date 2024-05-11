@@ -13,8 +13,11 @@ Test
 
 ```{=tex}
 \newpage
+\begingroup
+\setstretch{1.25}
 \pagenumbering{arabic}
 \tableofcontents
+\endgroup
 \newpage
 ```
 
@@ -26,27 +29,32 @@ Test
 knitr::opts_chunk$set(
   echo = FALSE,
   results = "asis",
-  fig.align = "center"
+  fig.align = "center",
+  message = FALSE
 )
+
+library(here)
 
 ```
 
+# Introduction
 
 ```{r}
 #| echo: false
 #| results: "asis"
 #| label: introduction
 
-intro <- knitr::knit_child(here::here("scripts/1_introduction.qmd"), quiet = TRUE)
+intro <- knitr::knit_child(here("scripts/1_introduction.qmd"), quiet = TRUE)
 cat(intro, sep = "\n")
 ```
+
 
 ```{r}
 #| echo: false
 #| results: "asis"
 #| label: methods
 
-method <- knitr::knit_child(here::here("scripts/2_methods.qmd"), quiet = TRUE)
+method <- knitr::knit_child(here("scripts/2_methods.qmd"), quiet = TRUE)
 cat(method, sep = "\n")
 ```
 
@@ -55,7 +63,7 @@ cat(method, sep = "\n")
 #| results: "asis"
 #| label: results
 
-results <- knitr::knit_child(here::here("scripts/3_results.qmd"), quiet = TRUE)
+results <- knitr::knit_child(here("scripts/3_results.qmd"), quiet = TRUE)#
 cat(results, sep = "\n")
 ```
 
@@ -64,7 +72,7 @@ cat(results, sep = "\n")
 #| results: "asis"
 #| label: discussion
 
-discussion <- knitr::knit_child(here::here("scripts/4_discussion.qmd"), quiet = TRUE)
+discussion <- knitr::knit_child(here("scripts/4_discussion.qmd"), quiet = TRUE)
 cat(discussion, sep = "\n")
 ```
 
@@ -73,7 +81,7 @@ cat(discussion, sep = "\n")
 #| results: "asis"
 #| label: references
 
-references <- knitr::knit_child(here::here("scripts/5_references.qmd"), quiet = TRUE)
+references <- knitr::knit_child(here("scripts/5_references.qmd"), quiet = TRUE)
 cat(references, sep = "\n")
 ```
 
@@ -82,11 +90,18 @@ cat(references, sep = "\n")
 #| results: "asis"
 #| label: appendix
 
-appendix <- knitr::knit_child(here::here("scripts/6_appendix.qmd"), quiet = TRUE)
+appendix <- knitr::knit_child(here("scripts/6_appendix.qmd"), quiet = TRUE)
 cat(appendix, sep = "\n")
 ```
 
 # Eidesstattliche Erklärung {.unlisted .unnumbered}
+
+```{r declaration}
+
+library(withr)
+today <- with_locale(new = c("LC_TIME" = "de_DE"), format(Sys.Date(), "%d. %B %Y"))
+
+```
 
 \thispagestyle{empty}
 
@@ -100,4 +115,4 @@ Sie wurde nicht, auch nicht auszugsweise, für eine andere Prüfungs- oder Studi
 
 \noindent Jan Luca Schnatz
 
-\noindent Darmstadt, den r format(Sys.time(), '%d. %B %Y')
+\noindent Darmstadt, den `r today`

@@ -2,9 +2,6 @@
 bibliography: ../bibliography/tidy_references.bib
 ---
 
-\newpage
-
-# Introduction
 
 <!--# Epistemological Intro -->
 
