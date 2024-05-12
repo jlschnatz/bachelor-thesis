@@ -2,7 +2,6 @@
 bibliography: ../bibliography/tidy_references.bib
 ---
 
-\newpage
 
 ```{r}
 #| echo: false
