@@ -2,9 +2,13 @@
 bibliography: ../bibliography/tidy_references.bib
 ---
 
+<!-- General introduction-->
+
 Science is commonly conceived as a cumulative endeavour with the overarching goal of establishing robust knowledge about the world upon which the future of scientific inquiry may be constructed [@curran_seemingly_2009]. As part of this endeavor, the idea of *meta-analyses* - quantitavely synthesizing research findings examining the same phenomena - has been attributed a particularly important role in contributing to the cumulative advancement of knowledge [@schmidt_what_1992; @schmidt_statistical_1996]. However, this premise rests on the fundamental assumption, that the published research in the scientific literature is representative for all conducted research [@song_dissemination_2010; @rothstein_publication_2005]. Yet, scientists have been pointing out for over half a century that results of published studies differ systematically from those of unpublished studies [@smart_importance_1964; @sterling_publication_1959; @bozarth_signifying_1972; @bakan_test_1966]. In practice, the publication of a study often hinges on the strength or direction of its findings [@dickersin_existence_1990; @dickersin_publication_1993] and has be collectively known as *publication bias*. Especially in a publishing culture that incentivizes novelty and positive results, alongside the prevalent use of the null hypothesis significance testing (NHST) framework, it has become common practice for the nominal false positive rate to serve as a de facto criterion for publication [@nosek_scientific_2012]. As a consequence, many statistically non-significant studies end up in the "file-drawer" and never get published [@rosenthal_file_1979].
 
 ## The Impact of Publication Bias
+
+<!-- Negative consequences of publication bias -->
 
 The ramifications of publication bias are severe, culminating in an inflation of meta-analytical effect sizes [@stanley_detecting_2021; @franco_publication_2014], heightened false-positive rate [@kicinski_how_2014; @munafo_how_2010; @ioannidis_why_2005] , thus increasing the risk of errorneous conclusions that may jeopardize the validity of research [@begg_publication_1994]. Moreover, the prevalence of questionable research practices such as p-hacking [@john_measuring_2012] exacerbates the issue, as they interact with publication bias to further distort meta-analytical effect sizes [@friese_p-hacking_2020]. These ramifications become especially relevant in light of recent large-scale replication projects providing evidence for non-replicability of many psychological findings [@open_science_collaboration_estimating_2015; @klein_many_2018; @camerer_evaluating_2018; @klein_investigating_2014; @ebersole_many_2016; @ebersole_many_2020]. This underscores why publication bias identified as a major threat to replicable science [@munafo_manifesto_2017] and thus considered as a significant contributor to the replication crisis [@renkewitz_how_2019]. The myriad issues associated with publication bias and its widespread impact have fuelled a great deal of research focusing on statistical methods to detect and address publication bias.
 
@@ -24,64 +28,9 @@ The latter class of methods prominently features publication bias selection meth
 
 <!-- Limitations of these methods -->
 
-- critic small-study effects: kein explizites publiaktion bias modell (@mcshane_adjusting_2016), und sample size adjustment gedöhns, p-hacking gedöhns
+Despite the abundace of statistical methods to assess publication bias, there are some justified critizisms that have been discussed in the literature. Firstly, small study effects methods are commonly criticised for their lack of an explicit model for publication bias @mcshane_adjusting_2016, and for their only "indirect" approach as they omit the true mechanism of publication bias by being driven on effect sizes rather than *p* values [@harrer_doing_2021]. Additionally regarding these methods, it has been discussed that publication bias may is not the only source that influence the effect size sample size distribution, as researcher may plan sample sizes before performing the study according to anticipated effect sizes [@linden_publication_2024; @schafer_meaningfulness_2019], which may compromise the validity of the interpretation of such methods. More broadly, several comprehensive simulation studies have demonstrated that many existing methods have poor performance across a range of scenarios with realistic settings commonly encountered in empirical meta-analyses [@carter_correcting_2019; @van_aert_publication_2019; @renkewitz_how_2019; @mcshane_adjusting_2016]. Such factors of influence include the extent of effect size heterogeneity, the prevalence of additional p-hacking and other questionable research practices, a limited number of individual studies included in the meta-analysis, and the severity of publication bias. These factors may in turn lead to reduced statistical power, elevated false positive rates,  convergence issues, and unsatisfactory agreement among different methods.
 
-
-
-However, it has been also discussed that funnel plot assymetry captured by these methods, can not only be explained by publication bias but also other factors,
-
-important factor for me: other factors influenceing the distribution of effect size and sample size -> sample size planning
-
-
-
-performance of derzeitigen methoden sehr stark abhängig von heterogenität, ausmaß von publication bias -> so mäßig gut und übereinstimmung zwischen verschiedenen methoden auch nicht gut, power of tests low, also false positive rate of some tests pretty bad under certain conditions [@carter_correcting_2019; @van_aert_publication_2019; @renkewitz_how_2019]
-
-extensive simulation studies have shown that:
-
-- @renkewitz_how_2019: 
-  - generally, no method outperforms the other in all conditions
-  - effect size heterogeneity seems to be big problem
-  - inflated false positive rate for some methods (TIVA) 
-  - many conditions where publication bias detection fails
-  - consistently low power when publication bias is moderate
-  
-- @mcshane_adjusting_2016:
-  - Evaluation of selection models
-
-- @carter_correcting_2019:
-    - trim-and-fill and WAAP-WLS high FPR and overstimation
-    - p-curve and p-uniform performed bad under heterogenetiy (increased fpr and oversetimation)
-    - PET-PEESE and 3PSM reasonable FPR but reduced power when small sample sizes and high heterogeneity, high use of QROS or little publication bias
-    - convergence issues or couldn´t be applied due to lack of significant studies in 3PSM and p-uniform, p-curve 
-
-- @van_aert_publication_2019:
-  - also simulation part in a big meta-meta-analysis
-
-
-
-
-more flexibility in modeling of publication bias necessary, -> sample size planning, heterogeneity, p-hacking -> flexible framework verbose framework would be neat for modeling this stuff...
-
----
-
-Thema Flexibilität:
-- SPEEC Methode unterscheidet sich drastisch durch Simulationsbasierte Schätzmethodik große Flexibilität
-- Important point  framework within which specific assumptions can be changed regarding marginal distributions e.g.
-- Explicit statement of assumption of the publication bias model in the generative publication bias model
-
-- FLexible framework (maybe also include p-hacking with the paper from Moss and collogues)
-
----
-
-- Overwhelming amount of methods  but, problems: 
-    - Heterogeneity
-    - Disagreement between methods
-- Often the assumption of homogeneity of effect sizes for publication bias detection methods
-  
-Research questions:
-
-- How does publication bias influence the joint probability distribution of effect size and sample size? 
-- How can the magnitude of publication bias in meta-analyses be estimated and effect sizes under publication bias be corrected from the joint distribution of sample size and effect size?
+Considering these limitations, an explicit modeling framework to assess publication bias could therefore be valuable, with explicit assumptions within this framework that can be flexibly adapted for different scenarios. This framework should be in principle capable of modelling different factors that are relevant and have been previously discussed in the context for modeling publication bias, such as heterogeneity, sample size planning, and the potential modeling of *p*-hacking.
 
 ## The Present Study
 
