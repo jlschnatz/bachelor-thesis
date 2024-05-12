@@ -1,39 +1,39 @@
 \begin{table}[H]
 \centering\centering
-\caption{Descriptive Statistics of the Discrepancy in the Distributional Parameter Estimates between SPEEC and MLE}
+\caption{Pairwise Pearson Correlations between the Absolute Difference of the Distributional Parameters from SPEEC and ML, Publication Bias Parameter and Meta-Analysis Size}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{threeparttable}
 \fontsize{12}{14}\selectfont
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{3.2cm}>{\centering\arraybackslash}p{3.2cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{4cm}>{\centering\arraybackslash}p{4cm}>{\centering\arraybackslash}p{4cm}>{\centering\arraybackslash}p{4cm}}
 \toprule
-Comparison & Pearson $r$ & 95\% CI & $p$ & $p_{adj}$\\
+Comparison & $r$ (95\% $CI$) & $p$ & $p_{\text{adj}}$\\
 \midrule
-$\tau$ - $\omega_{\text{PBS}}$ & \textbf{-0.298} & {}[-0.52, -0.04] & .024 & .085\\
-$\tau$ - k & 0.222 & {}[-0.04, 0.46] & .097 & .292\\
-$\tau$ - $\lvert \Delta_{\mu_d} \rvert$ & \textbf{0.660} & {}[0.48, 0.79] & <.001 & <.001\\
-$\tau$ - $\lvert \Delta_{\sigma^2_d} \rvert$ & \textbf{0.510} & {}[0.29, 0.68] & <.001 & <.001\\
-$\tau$ - $\lvert \Delta_{\phi_n} \rvert$ & -0.023 & {}[-0.28, 0.24] & .863 & .906\\
+$\tau$ - $\omega_{\text{PBS}}$ & \textbf{-0.30} [-0.52, -0.04] & .024 & .085\\
+$\tau$ - k & 0.22 [-0.04, 0.46] & .097 & .292\\
+$\tau$ - $\lvert \Delta_{\mu_d} \rvert$ & \textbf{0.66} [0.48, 0.79] & <.001 & <.001\\
+$\tau$ - $\lvert \Delta_{\sigma^2_d} \rvert$ & \textbf{0.51} [0.29, 0.68] & <.001 & <.001\\
+$\tau$ - $\lvert \Delta_{\phi_n} \rvert$ & -0.02 [-0.28, 0.24] & .863 & .906\\
 \addlinespace
-$\tau$ - $\lvert \Delta_{\mu_n} \rvert$ & -0.064 & {}[-0.32, 0.20] & .635 & .883\\
-$\omega_{\text{PBS}}$ - k & -0.140 & {}[-0.39, 0.13] & .300 & .572\\
-$\omega_{\text{PBS}}$ - $\lvert \Delta_{\mu_d} \rvert$ & \textbf{-0.438} & {}[-0.63, -0.20] & <.001 & .003\\
-$\omega_{\text{PBS}}$ - $\lvert \Delta_{\sigma^2_d} \rvert$ & \textbf{-0.367} & {}[-0.57, -0.12] & .005 & .021\\
-$\omega_{\text{PBS}}$ - $\lvert \Delta_{\phi_n} \rvert$ & 0.084 & {}[-0.18, 0.34] & .533 & .883\\
+$\tau$ - $\lvert \Delta_{\mu_n} \rvert$ & -0.06 [-0.32, 0.20] & .635 & .883\\
+$\omega_{\text{PBS}}$ - k & -0.14 [-0.39, 0.13] & .300 & .572\\
+$\omega_{\text{PBS}}$ - $\lvert \Delta_{\mu_d} \rvert$ & \textbf{-0.44} [-0.63, -0.20] & <.001 & .003\\
+$\omega_{\text{PBS}}$ - $\lvert \Delta_{\sigma^2_d} \rvert$ & \textbf{-0.37} [-0.57, -0.12] & .005 & .021\\
+$\omega_{\text{PBS}}$ - $\lvert \Delta_{\phi_n} \rvert$ & 0.08 [-0.18, 0.34] & .533 & .883\\
 \addlinespace
-$\omega_{\text{PBS}}$ - $\lvert \Delta_{\mu_n} \rvert$ & 0.034 & {}[-0.23, 0.29] & .799 & .883\\
-k - $\lvert \Delta_{\mu_d} \rvert$ & 0.036 & {}[-0.23, 0.29] & .793 & .883\\
-k - $\lvert \Delta_{\sigma^2_d} \rvert$ & 0.145 & {}[-0.12, 0.39] & .280 & .572\\
-k - $\lvert \Delta_{\phi_n} \rvert$ & -0.173 & {}[-0.41, 0.09] & .199 & .523\\
-k - $\lvert \Delta_{\mu_n} \rvert$ & 0.003 & {}[-0.26, 0.26] & .983 & .983\\
+$\omega_{\text{PBS}}$ - $\lvert \Delta_{\mu_n} \rvert$ & 0.03 [-0.23, 0.29] & .799 & .883\\
+k - $\lvert \Delta_{\mu_d} \rvert$ & 0.04 [-0.23, 0.29] & .793 & .883\\
+k - $\lvert \Delta_{\sigma^2_d} \rvert$ & 0.15 [-0.12, 0.39] & .280 & .572\\
+k - $\lvert \Delta_{\phi_n} \rvert$ & -0.17 [-0.41, 0.09] & .199 & .523\\
+k - $\lvert \Delta_{\mu_n} \rvert$ & 0.00 [-0.26, 0.26] & .983 & .983\\
 \addlinespace
-$\lvert \Delta_{\mu_d} \rvert$ - $\lvert \Delta_{\sigma^2_d} \rvert$ & \textbf{0.665} & {}[0.49, 0.79] & <.001 & <.001\\
-$\lvert \Delta_{\mu_d} \rvert$ - $\lvert \Delta_{\phi_n} \rvert$ & -0.059 & {}[-0.31, 0.20] & .662 & .883\\
-$\lvert \Delta_{\mu_d} \rvert$ - $\lvert \Delta_{\mu_n} \rvert$ & 0.147 & {}[-0.12, 0.39] & .275 & .572\\
-$\lvert \Delta_{\sigma^2_d} \rvert$ - $\lvert \Delta_{\phi_n} \rvert$ & -0.048 & {}[-0.31, 0.21] & .721 & .883\\
-$\lvert \Delta_{\sigma^2_d} \rvert$ - $\lvert \Delta_{\mu_n} \rvert$ & 0.041 & {}[-0.22, 0.30] & .764 & .883\\
+$\lvert \Delta_{\mu_d} \rvert$ - $\lvert \Delta_{\sigma^2_d} \rvert$ & \textbf{0.67} [0.49, 0.79] & <.001 & <.001\\
+$\lvert \Delta_{\mu_d} \rvert$ - $\lvert \Delta_{\phi_n} \rvert$ & -0.06 [-0.31, 0.20] & .662 & .883\\
+$\lvert \Delta_{\mu_d} \rvert$ - $\lvert \Delta_{\mu_n} \rvert$ & 0.15 [-0.12, 0.39] & .275 & .572\\
+$\lvert \Delta_{\sigma^2_d} \rvert$ - $\lvert \Delta_{\phi_n} \rvert$ & -0.05 [-0.31, 0.21] & .721 & .883\\
+$\lvert \Delta_{\sigma^2_d} \rvert$ - $\lvert \Delta_{\mu_n} \rvert$ & 0.04 [-0.22, 0.30] & .764 & .883\\
 \addlinespace
-$\lvert \Delta_{\phi_n} \rvert$ - $\lvert \Delta_{\mu_n} \rvert$ & -0.049 & {}[-0.31, 0.21] & .718 & .883\\
+$\lvert \Delta_{\phi_n} \rvert$ - $\lvert \Delta_{\mu_n} \rvert$ & -0.05 [-0.31, 0.21] & .718 & .883\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}

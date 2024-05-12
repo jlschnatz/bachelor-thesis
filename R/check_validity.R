@@ -167,21 +167,22 @@ data_table <- data_ml_speec |>
   mutate(comparison = str_replace(comparison, "-", " - ")) |>
   mutate(p_adj = p.adjust(p, "BH")) |>
   mutate(ci = glue("[{format_value(lower)}, {format_value(upper)}]")) |>
-  mutate(r = format_value(r, digits = 3)) |>
+  mutate(r = format_value(r, digits = 2, zap_small = TRUE)) |>
   mutate(fmt_p = str_remove(format_p(p, digits = "apa", whitespace = FALSE, name = NULL), "^0")) |>
   mutate(p_adj = str_remove(format_p(p_adj, digits = "apa", whitespace = FALSE, name = NULL), "^0")) |>
-  select(comparison, r, ci, p, fmt_p, p_adj)
+  select(comparison, r , p, fmt_p, p_adj, ci)
 
 
-caption_descr <- "Descriptive Statistics of the Discrepancy in the Distributional Parameter Estimates between SPEEC and MLE"
+caption <- "Pairwise Pearson Correlations between the Absolute Difference of the Distributional Parameters from SPEEC and ML, Publication Bias Parameter and Meta-Analysis Size"
 
 table_diagnostics <- data_table |>
   mutate(r = cell_spec(r, bold = if_else(p < .05, TRUE, FALSE), format = "latex")) |>
-  select(-p) |>
+  mutate(r = str_c(r, ci, sep = " ")) |>
+  select(-c(p, ci)) |>
   nice_table(
     x = _,
-    col_names = c("Comparison", "Pearson $r$", "95\\% CI", "$p$", "$p_{adj}$"), 
-    caption = caption_descr,
+    col_names = c("Comparison", "$r$ (95\\% $CI$)",  "$p$", "$p_{\\text{adj}}$"), 
+    caption = caption,
     general_fn = "test"
     ) |>
   kable_styling(font_size = 12) 
