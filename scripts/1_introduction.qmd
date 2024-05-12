@@ -2,25 +2,11 @@
 bibliography: ../bibliography/tidy_references.bib
 ---
 
-- Cooper et al (1019): Only through the formal modes, however, can scientists achieve their true goal, which is recognition for claims of new knowledge in a cumulative enterprise.
-- Science perceived as a cumulative enterprise -> overarching goal of robust knowledge about phenoma [@kitcher_advancement_1993], maybe don´t include
-- Research often study the same phenomena -> idea of meta-analysis: generalizing and synthesising findings from individual studies contributes the the cumulative advancement of knowledge
-- Schmidt (1997): very important look into -> meta-analysis as a driver to foster cumulative science
-- Premise hinges on important assumption: available/published scientific literature is representative for all conduceted research [@song_dissemination_2010; @rothstein_publication_2005]
-- Contrary to this, scientists have pointed out for over half a century that results of published studies differ systematically from unpublished studies [@smart_importance_1964; @sterling_publication_1959; @bozarth_signifying_1972; @bakan_test_1966]
-- Introduction of publication bias -> publication of a study often hinges of the strength or direction of its findings [@dickersin_existence_1990; @dickersin_publication_1993] 
-- Especially in currently still present publishing culrture that prioritizes novelty and positive results  [@nosek_scientific_2012] --> many statistically non-significant studies end up in the "file-drawer" and never get published [@rosenthal_file_1979]
+Science is commonly conceived as a cumulative endeavour with the overarching goal of establishing robust knowledge about the world upon which the future of scientific inquiry may be constructed [@curran_seemingly_2009]. As part of this endeavor, the idea of *meta-analyses* - quantitavely synthesizing research findings examining the same phenomena - has been attributed a particularly important role in contributing to the cumulative advancement of knowledge [@schmidt_what_1992; @schmidt_statistical_1996]. However, this premise rests on the fundamental assumption, that the published research in the scientific literature is representative for all conducted research [@song_dissemination_2010; @rothstein_publication_2005]. Yet, scientists have been pointing out for over half a century that results of published studies differ systematically from those of unpublished studies [@smart_importance_1964; @sterling_publication_1959; @bozarth_signifying_1972; @bakan_test_1966]. In practice, the publication of a study often hinges on the strength or direction of its findings [@dickersin_existence_1990; @dickersin_publication_1993] and has be collectively known as *publication bias*. Especially in a publishing culture that incentivizes novelty and positive results, alongside the prevalent use of the null hypothesis significance testing (NHST) framework, it has become common practice for the nominal false positive rate to serve as a de facto criterion for publication [@nosek_scientific_2012]. As a consequence, many statistically non-significant studies end up in the "file-drawer" and never get published [@rosenthal_file_1979].
 
----
+The ramifications of publication bias are severe, culminating in an inflation of meta-analytical effect sizes [@stanley_detecting_2021; @franco_publication_2014], heightened false-positive rate [@kicinski_how_2014; @munafo_how_2010; @ioannidis_why_2005] , thus increasing the risk of errorneoäus conclusions that may jeopardize the validity of research [@begg_publication_1994]. Moreover, the prevalence of questionable research practices such as p-hacking [@john_measuring_2012] exacerbates the issue, as they interact with publication bias to further distort meta-analytical effect sizes [@friese_p-hacking_2020]. These ramifications become especially relevant in light of recent large-scale replication projects providing evidence for non-replicability of many psychological findings [@open_science_collaboration_estimating_2015; @klein_many_2018; @camerer_evaluating_2018; @klein_investigating_2014; @ebersole_many_2016; @ebersole_many_2020]. This underscores why publication bias identified as a major threat to replicable science [@munafo_manifesto_2017] and thus considered as a significant contributor to the replication crisis [@renkewitz_how_2019]. Given the myriad of issues associated with publication bias and its widespread impact, it is not unsurprising that there has been considerable attention directed towards investigating methodologies to detect and correct the negative impact of publication bias.
 
-- Ramifications of publication bias are severe, culminating in 
-  - meta-analytical effect sizes [@stanley_detecting_2021; @franco_publication_2014] 
-  - heightened false-positive rate/risk [@kicinski_how_2014; @munafo_how_2010; @ioannidis_why_2005] 
-  - increasing the risk of erroneous conclusions that may jeopardize the validity of research [@begg_publication_1994]
-  - publication bias especially a major concern in the context of meta-analyses which are widely aknowledged as paramount method for objectively        appraising and synthesizing evidence across diverse fields [@rothstein_publication_2005]
-- These ramifications become especially relevant in the light of recent large-scale replication projects providing evidence for non-replicability of many psychological findings [@open_science_collaboration_estimating_2015; @klein_many_2018; @camerer_evaluating_2018; @klein_investigating_2014; @ebersole_many_2016; @ebersole_many_2020]
-- This underscores why publication bias identified as a major threat to replicable science [@munafo_manifesto_2017] and thus a considered as a significant contributor to the replication crisis [@renkewitz_how_2019]. 
-- Given the myriad of issues associated with publication bias and its widespread impact, there has been considerable attention directed towards investigating methodologies to detect publication bias. (it is not unsurprising that ... significant attention for methods to detect publication bias and correct...)
+
 
 ---
 
@@ -40,6 +26,8 @@ Thema Flexibilität:
 - SPEEC Methode unterscheidet sich drastisch durch Simulationsbasierte Schätzmethodik große Flexibilität
 - Important point  framework within which specific assumptions can be changed regarding marginal distributions e.g.
 - Explicit statement of assumption of the publication bias model in the generative publication bias model
+
+- FLexible framework (maybe also include p-hacking with the paper from Moss and collogues)
 
 ---
 
