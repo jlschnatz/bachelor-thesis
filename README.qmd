@@ -3,6 +3,7 @@ title: "My Project"
 format: 
   gfm:
     preview-mode: raw
+    standalone: true
 ---
 
 ```{r, include = FALSE}
@@ -67,7 +68,29 @@ bash ./build_dockerfile.sh
 
 ```
 
+To build the Docker image from the created Dockerfile, run:
 
+
+```bash
+
+bash ./virtualize.sh
+
+```
+
+Now that you have build to image, you can start a container with a bash entry point to interactively explore the container and run the pipeline:
+
+```bash
+
+sudo docker run -it --rm --entrypoint bash schnatz/thesis
+
+```
+
+```{r}
+#| echo: false
+
+knitr::include_graphics(here::here("figures/dag.png"))
+
+```
 
 # License
 

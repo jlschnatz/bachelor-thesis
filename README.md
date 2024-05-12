@@ -53,6 +53,7 @@ file to compile the thesis.
     #> scripts/
     #> ├── 0_main.qmd
     #> ├── 1_intro.qmd
+    #> ├── 1_introduction.qmd
     #> ├── 2_methods.qmd
     #> ├── 3_results.qmd
     #> ├── 4_discussion.qmd
@@ -72,18 +73,30 @@ git clone https://github.com/jlschnatz/bachelor-thesis.git
 git clone git@github.com:jlschnatz/bachelor-thesis.git 
 ```
 
-You need to install Docker (Docker version 24.0.6, build ed223bc)
+Next, you need to install Docker (Docker version 24.0.6, build ed223bc).
+To build the Dockerfile for this project dynamically run:
 
-To reproduce the results of the thesis, To first build the Dockerfile
-for this project automatically run 
+``` bash
 
-```bash
-
-docker build -t thesis_project .
-
+bash ./build_dockerfile.sh 
 ```
 
-to build the Docker image.
+To build the Docker image from the created Dockerfile, run:
+
+``` bash
+
+bash ./virtualize.sh
+```
+
+Now that you have build to image, you can start a container with a bash
+entry point to interactively explore the container and run the pipeline:
+
+``` bash
+
+sudo docker run -it --rm --entrypoint bash schnatz/thesis
+```
+
+![](figures/dag.png)
 
 # License
 
