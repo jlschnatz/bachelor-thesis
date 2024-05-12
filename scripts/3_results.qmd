@@ -13,9 +13,7 @@ pacman::p_load(insight, glue, tidyverse, here, parameters, broom, betareg, perfo
 source(here("R/functions.R"))
 ```
 
-# Results
-
-## Evaluation the Assumptions for the SESOIs
+# Confirmatory Results Assessing SPEEC
 
 ```{r dispersion-w-wpbs}
 
@@ -33,8 +31,6 @@ string_phi <- glue("$\\widehat{\\phi}$ = {{m_phi$b}}, {{m_phi$ci}}, $SE$ = {{m_p
 
 As an initial step, the assumptions made to determine the Smallest Effect Sizes of Interest (SESOI) for the four hypotheses were assessed. In the simulations-based sensitivity power analyses aimed to determine the SESOIs (see the Appendix for detailed explanations), three dispersion parameter conditions $\phi:\{10, 20, 30\}$ for the distribution of the publication bias parameter $\pbs$ were simulated. Employing an intercept-only beta regression model with the complete dataset, the estimated dispersion parameter was `r string_phi`. This finding contradicts our initial assumptions regarding the dispersion parameter's magnitude, rendering the interpretation of SESOIs for our hypotheses untenable. Consequently, it is appropriate to refrain from interpreting SESOIs that were determined from the simulation-based sensitivty power analyses in the subsequent analyses.
 
-
-## Confirmatory Results of the Predictions from the Hypotheses
 
 <!-- Hypotheses I -->
 

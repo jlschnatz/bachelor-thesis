@@ -83,6 +83,7 @@ data_ml_speec <- reduce(list(data_k, ml_optim1, ml_optim2, data_optim), inner_jo
   # Calculate absolute differences
   mutate(across(starts_with("delta"), abs, .names = "abs_{.col}")) |>
   inner_join(model_data, join_by(id_meta)) 
+  
 
 # Correlation Data
 cor_data <- data_ml_speec |>

@@ -14,7 +14,7 @@ Test
 ```{=tex}
 \newpage
 \begingroup
-\setstretch{1.25}
+\setstretch{1.2}
 \pagenumbering{arabic}
 \tableofcontents
 \endgroup

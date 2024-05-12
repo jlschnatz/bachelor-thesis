@@ -4,21 +4,32 @@ bibliography: ../bibliography/tidy_references.bib
 
 Science is commonly conceived as a cumulative endeavour with the overarching goal of establishing robust knowledge about the world upon which the future of scientific inquiry may be constructed [@curran_seemingly_2009]. As part of this endeavor, the idea of *meta-analyses* - quantitavely synthesizing research findings examining the same phenomena - has been attributed a particularly important role in contributing to the cumulative advancement of knowledge [@schmidt_what_1992; @schmidt_statistical_1996]. However, this premise rests on the fundamental assumption, that the published research in the scientific literature is representative for all conducted research [@song_dissemination_2010; @rothstein_publication_2005]. Yet, scientists have been pointing out for over half a century that results of published studies differ systematically from those of unpublished studies [@smart_importance_1964; @sterling_publication_1959; @bozarth_signifying_1972; @bakan_test_1966]. In practice, the publication of a study often hinges on the strength or direction of its findings [@dickersin_existence_1990; @dickersin_publication_1993] and has be collectively known as *publication bias*. Especially in a publishing culture that incentivizes novelty and positive results, alongside the prevalent use of the null hypothesis significance testing (NHST) framework, it has become common practice for the nominal false positive rate to serve as a de facto criterion for publication [@nosek_scientific_2012]. As a consequence, many statistically non-significant studies end up in the "file-drawer" and never get published [@rosenthal_file_1979].
 
-The ramifications of publication bias are severe, culminating in an inflation of meta-analytical effect sizes [@stanley_detecting_2021; @franco_publication_2014], heightened false-positive rate [@kicinski_how_2014; @munafo_how_2010; @ioannidis_why_2005] , thus increasing the risk of errorneoäus conclusions that may jeopardize the validity of research [@begg_publication_1994]. Moreover, the prevalence of questionable research practices such as p-hacking [@john_measuring_2012] exacerbates the issue, as they interact with publication bias to further distort meta-analytical effect sizes [@friese_p-hacking_2020]. These ramifications become especially relevant in light of recent large-scale replication projects providing evidence for non-replicability of many psychological findings [@open_science_collaboration_estimating_2015; @klein_many_2018; @camerer_evaluating_2018; @klein_investigating_2014; @ebersole_many_2016; @ebersole_many_2020]. This underscores why publication bias identified as a major threat to replicable science [@munafo_manifesto_2017] and thus considered as a significant contributor to the replication crisis [@renkewitz_how_2019]. Given the myriad of issues associated with publication bias and its widespread impact, it is not unsurprising that there has been considerable attention directed towards investigating methodologies to detect and correct the negative impact of publication bias.
+## The Impact of Publication Bias
+
+The ramifications of publication bias are severe, culminating in an inflation of meta-analytical effect sizes [@stanley_detecting_2021; @franco_publication_2014], heightened false-positive rate [@kicinski_how_2014; @munafo_how_2010; @ioannidis_why_2005] , thus increasing the risk of errorneous conclusions that may jeopardize the validity of research [@begg_publication_1994]. Moreover, the prevalence of questionable research practices such as p-hacking [@john_measuring_2012] exacerbates the issue, as they interact with publication bias to further distort meta-analytical effect sizes [@friese_p-hacking_2020]. These ramifications become especially relevant in light of recent large-scale replication projects providing evidence for non-replicability of many psychological findings [@open_science_collaboration_estimating_2015; @klein_many_2018; @camerer_evaluating_2018; @klein_investigating_2014; @ebersole_many_2016; @ebersole_many_2020]. This underscores why publication bias identified as a major threat to replicable science [@munafo_manifesto_2017] and thus considered as a significant contributor to the replication crisis [@renkewitz_how_2019]. Given the myriad of issues associated with publication bias and its widespread impact, it is not unsurprising that there has been considerable attention directed towards investigating methodologies to detect and correct the negative impact of publication bias.
+
+## Methods to Assess Publication Bias and their Limitations
+
+In this regard, there has been a great amount of research on publication bias detection techniques with numerous statistical methods developed over the past 50 years [@marks-anglin_historical_2020]. These statistical techniques can generally be classified into methodologies that operate with *p*-values and methodologies that are based on the relationship between effect size and sample size [@vevea_publication_2019]. 
+
+Statistical methods of the latter rely on the idea of small study effects - a correlation between the effect size estimate and a measure of precision of the study, and include methods such as PET-PEESE [@stanley_meta-regression_2014], Egger´s regression [@egger_bias_1997], Begg´s rank correlation [@begg_operating_1994] or the most simplistic form as effect size sample size correlation [e.g., @kuhberger_publication_2014]. Small-study effects idea: under the presence of publication bias, studies with small sample sizes (low precision) require larger effect sizes to be statistiacally significant in comparison to studies with large effect sizes (high precision) leading to disproportionally less studies with low sample sizes and low effect sizes under publication bias that is captured using regression methods.
+
+However, it has been also discussed that funnel plot assymetry captured by these methods, can not only be explained by publication bias but also other factors,
+
+important factor for me: other factors influenceing the distribution of effect size and sample size -> sample size planning
+
+Other more sophisticated methods include publication bias methods zugehörig zu
+
+Also more sophisticated methods -> publication bias selection methods
+
+With regard to performance of these methods, 
+
+performance of derzeitigen methoden sehr stark abhängig von heterogenität, ausmaß von publication bias -> so mäßig gut und übereinstimmung zwischen verschiedenen methoden auch nicht gut, power of tests low, also false positive rate of some tests pretty bad under certain conditions [@carter_correcting_2019; @van_aert_publication_2019; @renkewitz_how_2019]
+
+- @renkewitz_how_2019: 
 
 
-
----
-
-- In general overwhelming amount of statistical procedures developed over the passed decades
-- Many methods rely on the relationship betweem effect size and sample size  small study effects  explain the idea of small study effects shortly
-- Effect size and sample size (or other measures of sampling bias such as SE) used for publication bias assessment
-- Idea of small study-effects N-ES als Beispiel  PET-PEESE, Egger´s Regression, Begg´s Rank correlation, etc.  N-ES correlation exemplarisch hervorheben (und deren Probleme)
-
-- Only indirect assessment of publication bias methods in small-study effects
-- Publication bias selection methods  Möglicherweise nochmal ein Abstecher zu Publication Selection Models (für Einführung des Publicationsbiasparameters?)
-
-[@carter_correcting_2019; @van_aert_publication_2019; @renkewitz_how_2019]
+more flexibility in modeling of publication bias necessary, -> sample size planning, heterogeneity, p-hacking -> flexible framework verbose framework would be neat for modeling this stuff...
 
 ---
 
