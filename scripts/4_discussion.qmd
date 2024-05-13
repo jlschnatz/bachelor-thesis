@@ -2,74 +2,18 @@
 bibliography: ../bibliography/tidy_references.bib
 ---
 
-\newpage
 
 # General Discussion
 
-<!-- Summary pf Objective of study -->
 
-- Goal of study: introduction SPEEC method, flexible simulation-based framework, assess SPEEC in proof of concept
-- Derivation of Hypotheses for Proof of Concept
-- Short summary of main results
-- Next, why diagnostic evaluation? -> because of spurious results
+## Discussion of the Exploratory Diagnostic Results
 
-## Discussion of the Exploratory Results
-
-- Analysis four theoretical predictions that should hold true, if the approach works in principle -> or phrased oppositely, if we don´t find evidence for the hypotheses -> there are problems
-
-
-*Exploratory findings:*:
-
-**Q1:** 
-
-- There are differences between the the ML and SPEEC estimates -> for variance of effect size distribution, and mean and dispersion parameter of sample size distribution
-- These differences are not unsystematic across the entire range of the distributional parameters estimated via ML but rather show systematic trends (e.g.,)
-
-
-Interpretation der Heterogenität und Korrelationen zu Mittelwert, SD und Publikationsbiasparameter:
-
-- Dadurch, dass Meta-analytischen MOdel in SPEEC derzeit Fixed-effects modell ist, kann zusätzliche variabilität über sampling error hinaus nicht modelliert werden
-- wann aber in den empirischen daten heterogenität vorliegt, "muss" dadurch die varianz $\sigma^2_d$ überschätzt werden, zusätzlich $\mu_d$ (ka), aber $\pbs$ muss kleiner werden (dadurch werden studien mit kleinen effekten und sample size weniger wahrscheinlich) und extremere effekte wahrscheinlicher und dadurch steigt die heterogenität
-
-<!-- Interpretation of results and implications of study -->
-
-- Einordnung von Heterogenitätsproblem in Bezug auf andere Publikationsbias Methode -> ist ein häufiges problem 
-- Und ist auch erwartbar, wenn man das explizit nicht modelliert -> aber kann mit aufgenommen werden :) -> heterogenenitätsparameter $\tau^2$
-
-<!-- Limitations of study -->
 
 ## Limitations 
 
-- Limitation des SPEEC approaches an sich
-- Limitationen der Studie
-  - Proof of concept study -> not an comprehensive assessement of SPEEC appraoch
-
-- Limitations of study also motivates future work
-
-<!-- Future work -->
 
 ## Future Work
 
-- Possibility of including:
-  - Heterogeneity parameter $\tau^2$ -> this could be very valuable (discuss problems of current publication bias methods dealing with heterogeneity)
-  - Different effect size and thus different marginal distributions (thats the flexible aspect of SPEEC) -> odds ratio (log odds ratio), R2 variance
-  - Sample size planning parameter -> publiction bias not the only thing affecting n-es distribution
-
-- Flexibility of SPEEC approach (extending SPEEC):
-  - Possibility to include heterogeneity parameter (deviations from the true effect size not only due to sampling error but)
-  - Possibility to include other influences on the sample size distribution -> sample size planning
-  - Possibility to use other marginal distribution for sample size distribution (depending on the data)
-  
-
-<!-- Conclusion -->
 
 ## Conclusion
-
-- We did not find working approach for parameter optimization of the study -> this should/could be the focus of future studies
-- Framework has several areas which could be responsible for optimization problems
-  - The choice of grid size
-- Need for larger simulations study
-  - Systematically vary: heterogeneity, true effect size, publication bias severity, meta-analysis study size $k$
-  - But also the control parameters of the SPEEC approach could be varied to see if systematic misestimation lies within here
-  - For example: grid size choice for KDE has direct influece on the the loss function (KL-divergence) for the optimization -> fine grid size for low sample size studies could be problematic (because of too much uncertainty), while very coarse grid size could be also problematic (because then differences between regarding publication bias parameter cannot be captured anymore)
 

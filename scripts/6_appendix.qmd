@@ -18,23 +18,21 @@ source(here("R/functions.R"))
 
 ## Appendix A: Power Analyses determining the SESOIs
 
-
 The simulated-based sensitivity power analysis targeted a statistical power of $1-\beta=0.8$ with a fixed significance level of $\alpha = .05$. The simulated samples sizes were specified according to the hypotheses as follows:
 
-- $\mathcal{H}_1$: $n = 150$ (only traditional meta-analyses)
-- $\mathcal{H}_2$ and $\mathcal{H}_4$: $n = 207$ (both traditional meta-analyses and multisite replication studies)
-- $\mathcal{H}_3$: $n = 57$ (only multisite replication studies) 
+- $\hypothesis{i}{}$: $n = 150$ (only traditional meta-analyses)
+- $\hypothesis{ii}{}$ and $\hypothesis{iv}{}$: $n = 207$ (both traditional meta-analyses and registered replication reports)
+- $\hypothesis{iii}{}$: $n = 57$ (only multisite replication studies) 
 
 The distributional assumptions for the four sensitivity power analyses were specified as follows:
 $$
-\mathcal{H}_1: \quad z_{r_S} \sim \mathcal{N}(\mu=-0.1, \sigma=0.5) \\
+\begin{gathered}
+\hypothesis{i}{}: \quad z_{r_S} \sim \mathcal{N}(\mu=-0.1, \sigma=0.5) \\
+\hypothesis{ii}{} ~ \text{and} ~ \hypothesis{iii}{}: \quad \Delta_{\mu_d} \sim \mathcal{N}\Big(\mu=0, \sigma_{diff}=\sqrt{0.3^2+0.3^2}\Big) 
+\end{gathered}
 $$
 
-$$
-\mathcal{H}_2 ~ \text{and} ~ \mathcal{H}_3: \quad \Delta_{\mu_d} \sim \mathcal{N}\Big(\mu=0, \sigma_{diff}=\sqrt{0.3^2+0.3^2}\Big) 
-$$
-
-For hypothesis four, the proportions of the categorical predictor of the research synthesis type (traditional meta-analysis $MA$, multisite replication $MR$) were chosen according the the actual proportions of the data ($n_{MA}=150, n_{MR}=57$). For all simulations-based sensitivity power analyses ($\mathcal{H}_1, \mathcal{H}_2, \mathcal{H}_4$), the number of simulations was set to $n_{iter}=5000$. More over, the the beta-regressions on $\pbs$ in $\mathcal{H}_1$, $\mathcal{H}_2$, and $\mathcal{H}_4$ involved simulations for different dispersion parameter conditions $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. 
+For hypothesis four, the proportions of the categorical predictor of the research synthesis type (traditional meta-analysis $MA$, multisite replication $MR$) were chosen according the the actual proportions of the data ($n_{MA}=150, n_{MR}=57$). For all simulations-based sensitivity power analyses ($\hypothesis{i}{}, \hypothesis{ii}{}, \hypothesis{iv}{}$), the number of simulations was set to $n_{iter}=5000$. More over, the the beta-regressions on $\pbs$ in $\hypothesis{i}{}$, $\hypothesis{ii}{}$, and $\hypothesis{iv}{}$ involved simulations for different dispersion parameter conditions $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. 
 
 
 ```{=latex}
@@ -51,29 +49,16 @@ knitr::include_graphics(here("figures/power_sesoi.png"))
 ```{=latex}
 \begingroup
 \scriptsize
-\textit{Note.} OR: Odds ratio. Ribbons around the lines represent the 95\\% confidence interval. 
+\textit{Note.} OR: Odds ratio. Ribbons around the lines represent the 95\% confidence interval. 
 \endgroup
 \end{figure}
 ```
 
-
 ## Appendix B: Research Transparency Statement
 
-The present thesis project was aimed to to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available on the zugehörigen [OSF repository](https://osf.io/87m9k/?view_only=030c8d1c46474270b5886c4dfc491a78) of this thesis (https://osf.io/87m9k/?view_only=030c8d1c46474270b5886c4dfc491a78) and on [GitHub](https://github.com/jlschnatz/bachelor-thesis).To enhance the reproducability of this project, all analyses, figures, the thesis manuscript itself are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was explicitely management using *Snakemake* [@molder_sustainable_2021] and the R packages dependencies and version management used for the statistical analyses were managemed using *renv* [@ushey_renv_2024]. The thesis manuscript itself is dynamically generated and reproducible using the *Quarto* publishing system.
+The present thesis project was aimed to to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available on a repository on the [Local Infrastructure for Open Science]() for members of Goethe university, on the [Open Science Framework](https://osf.io/87m9k/?view_only=030c8d1c46474270b5886c4dfc491a78) of this thesis and on [GitHub](https://github.com/jlschnatz/bachelor-thesis). To enhance the reproducability of this project, all analyses, figures, the thesis manuscript itself are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was explicitely management using *Snakemake* [@molder_sustainable_2021] and the R packages dependencies and version management used for the statistical analyses were managemed using *renv* [@ushey_renv_2024]. The thesis manuscript itself is dynamically generated and reproducible using the *Quarto* publishing system [@allaire_quarto_2024].
 
-- The project is fully st containerized using *Docker* [@merkel_docker_2014]
-- Software and operating system virtualization, fully containerized project using Docker
-R package dependencies and version management using *renv* [@ushey_renv_2024].
-- Data analysis workflow management tool *Snakemake* [@molder_sustainable_2021] 
-- thesis is written using the *Quarto* [@allaire_quarto_2024] open-source scientific and technical publishing system
-
-CITE: All analyses, figures, and the final manuscript were generated using a makefile, bash scripts, and R and Rmarkdown. All relevant metadata, as well as analysis and manuscript code, are available on GitHub: https://github.com/ZimmermanLab/SF-metrosideros-endophytes/ and archived at Zenodo (https://doi.org/10.5281/zenodo.8075450). The complete computational environment for the analyses is documented in a Dockerfile based on rocker containers (Boettiger, 2014) and a renv.lock (Ushey, 2021) file in that same repository.
-
-## Appendix C: Deviations of Preregistration
-
-
-
-## Appendix D: Test
+## Appendix C: MLE Extrema Distributional Parameters
 
 ```{r}
 #| results: asis
@@ -94,24 +79,8 @@ df_lims |>
 
 ```
 
-## Appendix E: Regression Tables of Confirmatory Analyses
 
-```{r h1_table}
-#| results: asis
-
-table_h1 <- read_tex(here("tables/table_h1.tex"))
-cat(table_h1, sep = "\n")
-
-```
-
-```{r h2_table}
-#| results: asis
-
-table_h2 <- read_tex(here("tables/table_h2.tex"))
-cat(table_h2, sep = "\n")
-
-```
-
+## Appendix D: Sensitivity Analyses of Equivalence Test
 
 ```{r assumptions_h3}
 
@@ -122,8 +91,6 @@ h3_levene <- read_rds(here("data/src/asmpt_levene_h3.rds"))
 fmt_h3_levene <- with(h3_levene, glue("$F$ = {format_value(statistic, digits = 3)}, $df_1$ = {df1}, $df_2$ = {df2}, {format_p(p, name = '$p$')}"))
 ```
 
-
-**Testing the Assumptions of the t-test within the TOST procedure**:
 
 The homogeneity of variance assumption between the two population means was assessed using a Levene test [@levene_robust_1960]. The outcome was non-significant, indicating a failure to reject the null hypothesis of equal variances (`r fmt_h3_levene`). Subsequently, the assumption of normality was examined both inferentially and visually through the Shapiro-Wilk test [@shapiro_analysis_1965] and quantile-quantile plots, respectively. The inferential outcomes of the Shapiro test revealed deviations from normality for both distributions (see Table XXX). This finding was supported by the quantile-quantile plot depicted in Figure @fig-qqplot, where the empirical quantiles did not align with the theoretical quantiles expected under a normal distribution. This was especially the case for the lower and upper quantiles of the empirical distribution.
 
@@ -150,26 +117,35 @@ knitr::include_graphics(here("figures/h3_qqplot.png"))
 ```
 
 
-```{r h3_table}
+```{r h3_table_wilxoc}
 #| results: asis
-
-table_h3 <- read_tex(here("tables/table_h3.tex"))
-cat(table_h3, sep = "\n")
 
 table_h3_wilcox <- read_tex(here("tables/table_wilcox_h3.tex"))
 cat(table_h3_wilcox, sep = "\n")
 
-
-
 ```
 
 
+## Appendix E: Regression Tables of Confirmatory Analyses
 
-```{r h4_table}
+```{r htable}
 #| results: asis
+
+table_h1 <- read_tex(here("tables/table_h1.tex"))
+cat(table_h1, sep = "\n")
+
+
+table_h2 <- read_tex(here("tables/table_h2.tex"))
+cat(table_h2, sep = "\n")
+
+table_h3 <- read_tex(here("tables/table_h3.tex"))
+cat(table_h3, sep = "\n")
 
 table_h4 <- read_tex(here("tables/table_h4.tex"))
 cat(table_h4, sep = "\n")
 
+
 ```
+
+
 

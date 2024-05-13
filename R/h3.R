@@ -52,7 +52,7 @@ table_shapiro <- nice_table(
   x = shapiro_data,
   caption = "Shapiro-Wilk Test Testing Normality for $\\hypothesis{iii}{}$",
   col_names = c("Parameter", "$W$", "$p$"),
-  general_fn = "Test"
+  general_fn = "..."
 ) |>
   column_spec(column = 1, width = "7cm") |>
   column_spec(column = 2:3, width = "4.5cm")

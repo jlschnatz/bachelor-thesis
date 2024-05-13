@@ -184,7 +184,7 @@ table_diagnostics <- data_table |>
     x = _,
     col_names = c("Comparison", "$r$ (95\\% $CI$)",  "$p$", "$p_{\\text{adj}}$"), 
     caption = caption,
-    general_fn = "test"
+    general_fn = "..."
     ) |>
   kable_styling(font_size = 12) 
 
