@@ -5,14 +5,45 @@ bibliography: ../bibliography/tidy_references.bib
 
 # General Discussion
 
+- The aim of the present study was to introduce a flexible simulation-based framework to assess publication bias...
+- 2 sentences about SPEEC
+- Short reiteration of confiromatory results (only that weird results were obtained)
+- Confirmatory results
+
+
+## What Factors Drives the Parameter Estimation Challenges?
+
 
 ## Discussion of the Exploratory Diagnostic Results
+
+- **Q1**: To what degree do the estimated sitributional parameters differ between SPEC and MLE? There are *systematic* differences between MLE and SPEEC for $\sigma^2_d$, $\mu_n$, and $\phi_n$, where differences between the both is not constant across the range of the estimated parameters from MLE
+- **Q2**: How are the discrepancies in one parameter associated with those in the other distributional parameters across SPEEC and MLE? Specifically, does a consistency exist in the discrepancies between these parameters?
+  - Correlational analyses: strong positive correlation between divergences between ML and SPEEC for the parameters of the effect size distribution -> misestimation in one was associated with the other
+  - There was no evidence that the misestimation in effect size distribution were related to misestimation in sample size distribution
+- **Q3**: Is the discrepancy between SPEEC and MLE in the distributional parameters associated with the publication bias parameter $\pbs$?
+  - divergences between ML and SPEEC of both parameters of the effect size distribution were negatively associated with publication bias parameter
+  - as misestimation increased stronger predicted publication bias (for which we know can´t be the case)? 
+  -  misestimation in effect size parameters were associated with misestimation in $\pbs$
+- Does the discrepancy between SPEEC and MLE estimates of the distribtion parameters correltate with the sample size of the RRRs ($k$)? No evidence for that
+- Is the discrepancy between SPEEC and MLE in the distributional paraemters and the publication bias parameters associatd with effect size heterogeneity? YES! 
+- strong positive relationship with effect size parameters -> as heterogeneity increased -> divergence between ML and SPEEC for effect size parameters increased 
+  - negative correlation with publication bias parameter: more severe  publication bias associated with increased heterogenetiy
+  - Is this the explanation of the problems? -> discuss
 
 
 ## Limitations 
 
+- Limitations of SPEEC
+  -  No hypothesis test -> or quantification of uncertainty of estimation right now
+- Limitations of the study
+  - Study designed as a proof of concept -> only a preliminary evalution of the SPEEC method
+  - Need large simulation study
+
 
 ## Future Work
+
+- clear need to implement heterogeneity aspects to get it to work, sample size planning
+- 
 
 
 ## Conclusion

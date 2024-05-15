@@ -94,7 +94,7 @@ appendix <- knitr::knit_child(here("scripts/6_appendix.qmd"), quiet = TRUE)
 cat(appendix, sep = "\n")
 ```
 
-# Eidesstattliche Erklärung {.unlisted .unnumbered}
+# Statutory Declaration {.unlisted .unnumbered}
 
 ```{r declaration}
 
@@ -105,10 +105,11 @@ today <- with_locale(new = c("LC_TIME" = "de_DE"), format(Sys.Date(), "%d. %B %Y
 
 \thispagestyle{empty}
 
-Hiermit versichere ich, dass ich diese Abschlussarbeit selbständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe.
-Alle Stellen der Arbeit, die wortwörtlich oder sinngemäß aus anderen Quellen übernommen wurden, wurden als solche kenntlich gemacht.
-Die Arbeit hat in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegen und ist nicht veröffentlicht.
-Sie wurde nicht, auch nicht auszugsweise, für eine andere Prüfungs- oder Studienleistung verwendet.
+I herewith declare that I have composed the present thesis myself and without use of any other than the
+cited sources and aids. Sentences or parts of sentences quoted literally are marked as such; other references
+with regard to the statement and scope are indicated by full details of the publications concerned. The thesis
+in the same or similar form has not been submitted to any examination body and has not been published.
+This thesis was not yet, even in part, used in another examination or as a course performance.
 
 \vspace*{15mm}
 \noindent\makebox[3in]{\hrulefill}
