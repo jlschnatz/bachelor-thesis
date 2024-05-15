@@ -4,7 +4,6 @@ project:
   render: 
     - scripts/0_main.qmd
 execute: 
-  #cache: true
   echo: false
   warning: false
   
@@ -16,14 +15,13 @@ format:
     author: "Jan Luca Schnatz"
     email: "janluca.schnatz@gmx.de"
     student-id: "7516898"
-    affilitation: Department of Psychological Methods with Interdisciplinary Focus 
-    department: "Faculty 05: Psychology and Sports Sciences" 
+    affilitation: Abteilung für Psychologische Methoden mit Interdisziplinärer Ausrichtung
+    department: "Institut für Psychologie und Sportwissenschaften" 
     university: Goethe-Universität Frankfurt am Main
     promotor: Prof. Dr. Martin Schultze
     copromotor: Julia Beitner M.Sc.
-    date: today
-    date-format: "MMMM, YYYY"
-
+    due-date: "21. Mai, 2024"
+    
     # document settings
     documentclass: scrartcl
     classoption: twoside      
@@ -32,12 +30,6 @@ format:
       - outer=3.5cm
       - top=2.5cm
       - bottom=3.5cm
-      #- headsep=22pt
-      #- headheight=11pt
-      #- footskip=33pt
-      #- ignorehead
-      #- ignorefoot
-      #- heightrounded
     link-citations : true
     urlcolor       : black
     linkcolor      : black
@@ -48,10 +40,6 @@ format:
     bibliography: bibliography/tidy_references.bib
     csl: apa.csl
     citecolor: black
-    #margin-left: 2.5cm
-    #margin-right: 2.5cm
-    #margin-top: 2.5cm
-    #margin-bottom: 2cm
     cite-method: citeproc
     link-citation: true
     engine: knitr
