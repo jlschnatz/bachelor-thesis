@@ -4,9 +4,17 @@ bibliography: ../bibliography/tidy_references.bib
 
 ```{=latex}
 \newpage
-\renewcommand{\thetable}{\Alph{section}\arabic{table}}
+\appendix
+\setcounter{section}{0}
+\renewcommand{\thesection}{\Alph{section}}
+\setcounter{table}{0}
+\renewcommand{\thetable}{A\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{A\arabic{figure}}
 
 ```
+
+
 
 ```{r}
 pacman::p_load(here)
@@ -20,11 +28,12 @@ source(here("R/functions.R"))
 
 The simulated-based sensitivity power analysis targeted a statistical power of $1-\beta=0.8$ with a fixed significance level of $\alpha = .05$. The simulated samples sizes were specified according to the hypotheses as follows:
 
-- $\hypothesis{i}{}$: $n = 150$ (only traditional meta-analyses)
-- $\hypothesis{ii}{}$ and $\hypothesis{iv}{}$: $n = 207$ (both traditional meta-analyses and registered replication reports)
-- $\hypothesis{iii}{}$: $n = 57$ (only multisite replication studies) 
+- $\hypothesis{1}{}$: $n = 150$ (only traditional meta-analyses)
+- $\hypothesis{2}{}$ and $\hypothesis{4}{}$: $n = 207$ (both traditional meta-analyses and registered replication reports)
+- $\hypothesis{3}{}$: $n = 57$ (only multisite replication studies) 
 
-The distributional assumptions for the four sensitivity power analyses were specified as follows:
+\noindent
+The distributional assumptions for the 4 sensitivity power analyses were specified as follows:
 $$
 \begin{gathered}
 \hypothesis{i}{}: \quad z_{r_S} \sim \mathcal{N}(\mu=-0.1, \sigma=0.5) \\
@@ -32,7 +41,7 @@ $$
 \end{gathered}
 $$
 
-For hypothesis four, the proportions of the categorical predictor of the research synthesis type (traditional meta-analysis $MA$, multisite replication $MR$) were chosen according the the actual proportions of the data ($n_{MA}=150, n_{MR}=57$). For all simulations-based sensitivity power analyses ($\hypothesis{i}{}, \hypothesis{ii}{}, \hypothesis{iv}{}$), the number of simulations was set to $n_{iter}=5000$. More over, the the beta-regressions on $\pbs$ in $\hypothesis{i}{}$, $\hypothesis{ii}{}$, and $\hypothesis{iv}{}$ involved simulations for different dispersion parameter conditions $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. 
+For $\hypothesis{4}{}$, the proportions of the categorical predictor of the research synthesis type (traditional meta-analysis $MA$, registered replication reports $RRR$) were chosen according the the actual proportions of the data ($n_{MA}=150, n_{RRR}=57$). For all simulations-based sensitivity power analyses ($\hypothesis{1}{}, \hypothesis{2}{}, \hypothesis{4}{}$), the number of simulations was set to $n_{iter}=5000$. More over, the the beta-regressions on $\pbs$ in $\hypothesis{1}{}$, $\hypothesis{2}{}$, and $\hypothesis{4}{}$ involved simulations for different dispersion parameter conditions $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. 
 
 
 ```{=latex}
@@ -56,9 +65,18 @@ knitr::include_graphics(here("figures/power_sesoi.png"))
 
 ## Appendix B: Research Transparency Statement
 
-The present thesis project was aimed to to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available on a repository on the [Local Infrastructure for Open Science]() for members of Goethe university, on the [Open Science Framework](https://osf.io/87m9k/?view_only=030c8d1c46474270b5886c4dfc491a78) of this thesis and on [GitHub](https://github.com/jlschnatz/bachelor-thesis). To enhance the reproducability of this project, all analyses, figures, the thesis manuscript itself are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was explicitely management using *Snakemake* [@molder_sustainable_2021] and the R packages dependencies and version management used for the statistical analyses were managemed using *renv* [@ushey_renv_2024]. The thesis manuscript itself is dynamically generated and reproducible using the *Quarto* publishing system [@allaire_quarto_2024].
+The present thesis project was aimed to to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available on a repository on the [Local Infrastructure for Open Science]() for members of Goethe university, on the [Open Science Framework](https://osf.io/87m9k/?view_only=030c8d1c46474270b5886c4dfc491a78) of this thesis and on [GitHub](https://github.com/jlschnatz/bachelor-thesis). To enhance the reproducability of this project, all analyses, figures, the thesis manuscript itself are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was managed using *Snakemake* [@molder_sustainable_2021] and the R packages dependencies and version management used for the statistical analyses were managed using *renv* [@ushey_renv_2024]. The thesis manuscript itself is dynamically generated and reproducible using the *Quarto* publishing system [@allaire_quarto_2024].
 
 ## Appendix C: MLE Extrema Distributional Parameters
+
+```{=latex}
+\setcounter{section}{0}
+\renewcommand{\thesection}{\Alph{section}}
+\setcounter{table}{0}
+\renewcommand{\thetable}{C\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{C\arabic{figure}}
+```
 
 ```{r}
 #| results: asis
@@ -82,6 +100,15 @@ df_lims |>
 
 ## Appendix D: Sensitivity Analyses of Equivalence Test
 
+```{=latex}
+\setcounter{section}{0}
+\renewcommand{\thesection}{\Alph{section}}
+\setcounter{table}{0}
+\renewcommand{\thetable}{D\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{D\arabic{figure}}
+```
+
 ```{r assumptions_h3}
 
 library(glue)
@@ -92,7 +119,7 @@ fmt_h3_levene <- with(h3_levene, glue("$F$ = {format_value(statistic, digits = 3
 ```
 
 
-The homogeneity of variance assumption between the two population means was assessed using a Levene test [@levene_robust_1960]. The outcome was non-significant, indicating a failure to reject the null hypothesis of equal variances (`r fmt_h3_levene`). Subsequently, the assumption of normality was examined both inferentially and visually through the Shapiro-Wilk test [@shapiro_analysis_1965] and quantile-quantile plots, respectively. The inferential outcomes of the Shapiro test revealed deviations from normality for both distributions (see Table XXX). This finding was supported by the quantile-quantile plot depicted in Figure @fig-qqplot, where the empirical quantiles did not align with the theoretical quantiles expected under a normal distribution. This was especially the case for the lower and upper quantiles of the empirical distribution.
+The homogeneity of variance assumption between the two population means was assessed using a Levene test [@levene_robust_1960]. The outcome was non-significant, indicating a failure to reject the null hypothesis of equal variances (`r fmt_h3_levene`). Subsequently, the assumption of normality was examined both inferentially and visually through the Shapiro-Wilk test [@shapiro_analysis_1965] and quantile-quantile plots, respectively. The inferential outcomes of the Shapiro test revealed deviations from normality for both distributions (see Table XXX). This finding was supported by the quantile-quantile plot depicted in @fig-qqplot, where the empirical quantiles did not align with the theoretical quantiles expected under a normal distribution. This was especially the case for the lower and upper quantiles of the empirical distribution.
 
 ```{r}
 #| results: asis
@@ -107,13 +134,20 @@ cat(table_shapiro_h3, sep = "\n")
 #| out-width: 100%
 #| echo: false
 #| fig-cap-location: top
-#| fig-cap: QQ-Plot assessing the Normality Assumption for Hypothesis 3
+#| fig-cap: QQ-Plot assessing the Normality Assumption for \\hypothesis{3}{}
 #| fig-pos: H
 #| label: fig-qqplot
 #| fig-align: center
 
 knitr::include_graphics(here("figures/h3_qqplot.png"))
 
+```
+
+```{=latex}
+\begingroup
+\scriptsize
+\textit{Note.} Ribbons represent the 95\% confidence interval. 
+\endgroup
 ```
 
 
@@ -127,6 +161,15 @@ cat(table_h3_wilcox, sep = "\n")
 
 
 ## Appendix E: Regression Tables of Confirmatory Analyses
+
+```{=latex}
+\setcounter{section}{0}
+\renewcommand{\thesection}{\Alph{section}}
+\setcounter{table}{0}
+\renewcommand{\thetable}{E\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{E\arabic{figure}}
+```
 
 ```{r htable}
 #| results: asis

@@ -125,20 +125,23 @@ data_table <- tidy(mod_h4, conf.int = TRUE) |>
   mutate(estimate = if_else(component == "mean", paste0("$", estimate, "^a$"), paste0("$", estimate, "^b$"))) |>
   mutate(ci = if_else(str_starts(term, "type_synthesis"), glue::glue("${ci}^c$"), ci)) |>
   mutate(term = case_match(term, "(Intercept)" ~ "Intercept", "type_synthesisMultisite Replications" ~ "RRR", "(phi)" ~ "Intercept")) |>  
-  select(-component) #|>
+  select(-component) |>
+  mutate(ci = str_replace(ci, "Inf", "\\\\text{Inf}"))
+
   #add_row(term = "Meta-Analyses", estimate = "", ci = "", std.error = "", statistic = "", p.value = "", .after = 1)
 
 
 table_h4 <- nice_table(
   x = data_table, 
-  caption = "Beta Regression Results for $\\mathcal{H}_4$", 
+  caption = "Beta Regression Results for $\\hypothesis{4}{}$", 
   col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$"),
   digits = 2,
-  general_fn = glue::glue("MR: Multisite Replication; {report_fit(mod_h4, 'w_pbs')}"),
-  alphabet_fn = c("$OR$", "Identity", "One-sided Confidence interval in direction of the hypothesis")
+  general_fn = glue::glue("$RRR$: registered replication reports, $CI$: confidence interval. {report_fit(mod_h4, 'w_pbs')}"),
+  alphabet_fn = c("$OR$", "Raw values", "One-sided cnfidence interval in direction of the hypothesis")
 ) |> 
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
   group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
   str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
  
 cat(table_h4, file = here("tables/table_h4.tex"))
+ 

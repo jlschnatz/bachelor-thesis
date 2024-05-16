@@ -50,9 +50,9 @@ shapiro_data <- data_model |>
 
 table_shapiro <- nice_table(
   x = shapiro_data,
-  caption = "Shapiro-Wilk Test Testing Normality for $\\hypothesis{iii}{}$",
+  caption = "Shapiro-Wilk Test Testing Normality for $\\hypothesis{3}{}$",
   col_names = c("Parameter", "$W$", "$p$"),
-  general_fn = "..."
+  general_fn = "$W$: Shapiro-Wilk test statistic"
 ) |>
   column_spec(column = 1, width = "7cm") |>
   column_spec(column = 2:3, width = "4.5cm")
@@ -267,8 +267,12 @@ table_h3_wilcox <- nice_table(
   x = data_table_wilcox,
   col_names = c("Type", "Hypothesis", "$T^+$", "$\\mu_{T^+}$", "$\\sigma_{T^+}$", "$z$", "$p$"),
   caption = "Sensitivity Analyses for Hypotheses III: Wilxocon Signed-Rank Test",
-  general_fn = c("Continuity correction applied.")
-)
+  general_fn = paste("Continuity correction applied. Approximate Gaussian null distribution used. $T^+$: positive rank sum (test statistic), ", 
+                      "$\\mu_{T^+}$: mean of positive rank sum under $\\mathcal{H}_0$, ",
+                      "$\\sigma_{T^+}$: variance of positive rank sum under $\\mathcal{H}_0$") 
+) |>
+  str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
+
 
 cat(table_h3_wilcox, file = here("tables/table_wilcox_h3.tex"))
 

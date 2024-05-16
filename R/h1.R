@@ -37,17 +37,7 @@ mod_h1 <- betareg(
   control = betareg.control(method = "BFGS", trace = TRUE)
   ) 
 
-data.frame(epsilon = residuals(mod_h1, type = "sweighted2"), yhat = predict(mod_h1, type = "link")) |>
-  ggplot(aes(yhat, epsilon)) +
-  geom_point() +
-  geom_hline(yintercept = 0) -> ptest 
-
-ggsave(plot = ptest, filename = "test.pdf")
-
-
 summary(mod_h1)
-summary(std_mod_h1)
-
 write_rds(mod_h1, here("data/src/model_h1.rds"))
 
 # Generate scatter plot with model predictions —————————————————————————————————————————————————————————————————————————
@@ -84,7 +74,6 @@ predictions(mod_h1, by  = "z_rs", type = "response", conf_level = 0.95) |>
     axis.title.x = element_text(margin = margin(t = 8, unit = "mm"))
     ) -> p
 
-
 write_rds(p, file = here("data/src/plot_h1.rds"))
 
 # Generate table with model results ————————————————————————————————————————————————————————————————————————————————————
@@ -112,15 +101,16 @@ data_table <- tidy(mod_h1, conf.int = TRUE) |>
   "(Intercept)" ~ "Intercept",
    "z_rs" ~ "$z_{r_s}$")
    ) |> 
-  select(-component) 
+  select(-component) |>
+  mutate(ci = str_replace(ci, "Inf", "\\\\text{Inf}"))
 
 table_h1 <- nice_table(
   x = data_table,
-  caption = "Beta Regression Results for $\\mathcal{H}_1$", 
+  caption = "Beta Regression Results for $\\hypothesis{1}{}$", 
   digits = 2,
   col_names = c("Term", "Estimate", "$CI$ (95\\%)", "$SE$", "$z$", "$p$"),
-  general_fn = report_fit(mod_h1, "w_pbs"),
-  alphabet_fn = c("$OR$", "Identity", "One-sided Confidence interval in direction of the hypothesis")
+  general_fn = paste0("$CI$: Confidence interval, $SE$: standard error, ", report_fit(mod_h1, "w_pbs")),
+  alphabet_fn = c("$OR$", "Raw values", "One-sided confidence interval in the direction of the hypothesis")
 ) |>
 group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
 group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>

@@ -40,7 +40,6 @@ mod_h2 <- betareg(
   control = betareg.control(method = "BFGS", trace = TRUE)
 )
 summary(mod_h2)
-
 write_rds(mod_h2, here("data/src/model_h2.rds"))
 
 # Plot model predictions ———————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -104,13 +103,14 @@ data_table <- tidy(mod_h2, conf.int = TRUE) |>
     ) |> 
   select(-component) 
 
+
 table_h2 <- nice_table(
   x = data_table,
-  caption = "Beta Regression Results for $\\mathcal{H}_2$",
+  caption = "Beta Regression Results for $\\hypothesis{2}{}$",
   digits = 2,
   col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$"),
-  alphabet_fn = c("$OR$", "Identity", "One-sided Confidence interval in direction of the hypothesis"),
-  general_fn = report_fit(mod_h2, "w_pbs")
+  alphabet_fn = c("$OR$", "Raw values", "One-sided confidence interval in direction of the hypothesis"),
+  general_fn = paste0("$CI$: Confidence interval, $SE$: standard error, ", report_fit(mod_h2, "w_pbs"))
 ) |>
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
   group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>

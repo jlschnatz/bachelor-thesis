@@ -1,6 +1,6 @@
 \begin{table}[H]
 \centering
-\caption{Beta Regression Results for $\mathcal{H}_4$}
+\caption{Beta Regression Results for $\hypothesis{4}{}$}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{threeparttable}
@@ -11,17 +11,17 @@ Term & Estimate & $CI$ (95\%) & $SE$ & $z$ & $p$\\
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Mean model component: $\mu$}}\\
 \\[-1.5ex]\hspace{1em}Intercept & $3.30^a$ & {}[2.67, 4.08] & 0.11 & 11.07 & < .001\\
-\hspace{1em}RRR & $0.81^a$ & $[0.61, Inf]^c$ & 0.18 & -1.17 & .879\\
+\hspace{1em}RRR & $0.81^a$ & $[0.61, \text{Inf}]^c$ & 0.18 & -1.17 & .879\\
 \addlinespace[0.3em]
 \multicolumn{6}{l}{\textbf{Precision model component: $\phi$}}\\
 \\[-1.5ex]\hspace{1em}Intercept & $4.79^b$ & {}[3.59, 6.38] & 0.15 & 10.71 & < .001\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]
-\item \noindent \textit{Note.} MR: Multisite Replication; $LL$ = 163.31, $MAE$ = 0.23, $AIC$ = -320.62, $BIC$ = -310.62, $R^2$ = 0.011
+\item \noindent \textit{Note.} $RRR$: registered replication reports, $CI$: confidence interval. $LL$ = 163.31, $MAE$ = 0.23, $AIC$ = -320.62, $BIC$ = -310.62, $R^2$ = 0.011
 \item[a] $OR$
-\item[b] Identity
-\item[c] One-sided Confidence interval in direction of the hypothesis
+\item[b] Raw values
+\item[c] One-sided cnfidence interval in direction of the hypothesis
 \end{tablenotes}
 \end{threeparttable}}
 \end{table}

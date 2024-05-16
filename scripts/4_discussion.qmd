@@ -16,7 +16,21 @@ bibliography: ../bibliography/tidy_references.bib
 
 ## Discussion of the Exploratory Diagnostic Results
 
-- **Q1**: To what degree do the estimated sitributional parameters differ between SPEC and MLE? There are *systematic* differences between MLE and SPEEC for $\sigma^2_d$, $\mu_n$, and $\phi_n$, where differences between the both is not constant across the range of the estimated parameters from MLE
+- Across all distributional parameters (except $\mu_d$) *systematic* divergences between SPEEC and MLE with nonlinear functional forms, as values of parameters from MLE increased, divergences from SPEEC not constant
+- Correlation analyses indicated a consistency in misestimation of SPEEC from MLE for the mean and variance parameter of the Gaussian effect size distribution (strong positive correlation)
+- No evidence that misestimation in effect size distribution was associated with misestimation of sample size distribution
+- Misestimation in the parameters of the effect size distribution were negatively associated with the predicted publication bias -> this indicates that there was also a consitency between the misestimation in publication bias and misestimation of effect size parameters
+
+---
+
+What´s causing between divergences between MLE and SPEEC and the nonsensical predictions for SPEEC?
+
+- No evidence that uncertainty related to the size of the RRR was associated with the misestimation (results are inconclusive) -> connect to simulation study in which we can systematically which influence sample size has
+- However, strong evidence that misestimation between ML and SPEEC was positively associated with between-study heterogeneity -> increased heterogeneity was associated with increased misestimation + increases in heterogeneity was associated with increases in misestimation in publication bias parameter (-> negative correlation, discuss adjusted and unadjusted p-value)
+- Current simulation framework of SPEEC assumes fixed-effects meta-analytical model -> only variance source is sampling error 
+
+
+- **Q1**: To what degree do the Estimated sitributional parameters differ between SPEC and MLE? There are *systematic* differences between MLE and SPEEC for $\sigma^2_d$, $\mu_n$, and $\phi_n$, where differences between the both is not constant across the range of the estimated parameters from MLE
 - **Q2**: How are the discrepancies in one parameter associated with those in the other distributional parameters across SPEEC and MLE? Specifically, does a consistency exist in the discrepancies between these parameters?
   - Correlational analyses: strong positive correlation between divergences between ML and SPEEC for the parameters of the effect size distribution -> misestimation in one was associated with the other
   - There was no evidence that the misestimation in effect size distribution were related to misestimation in sample size distribution
