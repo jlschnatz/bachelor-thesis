@@ -2,7 +2,6 @@
 bibliography: ../bibliography/tidy_references.bib
 ---
 
-
 # General Discussion
 
 - The aim of the present study was to introduce a flexible simulation-based framework to assess publication bias...
@@ -57,7 +56,6 @@ What´s causing between divergences between MLE and SPEEC and the nonsensical pr
 ## Future Work
 
 - clear need to implement heterogeneity aspects to get it to work, sample size planning
-- 
 
 
 ## Conclusion

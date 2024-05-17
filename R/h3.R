@@ -55,7 +55,9 @@ table_shapiro <- nice_table(
   general_fn = "$W$: Shapiro-Wilk test statistic"
 ) |>
   column_spec(column = 1, width = "7cm") |>
-  column_spec(column = 2:3, width = "4.5cm")
+  column_spec(column = 2:3, width = "4.5cm") |>
+  str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
+
 
 cat(table_shapiro, file = here("tables/table_shapiro_h3.tex"))
 
@@ -266,10 +268,10 @@ data_table_wilcox <- chuck(tost_wilcox, "TOST") |>
 table_h3_wilcox <- nice_table(
   x = data_table_wilcox,
   col_names = c("Type", "Hypothesis", "$T^+$", "$\\mu_{T^+}$", "$\\sigma_{T^+}$", "$z$", "$p$"),
-  caption = "Sensitivity Analyses for Hypotheses III: Wilxocon Signed-Rank Test",
+  caption = "Sensitivity Analyses for the equivalence test in $\\hypothesis{3}{}$ and NHST: Wilxocon Signed-Rank Test",
   general_fn = paste("Continuity correction applied. Approximate Gaussian null distribution used. $T^+$: positive rank sum (test statistic), ", 
-                      "$\\mu_{T^+}$: mean of positive rank sum under $\\mathcal{H}_0$, ",
-                      "$\\sigma_{T^+}$: variance of positive rank sum under $\\mathcal{H}_0$") 
+                      "$\\\\mu_{T^+}$: mean of positive rank sum under $\\\\mathcal{H}_0$, ",
+                      "$\\\\sigma_{T^+}$: variance of positive rank sum under $\\\\mathcal{H}_0$") 
 ) |>
   str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
 
@@ -278,7 +280,7 @@ cat(table_h3_wilcox, file = here("tables/table_wilcox_h3.tex"))
 
 table_h3 <- nice_table(
   x = data_table,
-  caption = "Two One-Sided Tests Result using Welch´s Tests regarding $\\mathcal{H}_3$", 
+  caption = "Two One-Sided Tests Result using Welch´s Tests regarding $\\hypothesis{3}{}$", 
   digits = 2,
   col_names = c("Type", "$t$", "$SE$", "$df$", "$p$"),
   general_fn = "NHST: Null Hypothesis Significance Test, TOST: Two One-Sided Test"

@@ -2,7 +2,6 @@
 bibliography: ../bibliography/tidy_references.bib
 ---
 
-
 ```{r}
 #| echo: false
 pacman::p_load(tidyverse, insight, here, knitr, kableExtra, glue)
@@ -13,29 +12,29 @@ source(here("R/functions.R"))
 
 ## Comprehensive Methodological Description of SPEEC
 
-This section offers a comprehensive description and explanation of the SPEEC framework, which assesses the extent of publication bias and estimates effect sizes in the presence of publication bias in meta-analyses. The flowchart in @fig-speec-workflow provides an overview of the sequential steps of the SPEEC method. SPEEC is being developed as an open-source R package and is accessible on GitHub at https://github.com/jlschnatz/speec (alpha version).
+This section offers a comprehensive description and explanation of the SPEEC framework, which assesses the extent of publication bias and estimates effect sizes in the presence of publication bias in meta-analyses. The flowchart in $\autoref{fig:flowchart}$ provides an overview of the sequential steps of the SPEEC method. SPEEC is being developed as an open-source R package and is accessible on GitHub at https://github.com/jlschnatz/speec (alpha version).
 
 
+```{=latex}
+\begin{figure}[h]
+\caption{Flowchart of the SPEEC Method}
+\label{fig:flowchart}
+```
 ```{r speec_workflow}
 #| out-width: 80%
-#| echo: false
-#| fig-cap-location: top
-#| fig-cap: Overview of the SPEEC Approach
-#| fig-pos: H
-#| label: fig-speec-workflow
 #| fig-align: center
-
-include_graphics(here("figures/speec_workflow.png"))
-
+knitr::include_graphics(here("figures/speec_workflow.png"))
 ```
 
 ```{=latex}
-\vspace{5mm}
 \begingroup
-\small
+\scriptsize
+\vspace{-5pt}
+\setstretch{0.7}
 \noindent
-\textit{Note.} ...
+\textit{Note.} Flowchart illustrating the steps of the SPEEC method. The simulation framework of the publication bias model is depicted in the left box. Inputs are the publication bias parameter $\pbs$ and distributional parameters of the effect size and sample size distribution ($\mu_d$, $\sigma^2_d$, $\mu_n$, $\phi_n$). The output serves as the loss function for optimization and is the Kullback-Leibler divergence $D_{\text{KL}}(\widehat{f}_e ~ || ~ \widehat{f}_t)$ between the estimated kernel density of the empirical meta-analytica data $\widehat{f}_e$ and theoretical simulated data $\widehat{f}_t$ from the publication bias model. Optimization is performed using differential evolution to the find the minimum of  $D_{\text{KL}}(\widehat{f}_e ~ || ~ \widehat{f}_t)$.
 \endgroup
+\end{figure}
 ```
 
 ### Simulation Framework
@@ -48,10 +47,6 @@ n_1, \,n_2,\, \ldots, \,n_k \quad \text{where} \quad N\stackrel{\mathrm{i.i.d.}}
 $$ {#eq-nb-dist}
 
 Concerning the marginal distribution of effect size *d*, it is reasonable to assume a Gaussian distribution with mean $\mu_d$ and variance $\sigma^2_d$. To account for the increasing precision in estimating the true effect size mean $\mu_d$ as the sample size increases (i.e., the sampling error), the variance of the mean differences $\bar{x}_{i1} - \bar{x}_{i2}$ are computed, from which the effect sizes are assumed to originate in this type of study configuration. Subsequently, a normalisation factor $\gamma_i$ can be derived by scaling each individual variance $\sigma^2_{\bar{x}_{i1} - \bar{x}_{i2}}$ with the overall mean of those variances such that that $\bar{\gamma}=1$.
-
-$$
-d_1, \,d_2, \,\ldots, \,d_k \quad \text{where} \quad D \stackrel{}{\sim} \mathcal{N}(\mu_d, \sigma_d^2) \quad \text{for} \quad i = 1, \ldots, k.
-$$ {#eq-norm-dist}
 
 $$
 \begin{gathered}
@@ -78,12 +73,11 @@ Conditional on the marginal distributions, $k$ studies are drawn from the joint 
 Following the simulation step of sampling $k$ studies from the joint distribution of effect size and sample size, the subsequent stage involves the application of publication bias to the studies. As previously discussed, publication bias is operationalized in terms of the likelihood of a study being published conditional on the statistical significance of its results. Translated to this simulation setting, two-tailed *p*-values for each individual study *i* can be calculated from the corresponding effect size $d_i$ and sample size $n_i$. To implement this, it is assumed that the individual studies $i$ originate from a balanced sample size design. When the total sample size $n_i$ is even, the between-subject group sample sizes $n_{1i}$ and $n_{2i}$ are defined as $n_i/2$. Otherwise, when the total sample size $n_i$ is odd, the group sample sizes are determined as the ceilinged $\lceil n_i/2 \rceil$ and floored $\lfloor n_i/2 \rfloor$ values, respectively. Subsequently, the *p*-value $p_i$ of each simulated study can be derived from its corresponding *t*-value 
 
 $$
-t_i=\Big\lvert \frac{d_i}{\sqrt{1/n_{1i} +1/n_{2i}}} \Big\rvert
-$$ {#eq-t-value}
-
-$$
+\begin{gathered}
+t_i=\Big\lvert \frac{d_i}{\sqrt{1/n_{1i} +1/n_{2i}}} \Big\rvert \\
 p_i=2 \cdot P(t_i~|~df_i)
-$$ {#eq-p-value}
+\end{gathered}
+$$ {#eq-t-value}
 
 \noindent
 where $P(t_i , \, df_i)$ is the cumulative *t*-distribution with degrees of freedom $df_i=n_i-2$. Given each *p*-value $p_i$, publication bias is introduced by assigning each study $i$ a weight
@@ -96,7 +90,6 @@ $$ {#eq-pbs}
 
 \noindent
 with the constraint $\pbs \in \mathbb{R} : 0 \leq \pbs \leq 1$. This weight denotes the probability of a study $i$ being selected conditional on the *p*-value and the type I error rate $\alpha$. This definition of the publication bias weight is directly analogue to the step weighting function used in publication bias selection models [see @hedges_modeling_1992; @iyengar_selection_1988]. If a study $i$ is statistically nonsignificant (i.e., $p_i \geq \alpha$), the publication bias parameter $\pbs$ is assigned, else the probability of a study being selected is equal to 1, indicating no publication bias. Thus, the publication bias parameter $\pbs$ denotes the probability of selecting a nonsignificant study relative to a statistically significant one. For instance, a publication bias parameter of $\pbs=0.5$ would indicate that nonsignificant simulated studies are half as likely to be selected (i.e., published) compared to statistically significant studies. Importantly, the type I error rate needs to be fixed across all simulated studies and is set to the common nominal value of $\alpha = 0.05$ for the analyses of the hypotheses. Following the computation of the publication bias weight $\omega_{\text{PBS}_i}$ for each study $i$, the publication bias selection process can be defined in terms of an indicator function $1_\alpha(\omega_{\text{PBS}_i})$ where
-
 
 $$
 1_\alpha(\omega_{\text{PBS}_i}) = 
@@ -119,7 +112,7 @@ $$ {#eq-subsets}
 
 One challenge in simulating a fixed number of $k$ studies lies in the fact that ceteris paribus, as the extent of publication bias becomes greater (i.e. for lower values for $\pbs$), increasingly fewer studies $k^\prime$ remain after the selection process compared to the original number of simulations $k$. This process would lead to a loss of precision in the parameter estimation for decreasing values of $\pbs$. To address this, the steps as mentioned above (from @eq-nb-dist - @eq-subsets) are repeated a second time with an adjusted number of simulations $k_{\small{\text{adj}}} = \big\lceil {k^2}/{k'} \big\rceil$, thereby ensuring that the number of selected studies $k^\prime_{\small{\text{adj}}}$ is approximately equal over the entire range of $\pbs$.
 
-### Quantifying the Divergence Between Empirical and Simulated Data from the Publication Bias Model
+### Divergence Between Empirical and Simulated Data from the Publication Bias Model
  
 After the simulation of $k_{\small{\text{adj}}}$ from the publication bias model conditional of the marginal distributional parameters ($\mu_d$, $\sigma^2_d$, $\phi_n$, $\mu_n$) and the publication bias parameter $\pbs$ to determine the subset $(d_i^\prime, \,n_i^\prime)$ for $i=1, \dots,i=k_{\small{\text{adj}}}^\prime$, the following step involves quantifying how closely the simulated data from the publication bias model aligns with the empirical meta-analytical data. More specifically, this step involves measuring the statistical dissimilarity of the bivariate kernel density estimates between the empirical meta-analytical data and the simulated data of the publication bias model. While various measures of statistical dissimilarity between probability distributions exist [for an overview, see @cha_comprehensive_2007], the Kullback-Leibler divergence [$D_{\text{KL}}$, @kullback_information_1951] was chosen as a dissimilarity measure for SPEEC. This choice was motivated by superior performance of KLD in capturing the dissimilarity between estimated kernel densities compared to alternative measures (total variation distance and earthmover distance) tested for the SPEEC method, particularly across boundary conditions. In addition, $D_{\text{KL}}$ has an intuitive interpretation in this context. It can be interpreted as the expected value of the log-likelihood ratio favouring the true model over a candidate model [@etz_technical_2018]. Here, the estimated joint density of effect size and sample size from the meta-analytical data $\widehat{f}_{e}$ is regarded as the true data generating distribution, and the estimated kernel density from the simulated data $\widehat{f}_{t}$ generated by the publication bias model serves as the approximate candidate distribution.
 
@@ -145,6 +138,10 @@ $$ {#eq-kld}
 
 Summarizing the previous sections, the simulation framework within the publication bias model of SPEEC requires the distributional parameters for the marginal distributions of effect size and sample size and the publication bias parameter as input parameters. It returns a single scalar value representing $D_{\text{KL}}$ between the estimated joint kernel density of the simulated theoretical data and the empirical meta-analytical data. This framework can be considered as an optimization problem of finding parameter values such that 
 
+\setlength{\belowdisplayskip}{0pt} \setlength{\belowdisplayshortskip}{0pt}
+\setlength{\abovedisplayskip}{0pt} \setlength{\abovedisplayshortskip}{0pt}
+
+
 $$
 \begin{gathered}
 \min_{\mu_d,  ~ \sigma^2_d,  ~ \mu_n, ~ \phi_n, ~ \omega_{PBS}} \Big\{D_{\text{KL}}(\widehat{f}_e ~ \| ~ \widehat{f}_t) \Big\},  \\ \text{subject to:} ~ \mu_d, ~ \sigma^2_d, ~ \mu_n, ~ \phi_n,~ \omega_{PBS} \in \mathbb{R}, \quad \text{where}  \quad 0 \leq \omega_{PBS} \leq 1, \\
@@ -156,11 +153,11 @@ $$ {#eq-optim}
 
 For this purpose, we use the differential evolution [DE, @storn_differential_1997], a simple global optimisation algorithm [@feoktistov_differential_2006]. DE is an evolutionary metaheuristic based on principles such as mutation, cross over and selection and requires only a few control parameters that are generally straightforward to select to achieve favourable outcomes compared to other optimisation algorithms [@storn_differential_1997]. Importantly, all parameters of the DE algorithm, including the control parameters, the stopping criterion and boundary constraints of the differential evolution algorithm, were defined globally for the parameter estimation of all meta-analyses.
 
-To apply DE for optimisation within the SPEEC approach, the R package *RcppDE* [@edelbuettel_rcppde_2022] was utilised, which implements the classical DE algorithm $\mathsf{DE/rand/1}$ [@storn_differential_1997]. The control parameters for DE were chosen based on the recommendations of @storn_differential_1997 with additional adjustments informed by preliminary testing of simulated data from the simulation framework of SPEEC, setting the population size $NP$ to 150, the mutation constant $F$ to 0.9 and the crossover constant $CR$ to 0.1. In applying the DE algorithm, we adopted a direct termination criteria approach [@jain_termination_2001; @ghoreishi_termination_2017], with the termination condition being the maximum number of generations. Since there are no universally applicable default values for the maximum number of generations, as it is contingent upon the optimisation problem at hand [@jain_termination_2001], the choice for $t_{\text{max}}$ was also informed by preliminary testing of the simulation framework of SPEEC. These tests suggested that $t_{\text{max}} = 1000$ is a reasonable decision. In establishing the bounds for the parameter search space (see @eq-optim), a balance was struck between avoiding bounds that were too wide, which could lead to inefficient exploration of the search space, and ensuring that the bounds were not too narrow to provide sufficient coverage of the potential parameters. More specifically, the minima and maxima for all distributional parameters were determined using Maximum Likelihood (see Table XXX), and the boundaries were set slightly above those values to ensure good coverage. 
+To apply DE for optimisation within the SPEEC approach, the R package *RcppDE* [@edelbuettel_rcppde_2022] was utilised, which implements the classical DE algorithm $\mathsf{DE/rand/1}$ [@storn_differential_1997]. The control parameters for DE were chosen based on the recommendations of @storn_differential_1997 with additional adjustments informed by preliminary testing of simulated data from the simulation framework of SPEEC, setting the population size $NP$ to 150, the mutation constant $F$ to 0.9 and the crossover constant $CR$ to 0.1. In applying the DE algorithm, we adopted a direct termination criteria approach [@jain_termination_2001; @ghoreishi_termination_2017], with the termination condition being the maximum number of generations. Since there are no universally applicable default values for the maximum number of generations, as it is contingent upon the optimisation problem at hand [@jain_termination_2001], the choice for $t_{\text{max}}$ was also informed by preliminary testing of the simulation framework of SPEEC. These tests suggested that $t_{\text{max}} = 1000$ is a reasonable decision. In establishing the bounds for the parameter search space (see @eq-optim), a balance was struck between avoiding bounds that were too wide, which could lead to inefficient exploration of the search space, and ensuring that the bounds were not too narrow to provide sufficient coverage of the potential parameters. More specifically, the minima and maxima for all distributional parameters were determined using Maximum Likelihood (see *Table C1*), and the boundaries were set slightly above those values to ensure good coverage. 
 
 ## Secondary Data Description
 
-To examine the confirmatory hypotheses of this study aiming to provide a preliminary assessment of the viability of the SPEEC method, we use secondary data sourced from previous research by @linden_heterogeneity_2021. The dataset can be accessed both from its source (see https://osf.io/yr3xd/) and through the OSF, GitHub and LIFOS repositories associated with this project (see section [Appendix B: Research Transparency Statement](Appendix B: Research Transparency Statement)). The dataset is comprehensive and includes both traditional meta-analyses and registered replication reports for which publication bias is assumably absent. The dataset encompasses a total of 207 research syntheses covering various psychological phenomena. Within the dataset are 150 meta-analyses, each subset comprising 50 meta-analyses from different subfields of psychology (social psychology, organisational psychology, and cognitive psychology). Additionally, the dataset includes 57 registered replication reports, which are particularly relevant for investigating hypotheses $\hypothesis{iii}{}$ and $\hypothesis{iv}{}$. Information on the total sample size $n_i$ and effect size $d_i$ for each primary study was gathered for each research synthesis. The meta-analyses were selected using random sampling, with predefined inclusion criteria and specified journals from which the data were selected. One important inclusion criterion by @linden_heterogeneity_2021 was that effects must be reported as standardised mean differences (Cohen‘s *d* or Hedges‘ *g*) or as correlations (Pearson´s *r* or Fisher‘s *z*). In cases where a different effect size measure than Cohen‘s *d* was used, effect sizes were transformed accordingly [@linden_heterogeneity_2021].
+To examine the confirmatory hypotheses of this study aiming to provide a preliminary assessment of the viability of the SPEEC method, we use secondary data sourced from previous research by @linden_heterogeneity_2021. The dataset can be accessed both from its source (see https://osf.io/yr3xd/) and through the OSF, GitHub and LIFOS repositories associated with this project (see section [Appendix A: Research Transparency Statement](Appendix A: Research Transparency Statement)). The dataset is comprehensive and includes both classical meta-analyses and registered replication reports for which publication bias is assumably absent. The dataset encompasses a total of 207 research syntheses covering various psychological phenomena. Within the dataset are 150 meta-analyses, each subset comprising 50 meta-analyses from different subfields of psychology (social psychology, organisational psychology, and cognitive psychology). Additionally, the dataset includes 57 registered replication reports, which are particularly relevant for investigating hypotheses $\hypothesis{3}{}$ and $\hypothesis{4}{}$. Information on the total sample size $n_i$ and effect size $d_i$ for each primary study was gathered for each research synthesis. The meta-analyses were selected using random sampling, with predefined inclusion criteria and specified journals from which the data were selected. One important inclusion criterion by @linden_heterogeneity_2021 was that effects must be reported as standardised mean differences (Cohen‘s *d* or Hedges‘ *g*) or as correlations (Pearson´s *r* or Fisher‘s *z*). In cases where a different effect size measure than Cohen‘s *d* was used, effect sizes were transformed accordingly [@linden_heterogeneity_2021].
 
 
 ## Statistical Analysis
@@ -172,27 +169,26 @@ r_ver <- glue("{version$major}.{version$minor} {version$nickname}")
 
 ```
 
-The confirmatory statistical analyses were preregistered (https://osf.io/87m9k/?view_only=030c8d1c46474270b5886c4dfc491a78) based on an adaption of the secondary data analysis preregistration template by @van_den_akker_preregistration_2021. It includes additional metadata of the dataset and a transparency statement regarding prior knowledge of the data.  Any supplementary analyses not preregistered and deviations of the preregistered confirmatory analyses are explicitly labelled as such. All data and analysis scripts are made available for this thesis (see section [Appendix B: Research Transparency Statement](Appendix B: Research Transparency Statement)). All confirmatory analyses were performed using the R programming language [version `r r_ver`, @r_core_team_r_2023].
+The confirmatory statistical analyses were preregistered based on an adaption of the secondary data analysis preregistration template by @van_den_akker_preregistration_2021. The preregistration includes additional metadata of the dataset and a transparency statement regarding prior knowledge of the data.  Any supplementary analyses not preregistered and deviations of the preregistered confirmatory analyses are explicitly labelled as such. All data and analysis scripts and the preregistration are made available (see section [Appendix A: Research Transparency Statement](Appendix A: Research Transparency Statement)). All confirmatory analyses were performed using the R programming language [version `r r_ver`, @r_core_team_r_2023].
 
-Regarding the hypotheses, in which the publication bias parameter $\pbs$ was the dependent variable ($\hypothesis{i}{}$, $\hypothesis{ii}{}$, $\hypothesis{iv}{}$), beta regression as implemented in the *betareg* package [@zeileis_betareg_2021] was used to analyse the data. This choice was motivated by the restriction of the parameter space for the publication bias to the standard unit interval, whereby non-normality, skewness and heteroscedasticity can be anticipated [@cribari-neto_beta_2010; @smithson_better_2006]. Beta regression is recognised for its adaptability in handling such deviations. Because the optimisation approach permits $\widehat{\omega}_{\text{PBS}}$ values within the range $0 \leq \widehat{\omega}_{\text{PBS}} \leq 1$ in principle, and the beta-regression model assumes that $0 < \widehat{\omega}_{\text{PBS}} < 1$, a common transformation proposed by @smithson_better_2006 was employed. This transformation, denoted as  $\pbs^\prime={(\pbs \cdot(n-1)+0.5)}/{n}$, subtly adjusts the bounds to slightly narrow the range between zero and one. We used a logit link for the mean parameter $\mu$ and an identity link for the dispersion parameter that was fixed such that the beta regression model can be described as
+Regarding the hypotheses, in which the publication bias parameter $\pbs$ was the dependent variable ($\hypothesis{1}{}$, $\hypothesis{2}{}$, $\hypothesis{4}{}$), beta regression as implemented in the *betareg* package [@zeileis_betareg_2021] was used to analyse the data. This choice was motivated by the restriction of the parameter space for the publication bias to the standard unit interval, whereby non-normality, skewness and heteroscedasticity can be anticipated [@cribari-neto_beta_2010; @smithson_better_2006]. Beta regression is recognised for its adaptability in handling such deviations. Because the optimisation approach permits $\widehat{\omega}_{\text{PBS}}$ values within the range $0 \leq \widehat{\omega}_{\text{PBS}} \leq 1$ in principle, and the beta-regression model assumes that $0 < \widehat{\omega}_{\text{PBS}} < 1$, a common transformation proposed by @smithson_better_2006 was employed. This transformation, denoted as  $\pbs^\prime={(\pbs \cdot(n-1)+0.5)}/{n}$, subtly adjusts the bounds to slightly narrow the range between zero and one. We used a logit link for the mean parameter $\mu$ and an identity link for the dispersion parameter that was fixed such that the beta regression model can be described as
  
  
 $$
 \begin{gathered}
 \omega_{\text{PBS}^\prime_i} \sim  \mathcal{B}(\mu_i, \phi) \\
-\log{\bigg(\frac{\mu_i}{1 - \mu_i}\bigg)}=x_i^\top\beta.
+\log{\bigg(\frac{\mu_i}{1 - \mu_i}\bigg)}= \mathbf{X_i}^\top \symbf{\beta}.
 \end{gathered}
 $$ {#eq-beta-reg}
 
 
-The independent variables for these three hypotheses were as follows: regarding $\hypothesis{i}{}$, the independent variable was the Fisher *z*-transformed correlation coefficient of the correlation between effect size and sample size, where the transformation is defined as $z_r=\tanh^{-1}(r)$. The independent variable for $\hypothesis{ii}{}$ was the difference $\Delta_{\widehat{\mu}_d}$ between the average effect size estimate of each meta-analysis and the mean parameter of the Gaussian effect size distribution estimated with SPEEC. Lastly, the independent variable for $\hypothesis{iv}{}$, was a binary indicator specifying the research synthesis type (traditional meta-analysis or registered replication report), with registered replication reports set as the reference level for regression. The coefficients from the beta-regressions for these hypotheses were estimated using Maximum Likelihood estimation with the BFGS optimiser.
+The independent variables for these three hypotheses were as follows: regarding $\hypothesis{1}{}$, the independent variable was the Fisher *z*-transformed correlation coefficient of the correlation between effect size and sample size, where the transformation is defined as $z_r=\tanh^{-1}(r)$. The independent variable for $\hypothesis{2}{}$ was the difference $\Delta_{\widehat{\mu}_d}$ between the average effect size estimate of each meta-analysis and the mean parameter of the Gaussian effect size distribution estimated with SPEEC. Lastly, the independent variable for $\hypothesis{4}{}$, was a binary indicator specifying the research synthesis type (classical meta-analysis or registered replication report), with registered replication reports set as the reference level for regression. The coefficients from the beta-regressions for these hypotheses were estimated using Maximum Likelihood estimation with the BFGS optimiser.
 
-Hypothesis $\hypothesis{iii}{}$ was formulated to compare the estimated means of the Gaussian effect size distribution to the average effect sizes. This comparison aimed at assessing whether the presence of effects in mean differences $\Delta_{\widehat{\mu}_d}$ deemed large enough to be considered meaningful, according to specified equivalence bounds $\Delta_{EQ}$, can be rejected [@lakens_improving_2020]. For this purpose, an equivalence test using the Two One-Sided Tests (TOST) procedure [@schuirmann_comparison_1987] was conducted as implemented in the *TOSTER* R package [@lakens_toster_2023]. This involves conducting two one-tailed tests against the upper and lower equivalence bounds, where both must yield significant results to claim statistical equivalence within the equivalence range $\Delta_{EQ}$. The preregistration specified that the *means* for both variables would be compared for the TOST procedure, implying a Student *t*-test for dependent samples. However, upon analysis of the assumptions for the Student *t*-test, it was found that the normality assumption was violated for both distributions. Parametric tests like the Student *t*-test are generally robust to violations of the normality assumption [@boneau_effects_1960; @knief_violating_2021], so we proceeded as preregistered. However, to assess the robustness of the findings, we also conducted sensitivity analyses using the nonparametric Wilcoxon signed-rank test as part of the TOST procedure (see Appendix XXX). The choice of a dependent samples test was necessitated by the dependence between the pairs of samples originating from the same underlying data. The calculation of effect size measures is beneficial to obtain additional information about the magnitude of equivalence (not preregistered analyses). However, traditional effect size metrics, such as Cohen‘s *d*, prove inadequate within equivalence testing as they do not consider the equivalence range. Hence, the Proportional Distance $PD$, explicitly designed for equivalence testing, was utilised as an effect size metric [see @martinez_gutierrez_effect_2023]. The $PD$ quantifies the proportional distance from the observed effect ($\Delta_{\widehat{\mu}_d}$) to the bound of the equivalence range that is the same sign as the observed effect. 
-
+Hypothesis $\hypothesis{3}{}$ was formulated to compare the estimated means of the Gaussian effect size distribution to the average effect sizes. This comparison aimed at assessing whether the presence of effects in mean differences $\Delta_{\widehat{\mu}_d}$ deemed large enough to be considered meaningful, according to specified equivalence bounds $\Delta_{EQ}$, can be rejected [@lakens_improving_2020]. For this purpose, an equivalence test using the Two One-Sided Tests (TOST) procedure [@schuirmann_comparison_1987] was conducted as implemented in the *TOSTER* R package [@lakens_toster_2023]. This involves conducting two one-tailed tests against the upper and lower equivalence bounds, where both must yield significant results to claim statistical equivalence within the equivalence range $\Delta_{EQ}$. The preregistration specified that the *means* for both variables would be compared for the TOST procedure, implying a Student *t*-test for dependent samples. However, upon analysis of the assumptions for the Student *t*-test, it was found that the normality assumption was violated for both distributions. Parametric tests like the Student *t*-test are generally robust to violations of the normality assumption [@boneau_effects_1960; @knief_violating_2021], so we proceeded as preregistered. However, to assess the robustness of the findings, we also conducted sensitivity analyses using the nonparametric Wilcoxon signed-rank test as part of the TOST procedure (see [Appendix D](Appendix D: Sensitivity Analyses of Equivalence Test)). The choice of a dependent samples test was necessitated by the dependence between the pairs of samples originating from the same underlying data. The calculation of effect size measures is beneficial to obtain additional information about the magnitude of equivalence (not preregistered analyses). However, traditional effect size metrics, such as Cohen‘s *d*, prove inadequate within equivalence testing as they do not consider the equivalence range. Hence, the Proportional Distance $PD$, explicitly designed for equivalence testing, was utilised as an effect size metric [see @martinez_gutierrez_effect_2023]. The $PD$ quantifies the proportional distance from the observed effect ($\Delta_{\widehat{\mu}_d}$) to the bound of the equivalence range that is the same sign as the observed effect. 
 
 ## Smallest Effect Size of Interest
 
-For all four hypotheses, the smallest effect size of interest (SESOI) was established based on effect sizes that can be reliably detected, considering the constraints imposed by the sample size resources available for this secondary data analysis [@lakens_performing_2014; @lakens_equivalence_2018]. More specifically, three simulation-based ($\hypothesis{i}{}$, $\hypothesis{ii}{}$, $\hypothesis{iv}{}$) and one analytical ($\hypothesis{iii}{}$) sensitivity power analysis were conducted to determine for which effect sizes we have at least 80\% power ($1-\beta=0.8$) to detect, taking into account the predetermined sample size and fixed type I error rate $\alpha = .05$ (details see [Appendix A: Power Analyses determining the SESOIs](Appendix A: Power Analyses determining the SESOIs)). We specified the SESOI for $\hypothesis{iii}{}$ in raw units and all other SESOIs in odds ratios. The SESOI for the equivalence hypothesis defines the equivalence bounds for the TOST procedure ($\Delta_{EQ} = (-0.17, 0.17)$). Table XXX summarises all four SESOIs of the hypotheses.
+For all four hypotheses, the smallest effect size of interest (SESOI) was established based on effect sizes that can be reliably detected, considering the constraints imposed by the sample size resources available for this secondary data analysis [@lakens_performing_2014; @lakens_equivalence_2018]. More specifically, three simulation-based ($\hypothesis{1}{}$, $\hypothesis{2}{}$, $\hypothesis{4}{}$) and one analytical ($\hypothesis{3}{}$) sensitivity power analysis were conducted to determine for which effect sizes we have at least 80\% power ($1-\beta=0.8$) to detect, taking into account the predetermined sample size and fixed type I error rate $\alpha = .05$ (details see [Appendix A: Power Analyses determining the SESOIs](Appendix A: Power Analyses determining the SESOIs)). We specified the SESOI for $\hypothesis{3}{}$ in raw units and all other SESOIs in odds ratios. The SESOI for the equivalence hypothesis defines the equivalence bounds for the TOST procedure ($\Delta_{EQ} = (-0.17, 0.17)$). Table Table 1 summarises all four SESOIs of the hypotheses.
 
 ```{r}
 #| echo: false
@@ -204,8 +200,11 @@ df_sesoi <- read_csv(here("preregistration/data/sesois.csv")) |>
 
 nice_table(
     x = df_sesoi, col_names = c("Hypothesis", "SESOI", "Unit"),
-    general_fn = "Except for $\\\\hypothesis{iii}{}$ all SESOIs are defined in terms of odds ratios (OR). The SESOI of $\\\\hypothesis{iii}{}$ is defined in raw units.",
+    general_fn = "Except for $\\\\hypothesis{3}{}$ all SESOIs are defined in terms of odds ratios (OR). The SESOI of $\\\\hypothesis{3}{}$ is defined in raw units.",
     caption = "Smallest Effect Sizes of Interest of the Hypotheses"
-)
+) |>
+str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]") |>
+cat()
+
 
 ```

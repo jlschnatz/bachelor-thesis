@@ -4,6 +4,7 @@ bibliography: ../bibliography/tidy_references.bib
 
 ```{=latex}
 \newpage
+\renewcommand{\thetable}{\Alph{section}\arabic{table}}
 \appendix
 \setcounter{section}{0}
 \renewcommand{\thesection}{\Alph{section}}
@@ -11,9 +12,7 @@ bibliography: ../bibliography/tidy_references.bib
 \renewcommand{\thetable}{A\arabic{table}}
 \setcounter{figure}{0}
 \renewcommand{\thefigure}{A\arabic{figure}}
-
 ```
-
 
 
 ```{r}
@@ -24,29 +23,36 @@ source(here("R/functions.R"))
 
 # Appendix
 
-## Appendix A: Power Analyses determining the SESOIs
+## Appendix A: Research Transparency Statement
 
-The simulated-based sensitivity power analysis targeted a statistical power of $1-\beta=0.8$ with a fixed significance level of $\alpha = .05$. The simulated samples sizes were specified according to the hypotheses as follows:
+The present thesis project was aimed to to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available on a repository on the Local Infrastructure for Open Science (LIFOS) for members of Goethe university (https://tinyurl.com/lifos-schnatz-thesis), on the Open Science Framework (https://tinyurl.com/osf-schnatz-thesis) of this thesis and on GitHub (https://github.com/jlschnatz/bachelor-thesis). To enhance the reproducability of this project, all analyses, figures, the thesis manuscript itself are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was managed using *Snakemake* [@molder_sustainable_2021] and the R packages dependencies and version management used for the statistical analyses were managed using *renv* [@ushey_renv_2024]. The thesis manuscript itself is dynamically generated and reproducible using the *Quarto* publishing system [@allaire_quarto_2024].
 
-- $\hypothesis{1}{}$: $n = 150$ (only traditional meta-analyses)
-- $\hypothesis{2}{}$ and $\hypothesis{4}{}$: $n = 207$ (both traditional meta-analyses and registered replication reports)
-- $\hypothesis{3}{}$: $n = 57$ (only multisite replication studies) 
+## Appendix B: Power Analyses determining the SESOIs
+
+The simulated-based sensitivity power analysis targeted a statistical power of 80% with a fixed significance level of $\alpha = .05$. The simulated samples sizes were specified as follows:
+
+- $\hypothesis{1}{}$: $n = 150$ (only classical meta-analyses)
+- $\hypothesis{2}{}$ and $\hypothesis{4}{}$: $n = 207$ (both classical meta-analyses and registered replication reports)
+- $\hypothesis{3}{}$: $n = 57$ (only registered replication reports) 
 
 \noindent
-The distributional assumptions for the 4 sensitivity power analyses were specified as follows:
+The distributional assumptions were specified as follows:
+
 $$
 \begin{gathered}
-\hypothesis{i}{}: \quad z_{r_S} \sim \mathcal{N}(\mu=-0.1, \sigma=0.5) \\
-\hypothesis{ii}{} ~ \text{and} ~ \hypothesis{iii}{}: \quad \Delta_{\mu_d} \sim \mathcal{N}\Big(\mu=0, \sigma_{diff}=\sqrt{0.3^2+0.3^2}\Big) 
+\hypothesis{1}{}: \quad z_{r_S} \sim \mathcal{N}(\mu=-0.1, \sigma=0.5) \\
+\hypothesis{2}{} ~ \text{and} ~ \hypothesis{3}{}: \quad \Delta_{\mu_d} \sim \mathcal{N}\Big(\mu=0, \sigma_{diff}=\sqrt{0.3^2+0.3^2}\Big) \\
 \end{gathered}
 $$
 
-For $\hypothesis{4}{}$, the proportions of the categorical predictor of the research synthesis type (traditional meta-analysis $MA$, registered replication reports $RRR$) were chosen according the the actual proportions of the data ($n_{MA}=150, n_{RRR}=57$). For all simulations-based sensitivity power analyses ($\hypothesis{1}{}, \hypothesis{2}{}, \hypothesis{4}{}$), the number of simulations was set to $n_{iter}=5000$. More over, the the beta-regressions on $\pbs$ in $\hypothesis{1}{}$, $\hypothesis{2}{}$, and $\hypothesis{4}{}$ involved simulations for different dispersion parameter conditions $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. 
+\vspace{1cm}
+
+For hypothesis four, the proportions of the categorical predictor of the research synthesis type (classical meta-analysis $MA$, registered replication reports $RRR$) were chosen according the the actual proportions of the data ($n_{MA}=150, n_{RRR}=57$). For all simulations-based sensitivity power analyses ($\hypothesis{1}{}, \hypothesis{2}{}, \hypothesis{4}{}$), the number of simulations was set to $n_{iter}=5000$ and the average power was calculated across all simulations. More over, the the beta-regressions on $\pbs$ in $\hypothesis{i}{}$, $\hypothesis{2}{}$, and $\hypothesis{4}{}$ involved simulations for different dispersion parameter conditions $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. This is because the dispersion parameter directly influence the variance for a fixed mean. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. 
 
 
 ```{=latex}
 \begin{figure}[H]
-\caption{Power Curves of the Sensitivity Power Analyses determining the SESOIs
+\caption{Power Curves of the Sensitivity Power Analyses Determining the SESOIs
 \label{fig:sesoi}}
 ```
 ```{r sesoi}
@@ -63,9 +69,6 @@ knitr::include_graphics(here("figures/power_sesoi.png"))
 \end{figure}
 ```
 
-## Appendix B: Research Transparency Statement
-
-The present thesis project was aimed to to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available on a repository on the [Local Infrastructure for Open Science]() for members of Goethe university, on the [Open Science Framework](https://osf.io/87m9k/?view_only=030c8d1c46474270b5886c4dfc491a78) of this thesis and on [GitHub](https://github.com/jlschnatz/bachelor-thesis). To enhance the reproducability of this project, all analyses, figures, the thesis manuscript itself are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was managed using *Snakemake* [@molder_sustainable_2021] and the R packages dependencies and version management used for the statistical analyses were managed using *renv* [@ushey_renv_2024]. The thesis manuscript itself is dynamically generated and reproducible using the *Quarto* publishing system [@allaire_quarto_2024].
 
 ## Appendix C: MLE Extrema Distributional Parameters
 
@@ -83,7 +86,6 @@ The present thesis project was aimed to to be as transparent and reproducible as
 #| echo: false
 
 df_lims <- readRDS(here::here("data/src/dist_param_range.rds"))
-
 df_lims |>
     mutate(across(min:max, ~format_value(.x, digits = 3))) |>
     nice_table(
@@ -93,7 +95,9 @@ df_lims |>
       col_names = c("Parameter", "Minimum", "Maximum")
       ) |> 
       kableExtra::group_rows("Effect Size", 1, 2) |> 
-      kableExtra::group_rows("Sample Size", 3, 4) 
+      kableExtra::group_rows("Sample Size", 3, 4)  |>
+      str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]") |>
+      cat()
 
 ```
 
@@ -119,11 +123,10 @@ fmt_h3_levene <- with(h3_levene, glue("$F$ = {format_value(statistic, digits = 3
 ```
 
 
-The homogeneity of variance assumption between the two population means was assessed using a Levene test [@levene_robust_1960]. The outcome was non-significant, indicating a failure to reject the null hypothesis of equal variances (`r fmt_h3_levene`). Subsequently, the assumption of normality was examined both inferentially and visually through the Shapiro-Wilk test [@shapiro_analysis_1965] and quantile-quantile plots, respectively. The inferential outcomes of the Shapiro test revealed deviations from normality for both distributions (see Table XXX). This finding was supported by the quantile-quantile plot depicted in @fig-qqplot, where the empirical quantiles did not align with the theoretical quantiles expected under a normal distribution. This was especially the case for the lower and upper quantiles of the empirical distribution.
+The homogeneity of variance assumption between the two population means was assessed using a Levene test [@levene_robust_1960]. The outcome was non-significant, indicating a failure to reject the null hypothesis of equal variances (`r fmt_h3_levene`). Subsequently, the assumption of normality was examined both inferentially and visually through the Shapiro-Wilk test [@shapiro_analysis_1965] and quantile-quantile plots, respectively. The inferential outcomes of the Shapiro test revealed deviations from normality for both distributions (see *Table D1*). This finding was supported by the quantile-quantile plot depicted in @fig-qqplot, where the empirical quantiles did not align with the theoretical quantiles expected under a normal distribution.
 
 ```{r}
 #| results: asis
-
 
 table_shapiro_h3 <- read_tex(here("tables/table_shapiro_h3.tex"))
 cat(table_shapiro_h3, sep = "\n")
@@ -134,7 +137,7 @@ cat(table_shapiro_h3, sep = "\n")
 #| out-width: 100%
 #| echo: false
 #| fig-cap-location: top
-#| fig-cap: QQ-Plot assessing the Normality Assumption for \\hypothesis{3}{}
+#| fig-cap: QQ-Plot Assessing the Normality Assumption for $\hypothesis{3}{}$
 #| fig-pos: H
 #| label: fig-qqplot
 #| fig-align: center
@@ -146,10 +149,10 @@ knitr::include_graphics(here("figures/h3_qqplot.png"))
 ```{=latex}
 \begingroup
 \scriptsize
-\textit{Note.} Ribbons represent the 95\% confidence interval. 
+\noindent
+\textit{Note.} Empirical observed quantiles for the average effect size $\widehat{\delta}$ and mean parameter of the effect size distribution from SPEEC $\Delta_{\widehat{\mu}_d}$ as a function of theoretical quantiles expected under the normal distribution.Ribbons represent the 95\% confidence interval. 
 \endgroup
 ```
-
 
 ```{r h3_table_wilxoc}
 #| results: asis
@@ -177,7 +180,6 @@ cat(table_h3_wilcox, sep = "\n")
 table_h1 <- read_tex(here("tables/table_h1.tex"))
 cat(table_h1, sep = "\n")
 
-
 table_h2 <- read_tex(here("tables/table_h2.tex"))
 cat(table_h2, sep = "\n")
 
@@ -187,8 +189,4 @@ cat(table_h3, sep = "\n")
 table_h4 <- read_tex(here("tables/table_h4.tex"))
 cat(table_h4, sep = "\n")
 
-
 ```
-
-
-

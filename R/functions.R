@@ -93,8 +93,9 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
 #' @param symbol_fn Symbol footnote
 #' @param number_fn Number footnote
 #' @param alphabet_fn Alphabet footnote
+#' @param placement Default HOLD_position
 #' @return A character vector of the table source code
-nice_table <- function(x, digits = 2, caption, align = NULL, col_names = NULL, general_fn = NULL, symbol_fn = NULL, number_fn = NULL, alphabet_fn = NULL) {
+nice_table <- function(x, digits = 2, caption, align = NULL, col_names = NULL, general_fn = NULL, symbol_fn = NULL, number_fn = NULL, alphabet_fn = NULL, placement = "HOLD_position") {
   n_col <- ncol(x)
   center <- paste0(rep("c", n_col - 1), collapse = "")
   if (is.null(align)) align <- paste0("l", center, collape = "")
@@ -112,7 +113,7 @@ nice_table <- function(x, digits = 2, caption, align = NULL, col_names = NULL, g
     escape = FALSE,
     align = align
   ) |>
-  kableExtra::kable_styling(latex_options = c("scale_down", "HOLD_position"), full_width = FALSE) |>
+  kableExtra::kable_styling(latex_options = c("scale_down", placement), full_width = FALSE) |>
   kableExtra::column_spec(column = seq_len(n_col), width = width_per_col)
 
   if (!is.null(general_fn) || !is.null(symbol_fn) || !is.null(number_fn) || !is.null(alphabet_fn)) {

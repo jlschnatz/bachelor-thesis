@@ -141,11 +141,8 @@ cor_table <- nice_table(
   general_fn = general,
   symbol_fn = c("Significance *** $p$ < .001; ** $p$ < .01; * $p$ < .05")
 ) |>
-  kableExtra::kable_styling(font_size = 9) 
-  #kableExtra::column_spec(column = 1, width = "1.3cm") |>
-  #kableExtra::column_spec(column = 2:3, width = "3.5cm") |>
-  #kableExtra::column_spec(column = 4:5, width = "2.75cm") |>
- # kableExtra::column_spec(column = 6, width = "2.2cm") 
+  kableExtra::kable_styling(font_size = 9) |>
+  str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
 
 
 cat(cor_table, file = here("tables/table_diagnostic_cormat.tex"))
@@ -184,9 +181,12 @@ table_diagnostics <- data_table |>
     x = _,
     col_names = c("Comparison", "$r$ (95\\% $CI$)",  "$p$", "$p_{\\text{adj}}$"), 
     caption = caption,
-    general_fn = "..."
+    general_fn = "$r$: Pearson correlation coefficient, $CI$: confidence interval, $p$-values are adjusted on based on the correction by Benjamini \\\\& Hochberg (1995). Highlighted bold values are statistically significant according to the unadjusted $p$-values.",
+    placement = "h"
     ) |>
-  kable_styling(font_size = 12) 
+  kable_styling(font_size = 12) |>
+  str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
+
 
 cat(table_diagnostics, file = here("tables/table_diagnostic_cormat.tex"))
   
@@ -230,7 +230,7 @@ p_mu_n <- data_ml_speec |>
   geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
   geom_point(aes(color = abs_delta_mu_n), size = 2.5, alpha = .5) +
   scale_x_continuous(
-    name = TeX("$\\widehat{\\mu}_{n_{ML}}$"),
+    name = TeX("$\\widehat{\\mu}_{n_{MLE}}$"),
     limits = c(0, 400),
     breaks = seq(0, 400, 100),
     expand = expansion()
@@ -243,7 +243,7 @@ p_mu_n <- data_ml_speec |>
   ) +
   coord_equal() +
   scale_colour_paletteer_c(
-    name = TeX(r"($\Delta_{\mu_n}^{*}=|\widehat{\mu}_{n_{SPEEC}} - \widehat{\mu}_{n_{ML}}|$)"),
+    name = TeX(r"($\Delta_{\mu_n}^{*}=|\widehat{\mu}_{n_{SPEEC}} - \widehat{\mu}_{n_{MLE}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = c(0, 180),
     breaks = seq(0, 180, 60)
@@ -257,7 +257,7 @@ p_phi_n <- data_ml_speec |>
   geom_abline(intercept = 0, slope = 1, color = "grey80", linewidth = .6) +
   geom_point(aes(color = abs_delta_phi_n), size = 2.5, alpha = .5) +
   scale_x_continuous(
-    name = TeX("$\\widehat{\\phi}^2_{n_{ML}}$"),
+    name = TeX("$\\widehat{\\phi}^2_{n_{MLE}}$"),
     trans = log10_trans(),
     labels = label_log(),
     limits = c(10^-2, 10^3),
@@ -276,7 +276,7 @@ p_phi_n <- data_ml_speec |>
   ) +
   coord_equal() +
   scale_colour_paletteer_c(
-    name = TeX(r"($\Delta_{\phi_n}^{*}=|\widehat{\phi}_{n_{SPEEC}} - \widehat{\phi}_{n_{ML}}|$)"),
+    name = TeX(r"($\Delta_{\phi_n}^{*}=|\widehat{\phi}_{n_{SPEEC}} - \widehat{\phi}_{n_{MLE}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = 10**c(-1, 2),
     breaks = 10**seq(-1, 2), 
@@ -296,7 +296,7 @@ p_mu_d <- data_ml_speec |>
     alpha = .6
     ) +
   scale_x_continuous(
-    name = TeX("$\\widehat{\\mu}_{d_{ML}}$"),
+    name = TeX("$\\widehat{\\mu}_{d_{MLE}}$"),
     limits = c(-3, 3),
     breaks = seq(-3, 3, 1),
     expand = expansion()
@@ -309,7 +309,7 @@ p_mu_d <- data_ml_speec |>
   ) +
   coord_equal() +
   scale_colour_paletteer_c(
-    name = TeX(r"($\Delta_{\mu_d}^{*}=|\widehat{\mu}_{d_{SPEEC}} - \widehat{\mu}_{d_{ML}}|$)"),
+    name = TeX(r"($\Delta_{\mu_d}^{*}=|\widehat{\mu}_{d_{SPEEC}} - \widehat{\mu}_{d_{MLE}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = c(0, .3),
     breaks = seq(0, 0.3, 0.1)
@@ -336,7 +336,7 @@ p_sigma2_d <- data_ml_speec |>
     expand = expansion()
   ) +
   scale_x_continuous(
-    name = TeX("$\\widehat{\\sigma}^2_{d_{ML}}$"),
+    name = TeX("$\\widehat{\\sigma}^2_{d_{MLE}}$"),
     trans = log10_trans(),
     limits = c(0.001, 100),
     labels = label_log(),
@@ -346,7 +346,7 @@ p_sigma2_d <- data_ml_speec |>
   ) +
   coord_fixed() +
   scale_colour_paletteer_c(
-    name = TeX(r"($\Delta_{\sigma^2_d}^{*}=|\widehat{\sigma}^2_{d_{SPEEC}} - \widehat{\sigma}^2_{d_{ML}}|$)"),
+    name = TeX(r"($\Delta_{\sigma^2_d}^{*}=|\widehat{\sigma}^2_{d_{SPEEC}} - \widehat{\sigma}^2_{d_{MLE}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = 10**c(-4, 1),
     breaks = 10**seq(-4, 1),
@@ -355,11 +355,15 @@ p_sigma2_d <- data_ml_speec |>
   ) +
   theme_comparison()
 
+font_add_google("Inter", "font2")
+
+
 # Combine plots with patchwork
 p_comb <- (p_mu_d | p_sigma2_d | p_mu_n | p_phi_n) +
   plot_layout(ncol = 4) +
   plot_annotation(tag_levels = c("A")) &
-  theme(plot.tag = element_text(face = "bold", family = "font", margin = margin(l = 10)))
+  theme(plot.tag = element_text(face = "bold", family = "font2", margin = margin(l = 10)),
+        plot.margin = margin(l = 0, r = 5, unit = "pt")) 
 
 # Save
 ggsave(

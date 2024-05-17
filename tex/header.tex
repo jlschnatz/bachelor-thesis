@@ -1,6 +1,4 @@
-\usepackage{bm}             % bold font in math mode
-%\usepackage{amsmath}        % more math mode options
-\usepackage[bb=ams]{mathalpha}
+\usepackage{unicode-math}
 
 \usepackage[english]{babel} 
 \raggedbottom               % do not spread content to bottom of page
@@ -8,7 +6,6 @@
 \usepackage{setspace}       % to modify line spread within the document
 \usepackage[nottoc]{tocbibind} % puts lof & lot, but not toc itself in toc
 \usepackage[section]{placeins} % keep floats in respective section
-\parindent=0.5in            % indent paragraphs  
 \usepackage{indentfirst}    % indent first paragraph also
 \usepackage{sectsty}        % header styling
 \sectionfont{\fontsize{12}{12}\bfseries\centering} % section header
@@ -73,7 +70,7 @@
 \usepackage{multirow} % valign of table cells
 \usepackage{longtable} % longtable
 \usepackage{threeparttablex} % threeparttable
-\usepackage{amsmath} % math font
+%\usepackage{amsmath} % math font
 
 % shortcut for hypothesis naming [number hypothesis, type hypothesis (null: 0, alternative: 1)]
 \newcommand{\hypothesis}[2]{\mathcal{H}^{\text{(#1)}}_{\text{#2}}}
@@ -87,3 +84,9 @@
 %\usepackage[backend=biber,natbib=true,style=apa]{biblatex} 
 
 \usepackage{appendix}
+
+\usepackage{hyperref}
+
+\usepackage{amsmath}        % more math mode options
+%\usepackage[bb=ams]{mathalpha}
+\usepackage{bm}             % bold font in math mode
