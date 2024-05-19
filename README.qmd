@@ -1,5 +1,7 @@
 ---
-title: "My Project"
+title: "Assessing Publication Bias in Meta-Analyses"
+subtitle: "A Simulation-Based Estimation Approach Focusing on the Joint Distribution of Effect Size and Sample Size"
+author: "Jan Luca Schnatz"
 format: 
   gfm:
     preview-mode: raw
@@ -13,8 +15,6 @@ knitr::opts_chunk$set(
   echo = FALSE
 )
 ```
-
-# Bachelor Thesis
 
 ## Project Structure
 

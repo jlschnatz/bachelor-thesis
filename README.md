@@ -1,7 +1,5 @@
-# My Project
-
-
-# Bachelor Thesis
+# Assessing Publication Bias in Meta-Analyses
+Jan Luca Schnatz
 
 ## Project Structure
 
@@ -12,6 +10,7 @@
     #> ├── check_validity.R
     #> ├── combine_plots.R
     #> ├── dispersion.R
+    #> ├── distributions.R
     #> ├── functions.R
     #> ├── h1.R
     #> ├── h2.R
@@ -52,7 +51,6 @@ file to compile the thesis.
 
     #> scripts/
     #> ├── 0_main.qmd
-    #> ├── 1_intro.qmd
     #> ├── 1_introduction.qmd
     #> ├── 2_methods.qmd
     #> ├── 3_results.qmd
