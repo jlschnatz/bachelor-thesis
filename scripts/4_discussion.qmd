@@ -4,13 +4,29 @@ bibliography: ../bibliography/tidy_references.bib
 
 # General Discussion
 
+
+
+The aim of the present thesis was to introduce a simulation-based framework to assess the extent of publication bias in meta-analyses and estimate corrected effect sizes in the presence of publication bias based on the joint distribution of effect size and sample size (SPEEC). In a proof of concept study, the viablility of the SPEEC method preliminary assessed, by deriving four theoretically justified hypotheses that should be corroborated by empirical data encompassing traditional meta-analyses and publication bias absent registered replication reports. In the confirmatory analyses it was found that, while from a statistical signifcance standpoint, three out of four predictions were statistically significant, there was a weak magnitude of effect found for these three hypotheses. Additionaly, no evidence was found for hypothesis four leading to conclusion pointing to potential problems in the parameter estimation of SPEEC.
+
+
+Assessed the potential parameter estimation of SPEEC with the subset of publication bias absent registered replication reports (RRR)
+
+to compare the estimation of the distributional paramerer within SPEEC to paramerters estimations from Maximum Likelihood (MLE)
+
+To quantify the extent and consistency of misestimation of SPEEC from MLE
+
+
+
+
 - The aim of the present study was to introduce a flexible simulation-based framework to assess publication bias...
+- Proof of concept study
 - 2 sentences about SPEEC
 - Short reiteration of confiromatory results (only that weird results were obtained)
-- Confirmatory results
-
+- Introduction of exploratory diagnostic results
 
 ## Extent and Consistency of Misestimation of SPEEC Parameters
+
+Regarding the first three exploratory diagnostic question, it was found that, except for the mean $\mu_d$ of the effect size distribution, there were systematic divergences between SPEEC and MLE in the parameter estimation. Across the estimated parameter space from MLE, these divergences were not constant with nonlinear functional forms displaying substantial heteroscedasticity. The correlational analyses indicated that there was a consistency in the misestimation of SPEEC from MLE for the mean $\mu_d$ and variance parameter $\sigma^2_d$ of the effect size distribution. TO put it differently, an increase in the absolute divergence between SPEEC and MLE was in one parameter was associated with an increase in the absolute divergence in the other one. Overall, no evidence was found that the miestimation in the effect size distribution parameters were associated with the misestimation of the parameters of the sample size distribution. It was also found that there is a consistency in the misestimation of the parameters of the effect size distribution ($\mu_d$, $\sigma^2_d$) and the publication bias parameter $\pbs$ such that larger divergences between both distributional parameters were associated with lower values of the publication bias parameter $\pbs$, for which we know in the RRR subset should no be the case.
 
 
 - Regarding the first three exploratory questions we found that across all distributional parameters, except the mean $\mu_d$ of the effect size distribution, *systematic* divergences between SPEEC and MLE. 
@@ -22,6 +38,23 @@ bibliography: ../bibliography/tidy_references.bib
 ---
 
 ## What Factors Drive the Parameter Misestimation in SPEEC?
+
+The systematic discrepancy that were partially consistent across the distributional parameters between SPEEC and MLE raise the question, what factor(s) are the root cause for the misestimation. To this regard, no evidence was found, that the uncertainty related to the sample size $k$ of the registered replication reports was associated with the misestimation.  However, absence of evidence is not evidence of absence, these results should be taken with a grain of salt, because sample size fo correlational analyses were low $n = 57$ implying low power, so we can´t know if null hypothesis is true or we made a type II error rate and could not detect association. However, strong correlations were found between misestimation of SPEEC from MLE in distributional parameters with between-study heterogeneity, and a negative correlation between heterogeneity and the publication bias parameter $\pbs$.
+
+
+Current simulation-framework of the SPEEC method assumes fixed-effects meta-analytical model, where only source of variance is attributed to sampling error.
+
+RRRs used for the analyses displayed moderate levels of overall heterogeneity [@linden_heterogeneity_2021]
+
+When there is more heterogeneity than can be modeled in the SPEEC method due to sampling error alone, it may be the case that the SPEEC method "compensate" for this additional level of heterogeneity dadurch dass andere parameter verschätzt werden
+
+Especially relevant in because of the way how the loss function for the optimization is defined -> minimizing the KLD between estimated kernel densities from empirical and simulated data of effect size sample size distribution.
+
+When empirical effect size sample size distribution displays more effect size heterogeneity than can be modeled in the simulated data due to sampling error alone, SPEEC method has to "compensate" and "adjust" the parameters of the simulated data, such that it minimizes the KLD 
+
+- overestimation of variance parameter of SPEEC method $\sigma^2_d$ 
+- decrease in publication bias parameter $\pbs$, the lower $\pbs$ (the higher the predicted extent of publication bias), the larger the variance in the effect size distribution due to the emerging sparsity of data loss for nonsignificant simulated studies (with effect sizes close to zero and small sample sizes)
+
 
 What´s causing between divergences between MLE and SPEEC and the nonsensical predictions for SPEEC?
 
@@ -44,9 +77,11 @@ What´s causing between divergences between MLE and SPEEC and the nonsensical pr
   - Need large simulation study
 
 
-## Future Work
+## Future Research
 
+- call for implementation of heterogeneity aspects
 - clear need to implement heterogeneity aspects to get it to work, sample size planning
+- comprehensive simulation study -> to assess how adapted SPEEC performs under various conditions -> needed for validation
 
 
 ## Conclusion

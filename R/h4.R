@@ -35,7 +35,7 @@ mod_h4 <- betareg(
   link = "logit",
   link.phi = "identity",
   data = data_model,
-  control = betareg.control(method = "BFGS", trace = TRUE)
+  control = betareg.control(method = "L-BFGS", trace = TRUE)
   ) 
 
 summary(mod_h4)
@@ -118,7 +118,7 @@ data_table <- tidy(mod_h4, conf.int = TRUE) |>
   # transform CIs and estimate for log-OR to ORs
   mutate(across(c(estimate, conf.low, conf.high), exp)) |>
   mutate(ci = format_ci(conf.low, conf.high, ci_string = "", ci = NULL, digits = 2), .before = std.error) |>
-  select(-starts_with("conf
+  select(-starts_with("conf")) |>
   mutate(p.value = if_else(str_starts(term, "type_synthesis"), p_b1, p.value)) |>
   mutate(p.value = str_remove(format_p(p.value, name = NULL, digits = "apa"), "^0")) |>
   mutate(across(c(estimate, std.error, statistic), ~format_value(.x, digits = 2))) |>

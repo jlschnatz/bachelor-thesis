@@ -71,6 +71,11 @@ model_data <- data_meta |>
   select(id_meta, tau2 = tau.squared) |>
   mutate(tau = sqrt(tau2), .keep = "unused")
 
+model_data |> 
+  filter(id_meta %in% id_mr) |>
+  summarise(tau = winsor.mean(tau, trim = 0.1))
+
+
 # Join Data
 data_ml_speec <- reduce(list(data_k, ml_optim1, ml_optim2, data_optim), inner_join, by = "id_meta")  |> 
   select(-c(runtime, bestval)) |>
@@ -162,6 +167,7 @@ data_table <- data_ml_speec |>
   mutate(comparison = str_replace(comparison, "abs_delta_phi_n", "$\\\\lvert \\\\Delta_{\\\\phi_n} \\\\rvert$")) |>
   mutate(comparison = str_replace(comparison, "w_pbs", "$\\\\omega_{\\\\text{PBS}}$")) |>
   mutate(comparison = str_replace(comparison, "tau", "$\\\\tau$")) |>
+  mutate(comparison = str_replace(comparison, "k", "$k$")) |>
   mutate(comparison = str_replace(comparison, "-", " - ")) |>
   mutate(p_adj = p.adjust(p, "BH")) |>
   mutate(ci = glue("[{format_value(lower)}, {format_value(upper)}]")) |>
@@ -171,7 +177,7 @@ data_table <- data_ml_speec |>
   select(comparison, r , p, fmt_p, p_adj, ci)
 
 
-caption <- "Pairwise Pearson Correlations between the Absolute Difference of the Distributional Parameters from SPEEC and ML, Publication Bias Parameter and Meta-Analysis Size"
+caption <- "Pairwise Correlations between Absolute Divergences in Distributional Parameters of SPEEC and ML, Publication Bias Parameter, Meta-Analysis Size and Heterogeneity"
 
 table_diagnostics <- data_table |>
   mutate(r = cell_spec(r, bold = if_else(p < .05, TRUE, FALSE), format = "latex")) |>

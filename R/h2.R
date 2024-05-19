@@ -37,7 +37,7 @@ mod_h2 <- betareg(
   formula = w_pbs ~ 1 + I(Delta**2),
   link = "logit",
   data = data_model,
-  control = betareg.control(method = "BFGS", trace = TRUE)
+  control = betareg.control(method = "L-BFGS", trace = F)
 )
 summary(mod_h2)
 write_rds(mod_h2, here("data/src/model_h2.rds"))

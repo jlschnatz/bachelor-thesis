@@ -657,6 +657,17 @@
       ],
       "Hash": "99b79fcbd6c4d1ce087f5c5c758b384f"
     },
+    "dichromat": {
+      "Package": "dichromat",
+      "Version": "2.0-0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "stats"
+      ],
+      "Hash": "16e66f2a483e124af5fc6582d26005f7"
+    },
     "diffobj": {
       "Package": "diffobj",
       "Version": "0.3.5",
@@ -1674,6 +1685,31 @@
       ],
       "Hash": "7ce2733a9826b3aeb1775d56fd305472"
     },
+    "mapproj": {
+      "Package": "mapproj",
+      "Version": "1.2.11",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "maps",
+        "stats"
+      ],
+      "Hash": "37090866afbdb09e6437ba0b25c307a2"
+    },
+    "maps": {
+      "Package": "maps",
+      "Version": "3.4.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "utils"
+      ],
+      "Hash": "5f7886e53a3b39d4a110c7bd7fce9164"
+    },
     "marginaleffects": {
       "Package": "marginaleffects",
       "Version": "0.18.0",
@@ -1939,6 +1975,24 @@
         "rstudioapi"
       ],
       "Hash": "ac364dee7ff8277fb4144fcc1e26302f"
+    },
+    "pals": {
+      "Package": "pals",
+      "Version": "1.8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "colorspace",
+        "dichromat",
+        "grDevices",
+        "graphics",
+        "mapproj",
+        "maps",
+        "methods",
+        "stats"
+      ],
+      "Hash": "ee8ea3d5a65b3c00a2329e9c36115f13"
     },
     "parallelly": {
       "Package": "parallelly",

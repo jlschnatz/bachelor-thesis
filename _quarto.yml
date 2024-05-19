@@ -26,8 +26,8 @@ format:
     documentclass: scrartcl
     classoption: twoside      
     geometry:
-      - inner=2.5cm
-      - outer=3.5cm
+      - inner=3.5cm
+      - outer=2.5cm
       - top=2.5cm
       - bottom=3.5cm
     link-citations : true

@@ -34,7 +34,7 @@ mod_h1 <- betareg(
   link = "logit",
   link.phi = "identity",
   data = data_model,
-  control = betareg.control(method = "BFGS", trace = TRUE)
+  control = betareg.control(method = "L-BFGS", trace = F)
   ) 
 
 summary(mod_h1)

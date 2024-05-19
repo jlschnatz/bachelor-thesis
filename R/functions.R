@@ -286,3 +286,11 @@ str_discr <- function(x, parameter) {
     subs <- x[parameter, ]
     glue::glue('$M{subs$parameter}$ = {subs$mean}, $Mdn{subs$parameter}$ = {subs$median}')
 }
+
+# reparametrize nb-distribution from NB(phi, mu) to NB(r, p)
+reparametrize_nb <- function(phi, mu) {
+    stopifnot(phi > 0, mu > 0)
+    p <- phi / (phi + mu)
+    size <- phi
+    return(data.frame("size" = size, "p" = p))
+}

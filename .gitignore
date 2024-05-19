@@ -11,3 +11,4 @@
 /scripts/0_main_cache/
 build.log
 correction/
+/.luarc.json
