@@ -19,8 +19,8 @@ format:
     department: "Institut für Psychologie und Sportwissenschaften" 
     university: Goethe-Universität Frankfurt am Main
     promotor: Prof. Dr. Martin Schultze
-    copromotor: Julia Beitner M.Sc.
-    due-date: "21. Mai, 2024"
+    copromotor: Julia Beitner, M.Sc.
+    due-date: "21. Mai 2024"
     
     # document settings
     documentclass: scrartcl

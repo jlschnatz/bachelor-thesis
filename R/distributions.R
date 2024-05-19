@@ -98,7 +98,7 @@ p3 <- tibble(
     )
 
 font_add_google("Inter", "font2")
-(free(p1) + free(p2)) + free(p3) +
+free(p1) + free(p2)  +
     plot_annotation(tag_levels = "A") &
     theme(
         plot.tag = element_text(face = "bold", family = "font2"),

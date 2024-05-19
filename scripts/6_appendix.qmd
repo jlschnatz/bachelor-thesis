@@ -24,6 +24,10 @@ source(here("R/functions.R"))
 
 ## Appendix A: Research Transparency Statement
 
+[@schnatz_assessing_2024]
+
+https://osf.io/87m9k/
+
 The present thesis project was aimed to to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available on a repository on the Local Infrastructure for Open Science (LIFOS) for members of Goethe university (https://tinyurl.com/lifos-schnatz-thesis), on the Open Science Framework (https://tinyurl.com/osf-schnatz-thesis) of this thesis and on GitHub (https://github.com/jlschnatz/bachelor-thesis). To enhance the reproducability of this project, all analyses, figures, the thesis manuscript itself are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was managed using *Snakemake* [@molder_sustainable_2021] and the R packages dependencies and version management used for the statistical analyses were managed using *renv* [@ushey_renv_2024]. The thesis manuscript itself is dynamically generated and reproducible using the *Quarto* publishing system [@allaire_quarto_2024].
 
 ## Appendix B: Power Analyses determining the SESOIs

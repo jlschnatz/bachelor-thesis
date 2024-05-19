@@ -117,7 +117,7 @@ nice_table <- function(x, digits = 2, caption, align = NULL, col_names = NULL, g
   kableExtra::column_spec(column = seq_len(n_col), width = width_per_col)
 
   if (!is.null(general_fn) || !is.null(symbol_fn) || !is.null(number_fn) || !is.null(alphabet_fn)) {
-    general_fn <- paste0("\\\\noindent \\\\textit{Note.} ", general_fn)
+    general_fn <- paste0("\\\\noindent\\\\textit{Note.} ", general_fn)
     out <- table_raw |>
       kableExtra::footnote(
         general = general_fn,
