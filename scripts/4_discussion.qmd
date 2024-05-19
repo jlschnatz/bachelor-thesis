@@ -12,45 +12,32 @@ To further diagnose these potential parameter estimation challenges, five explor
 
 Regarding the first three exploratory diagnostic questions, it was found that, except for the mean $\mu_d$ of the effect size distribution, there were *systematic* divergences between SPEEC and MLE in the parameter estimation. This misestimation of SPEEC from MLE was not constant across the parameter space of the MLE estimates, displaying nonlinear functional forms and substantial heteroscedasticity. 
 
-The correlational analyses indicated a consistency in the misestimation of SPEEC compared to MLE for the mean $|\Delta_{\widehat{\mu}_d}|$ and variance parameter $|\Delta_{\widehat{\sigma}^2_d}|$ of the effect size distribution. In other words, an increase in the absolute divergence between SPEEC and MLE in one parameter was associated with an increase in the absolute divergence in the other parameter. The absence of any substantial (and significant) correlations between the divergences of SPEEC and MLE for effect size distribution parameters ($|\Delta_{\widehat{\mu}_d}|$, $|\Delta_{\widehat{\sigma}^2_d}|$) and sample size distribution parameters ($|\Delta_{\widehat{\phi}_n}|$, $|\Delta_{\widehat{\mu}_n}|$) suggests there is no evidence of a consistency between the misestimation of of SPEEC from MLE of effect size parameters and sample size parameters. However, there was a strong and statistically significant negative correlation between the parameters of the effect size distribution ($|\Delta_{\widehat{\mu}_d}|$, $|\Delta_{\widehat{\sigma}^2_d}|$) and the publication bias parameter $\epbs$ such that larger divergences between MLE and SPEEC of the distributional parameters were associated with lower predicted values of the publication bias parameter. Because, as argued previously, $\epbs$ should equal theoretically exactly 1, this negative correlation can be interpreted as a consistency in the misestimation of the effect size parameter of SPEEC from MLE and the misestimation of the publication bias parameter $\epbs$.
+The correlational analyses indicated a consistency in the misestimation of SPEEC compared to MLE for the mean $|\Delta_{\widehat{\mu}_d}|$ and variance parameter $|\Delta_{\widehat{\sigma}^2_d}|$ of the effect size distribution. In other words, an increase in the absolute divergence between SPEEC and MLE in one parameter was associated with an increase in the absolute divergence in the other parameter. The absence of any substantial (and significant) correlations between the divergences of SPEEC and MLE for effect size distribution parameters ($|\Delta_{\widehat{\mu}_d}|$, $|\Delta_{\widehat{\sigma}^2_d}|$) and sample size distribution parameters ($|\Delta_{\widehat{\phi}_n}|$, $|\Delta_{\widehat{\mu}_n}|$) suggests there is no evidence of a consistency between the misestimation of of SPEEC from MLE of effect size parameters and sample size parameters. However, there was a strong and statistically significant negative correlation between the parameters of the effect size distribution ($|\Delta_{\widehat{\mu}_d}|$, $|\Delta_{\widehat{\sigma}^2_d}|$) and the publication bias parameter $\epbs$ such that larger divergences between MLE and SPEEC of the distributional parameters were associated with lower predicted values of the publication bias parameter. Because, as argued previously, $\epbs$ should in theory equal exactly 1, this negative correlation can be interpreted as a consistency in the misestimation of the effect size parameter of SPEEC from MLE and the misestimation of the publication bias parameter $\epbs$.
 
-## What Factors Drive the Parameter Misestimation in SPEEC?
+## Which Factors Drive the Parameter Misestimation in SPEEC?
 
 The systematic discrepancy between MLE and SPEEC for the distribution parameters, together with the consistency in the misestimation of the effect size parameters and the publication bias parameter, begs the question of what factors are responsible for the parameter misestimation of the SPEEC method.
 
-In this regard, no evidence was found that uncertainty related to the sample size $k$ of the RRRs was associated with the misestimation of the distributional parameters of SPEEC from MLE. However, strong positive correlations were observed between the misestimation of SPEEC from MLE in the effect size distribution parameters ($|\Delta_{\widehat{\mu}d}|$, $|\Delta{\widehat{\sigma}^2_d}|$) and between-study heterogeneity $\widehat{\tau}$. Additionally, a medium negative correlation was observed between the publication bias parameter $\epbs$ and between-study heterogeneity $\widehat{\tau}$.
+In this regard, no evidence was found that the sample size $k$ of the RRRs was associated with the misestimation of the distributional parameters of SPEEC from MLE. However, strong positive correlations were observed between the misestimation of SPEEC from MLE in the effect size distribution parameters ($|\Delta_{\widehat{\mu}d}|$, $|\Delta_{\widehat{\sigma}^2_d}|$) and between-study heterogeneity $\widehat{\tau}$. Additionally, a medium negative correlation was observed between the publication bias parameter $\epbs$ and between-study heterogeneity $\widehat{\tau}$. This indicates that increasing observed heterogenity $\widehat{\tau}$ is associated with larger misestimation of distributional parameter of SPEEC from MLE and larger misestimation of the publication bias parameter $\epbs$. Overall, these results highlight the potential significance of between-study heterogeneity in influencing parameter misestimation.
 
+This is plausible from the perspective that the simulation framework of SPEEC currently assumes a fixed-effect meta-analytical model, where the only source of effect size variation is attributable to sampling error. Both the classical meta-analyses and the RRRs of the empirical data used for the proof of concept displayed moderate to large levels of between-study heterogeneity [@linden_heterogeneity_2021]. Thus, the the empirical data displayed an additional level of effect size variation that could not be adequately modeled in the SPEEC method due to sampling error alone. Especially due the definition of the loss function $D_{\text{KL}}$ as a statistical distance between kernel densities from empirical and simulated data, parameters may be erroneously adjusted in the presence of heterogeneity to minimize the loss function. 
 
-As I will argue below, this may be a plausible cause of the parameter misestimation of the SPEEC method regarding the empirical data.
+This could be one potential explanation for the associated predicted decrease in $\epbs$ for high heterogeneity $\widehat{\tau}$, as more severe publication bias implies that the nonsignificant studies, that are likely to have effect sizes close to zero, are censored, thus artificially increasing the overall variance to account for heterogeneity in the minimzation of $D_{\text{KL}}$. Furthermore, the same line of reasoning could also account for the positive relationship between $| \Delta_{\widehat{\sigma}^2_d} |$ and $\sigma^2_d$, as the overestimation of $\sigma^2_d$ by SPEEC compared to MLE increases the overall variability of the effect size distribution to seamingly capture heterogeneity.
 
+In summary, the challenges faced by the current version of the SPEEC method, that are likely to attributable to between-study heterogeneity, align with other statistical methods that assume a fixed-effects meta-analytical model, like *p*-uniform [@van_assen_meta-analysis_2015] and *p*-curve analysis [@simonsohn_p-curve_2014], which tend to perform poorly in the presence of high heterogeneity [@mcshane_adjusting_2016].
 
-Current simulation-framework of the SPEEC method assumes fixed-effects meta-analytical model, where only source of effect size variation is attributable to sampling error.
+overestimation of the true effect size under high heterogeneity [@mcshane_adjusting_2016; @carter_correcting_2019; @van_aert_conducting_2016]
 
-Meta-analyses and RRRs used for the proof of concept displayed moderate to large levels of between-study heterogeneity [@linden_heterogeneity_2021]. 
-
-This means that empirical data displayed additional level of effect size variation, that could not be modeled in SPEEC method due to sampling error alone.
-
-Because of how the loss function for the stochastic optimization is defined -> minimizing the kullback-leibler divergence between estimated kernel densities from empirical and simulated data of effect size sample size distribution -> this means in practice that within the optimization parameters evolve such that the similarity between both is maximized
-
-Dadurch dass SPEEC method nicht heterogeneität modelliert, ist eine plausible erklärung, dass die effectstärke parameter verschätzt werden "müssen" damit KLD minimiert wird.
-
-
-When empirical effect size sample size distribution displays more effect size heterogeneity than can be modeled in the simulated data due to sampling error alone, SPEEC method has adjust the parameters of the simulated data, such that it minimizes the KLD 
-
-- overestimation of variance parameter of SPEEC method $\sigma^2_d$ 
-- decrease in publication bias parameter $\pbs$, the lower $\pbs$ (the higher the predicted extent of publication bias), the larger the variance in the effect size distribution due to the emerging sparsity of data loss for nonsignificant simulated studies (with effect sizes close to zero and small sample sizes)
-
-
-
-- explain how these results align with other approaches‘ problems to account for heterogeneity
- 
 
 ## Limitations
 
+Objections to the SPEEC method itself
+- other than the observed parameter estimation challenges that are likely due to heterogeneity:
+- altough in comparison to other common methods, an explicit generative publication bias model was assumed, real life data models and selection models of publication bias are far more complicated [@mcshane_adjusting_2016]: studies often have a multiple dependent effects of interest (selection likely to be based on properties of these multiple dependent effects jointly), QRPs also present which interacts with publication bias [@friese_p-hacking_2020] -> still kind of unrealistic model
+- no quantification of uncertainty of the parameter estimation of SPEEC -> what missing confidence in the publication bias-corrected meta-analytical effect size and the exent of publication bias
 
-- Limitations of SPEEC
-  -  No hypothesis test -> or quantification of uncertainty of estimation right now
-- Limitations of the study
+
+Limitations of the study
   - Study designed as a proof of concept -> only a preliminary evalution of the SPEEC method
   - Need large simulation study
 
@@ -58,11 +45,11 @@ When empirical effect size sample size distribution displays more effect size he
 ## Directions for Future Research
 
 1. Further development of the SPEEC method
-   - Given that between-study heterogeneity is very common in psychology and other fields [@linden_heterogeneity_2021; @van_erp_estimates_2017; @kenny_unappreciated_2019] -> importance of incorporting heterogeneity parameter in the simulation framework -> einordnung der ergebnise -> sonst parameter schätzung nicht gut
+   - Given that between-study heterogeneity is very common in psychology and other fields [@linden_heterogeneity_2021; @van_erp_estimates_2017; @higgins_commentary_2008] -> importance of incorporting heterogeneity parameter in the simulation framework -> einordnung der ergebnise -> sonst parameter schätzung nicht gut
    - Consider sample size planning, p-hacking etc.
 2. Comprehensive Evaluation of the SPEEC method (simulation study)
    - Comprehensive simulation study
-   - How does adapted SPEEC perform under various conditions -> heterogeneity, sample size, true effect size, degree of publication bias, (additional) p-hacking
+   - How does adapted SPEEC perform under various conditions -> heterogeneity, sample size, true effect size, degree of publication bias, (additional) *p*-hacking
 
 ## Conclusion
 
