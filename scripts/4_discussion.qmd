@@ -18,9 +18,10 @@ The correlational analyses indicated a consistency in the misestimation of SPEEC
 
 The systematic discrepancy between MLE and SPEEC for the distribution parameters, together with the consistency in the misestimation of the effect size parameters and the publication bias parameter, begs the question of what factors are responsible for the parameter misestimation of the SPEEC method.
 
-In this regard, no evidence was found, that uncertainty related to the sample size $k$ of the RRRs was associated with the misestimation of the distributional parameters of SPEEC from MLE. However, strong positive correlations were found between the misestimation of SPEEC from MLE in the effect size distribution parameters $|\Delta_{\widehat{\mu}_d}|$, $|\Delta_{\widehat{\sigma}^2_d}|$) and between-study heterogeneity $\widehat{\tau}$, Additionaly, medium negative correlation between publication bias parameter $\epbs$ and and between-study heterogeneity $\widehat{\tau}$.
+In this regard, no evidence was found that uncertainty related to the sample size $k$ of the RRRs was associated with the misestimation of the distributional parameters of SPEEC from MLE. However, strong positive correlations were observed between the misestimation of SPEEC from MLE in the effect size distribution parameters ($|\Delta_{\widehat{\mu}d}|$, $|\Delta{\widehat{\sigma}^2_d}|$) and between-study heterogeneity $\widehat{\tau}$. Additionally, a medium negative correlation was observed between the publication bias parameter $\epbs$ and between-study heterogeneity $\widehat{\tau}$.
 
-As I will argue below, this may be a plausible cause of the parameter misestimation.
+
+As I will argue below, this may be a plausible cause of the parameter misestimation of the SPEEC method regarding the empirical data.
 
 
 Current simulation-framework of the SPEEC method assumes fixed-effects meta-analytical model, where only source of effect size variation is attributable to sampling error.
