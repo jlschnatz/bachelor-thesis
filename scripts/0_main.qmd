@@ -9,16 +9,16 @@
 
 # Abstract {.unnumbered}
 
-
 ```{=tex}
 \newpage
 \begingroup
 \setstretch{1.3}
-\pagenumbering{arabic}
 \setcounter{tocdepth}{2}
 \tableofcontents
 \endgroup
 \newpage
+\pagenumbering{arabic}
+
 ```
 
 

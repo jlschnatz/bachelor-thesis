@@ -4,25 +4,9 @@ bibliography: ../bibliography/tidy_references.bib
 
 # General Discussion
 
+The objective of this thesis was to introduce a flexible simulation-based framework, to assess the extent of publication bias and estimate corrected effect sizes based on the joint distribution of effect size and sample size (SPEEC). In a proof-of-concept study, the viability of the SPEEC method was evaluated through four theoretically justified hypotheses, which were should be corroborated by empirical data encompassing both classical meta-analyses and publication bias-free registered replication reports (RRRs) if the method works in principle. The confirmatory analyses revealed that, while three out of the four predictions were statistically significant, the effect sizes for these hypotheses were weak. Additionally, no evidence supported the fourth hypothesis pointing to potential issues with the parameter estimation in the SPEEC method.
 
-
-The aim of the present thesis was to introduce a simulation-based framework to assess the extent of publication bias in meta-analyses and estimate corrected effect sizes in the presence of publication bias based on the joint distribution of effect size and sample size (SPEEC). In a proof of concept study, the viablility of the SPEEC method preliminary assessed, by deriving four theoretically justified hypotheses that should be corroborated by empirical data encompassing traditional meta-analyses and publication bias absent registered replication reports. In the confirmatory analyses it was found that, while from a statistical signifcance standpoint, three out of four predictions were statistically significant, there was a weak magnitude of effect found for these three hypotheses. Additionaly, no evidence was found for hypothesis four leading to conclusion pointing to potential problems in the parameter estimation of SPEEC.
-
-
-Assessed the potential parameter estimation of SPEEC with the subset of publication bias absent registered replication reports (RRR)
-
-to compare the estimation of the distributional paramerer within SPEEC to paramerters estimations from Maximum Likelihood (MLE)
-
-To quantify the extent and consistency of misestimation of SPEEC from MLE
-
-
-
-
-- The aim of the present study was to introduce a flexible simulation-based framework to assess publication bias...
-- Proof of concept study
-- 2 sentences about SPEEC
-- Short reiteration of confiromatory results (only that weird results were obtained)
-- Introduction of exploratory diagnostic results
+To further diagnose these potential parameter estimation challenges, five exploratory diagnostic questions were derived and the subset of publication bias-free RRRs was used to compare the distributional parameters estimated using SPEEC to those estimated using Maximum Likelihood Estimation (MLE). Additionaly, it was analyzed how these divergences between SPEEC and MLE are associated with the publication bias parameter $\pbs$ and uncertainty related factors such as the meta-analytical sample size $k$ and between-study heterogeneity $\tau$. This analysis aimed to quantify the extent and consistency of misestimations in SPEEC compared to MLE (question 1-3) and to identify potential root causes of the parameter estimation issues (question 4-5).
 
 ## Extent and Consistency of Misestimation of SPEEC Parameters
 

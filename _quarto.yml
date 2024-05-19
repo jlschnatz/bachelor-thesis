@@ -44,6 +44,7 @@ format:
     link-citation: true
     engine: knitr
     zotero: true
+    keep-tex: false
     include-in-header: tex/header.tex
     template-partials: 
       - tex/before-body.tex 
