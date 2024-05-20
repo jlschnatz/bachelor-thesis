@@ -24,12 +24,14 @@ This is plausible from the perspective that the simulation framework of SPEEC cu
 
 This could be one potential explanation for the associated predicted decrease in $\epbs$ for high heterogeneity $\widehat{\tau}$, as more severe publication bias implies that the nonsignificant studies, that are likely to have effect sizes close to zero, are censored, thus artificially increasing the overall variance to account for heterogeneity in the minimzation of $D_{\text{KL}}$. Furthermore, the same line of reasoning could also account for the positive relationship between $| \Delta_{\widehat{\sigma}^2_d} |$ and $\sigma^2_d$, as the overestimation of $\sigma^2_d$ by SPEEC compared to MLE increases the overall variability of the effect size distribution to seamingly capture heterogeneity.
 
-In summary, the challenges faced by the current version of the SPEEC method, that are likely to attributable to between-study heterogeneity, align with other statistical methods that assume a fixed-effects meta-analytical model, like *p*-uniform [@van_assen_meta-analysis_2015] and *p*-curve analysis [@simonsohn_p-curve_2014], which tend to perform poorly in the presence of high heterogeneity [@mcshane_adjusting_2016].
 
-overestimation of the true effect size under high heterogeneity [@mcshane_adjusting_2016; @carter_correcting_2019; @van_aert_conducting_2016]
-
+In summary, the challenges encountered by the current version of the SPEEC method, which are likely attributable to between-study heterogeneity, are parallel to those faced by other statistical techniques assuming a fixed-effects meta-analytical model, such as *p*-uniform and *p*-curve analysis [@simonsohn_p-curve_2014; @van_assen_meta-analysis_2015]. These methods tend to exhibit poor performance in the presence of substantial heterogeneity, resulting in an overestimation of the true effect size under such conditions [@mcshane_adjusting_2016; @carter_correcting_2019; @van_aert_conducting_2016]. This aligns with the positive correlation observed between $|\Delta_{\widehat{\mu}_d}|$ and $\widehat{\tau}$, suggesting that an increase heterogeneity is associated with a greater misestimation of SPEEC from MLE for the mean parameter $\mu_d$ of the effect size distribution.
 
 ## Limitations
+
+In addition to the already discussed likely challenges that SPEEC faces due to between-study heterogeneity there are several other limitations.
+
+these may be subdivided into objections to the SPEEC method itself and limitations of the study design.
 
 Objections to the SPEEC method itself
 - other than the observed parameter estimation challenges that are likely due to heterogeneity:
@@ -40,7 +42,6 @@ Objections to the SPEEC method itself
 Limitations of the study
   - Study designed as a proof of concept -> only a preliminary evalution of the SPEEC method
   - Need large simulation study
-
 
 ## Directions for Future Research
 

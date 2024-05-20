@@ -94,6 +94,8 @@ appendix <- knitr::knit_child(here("scripts/6_appendix.qmd"), quiet = TRUE)
 cat(appendix, sep = "\n")
 ```
 
+\newpage
+
 # Statutory Declaration {.unlisted .unnumbered}
 
 ```{r declaration}
@@ -104,7 +106,6 @@ today <- with_locale(new = c("LC_TIME" = "de_DE"), format(Sys.Date(), "%d. %B %Y
 ```
 
 \thispagestyle{empty}
-\newpage
 
 I herewith declare that I have composed the present thesis myself and without use of any other than the
 cited sources and aids. Sentences or parts of sentences quoted literally are marked as such; other references
