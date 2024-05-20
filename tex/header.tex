@@ -90,3 +90,8 @@
 %\usepackage[bb=ams]{mathalpha}
 \usepackage{bm}             % bold font in math mode
 
+\newcommand{\insertblankpage}{%
+  \clearpage% Flush pending page content
+  \thispagestyle{empty}% Set page style to be 'empty' (no header/footer)
+  \mbox{}% Some some (blank) content on the page
+  \clearpage}% Flash page content

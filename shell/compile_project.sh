@@ -26,7 +26,7 @@ clean_bib() {
     echo -e "$output" > "$output_ref"
 }
 
-clean_bib 
+#clean_bib 
 
 # Render Quarto Project
 render_quarto() {

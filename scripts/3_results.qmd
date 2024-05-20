@@ -1,6 +1,4 @@
----
-bibliography: ../bibliography/tidy_references.bib
----
+
 
 ```{r}
 #| message: false
@@ -255,7 +253,7 @@ The estimates of the MLE for the distributional parameters were obtained using t
 \label{fig:diagnostics}
 ```
 ```{r diagnostics}
-#| out-width: 100%
+#| out-width: 65%
 #| fig-align: center
 knitr::include_graphics(here("figures/method_comparison.png"))
 ```

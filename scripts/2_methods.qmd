@@ -1,6 +1,4 @@
----
-bibliography: ../bibliography/tidy_references.bib
----
+
 
 ```{r}
 #| echo: false

@@ -26,10 +26,10 @@ format:
     documentclass: scrartcl
     classoption: twoside      
     geometry:
-      - inner=3.5cm
-      - outer=2.5cm
+      - inner=3.0cm
+      - outer=3.0cm
       - top=2.5cm
-      - bottom=3.5cm
+      - bottom=3.0cm
     link-citations : true
     urlcolor       : black
     linkcolor      : black
@@ -37,7 +37,7 @@ format:
     toc: false
     fig-align: center
     fig-cap-location: top
-    bibliography: bibliography/tidy_references.bib
+    bibliography: bibliography/final_references.bib
     csl: apa.csl
     citecolor: black
     cite-method: citeproc

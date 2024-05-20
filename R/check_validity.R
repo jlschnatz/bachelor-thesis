@@ -371,6 +371,22 @@ p_comb <- (p_mu_d | p_sigma2_d | p_mu_n | p_phi_n) +
   theme(plot.tag = element_text(face = "bold", family = "font2", margin = margin(l = 10)),
         plot.margin = margin(l = 0, r = 5, unit = "pt")) 
 
+p_comb <- (p_mu_d | p_sigma2_d | p_mu_n | p_phi_n) +
+  plot_layout(ncol = 2, nrow = 2) +
+  plot_annotation(tag_levels = c("A")) &
+  theme(plot.tag = element_text(face = "bold", family = "font2", margin = margin(l = 10)),
+        plot.margin = margin(l = 0, r = 5, t = 5, b = 5, unit = "pt")
+        ) 
+
+
+# Save
+ggsave(
+  plot = p_comb, 
+  filename = here("figures/method_comparison.png"), 
+  width = 6, height = 7, 
+  bg = "white", dpi = 500
+  )
+
 # Save
 ggsave(
   plot = p_comb, 
