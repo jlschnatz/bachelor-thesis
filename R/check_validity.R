@@ -378,3 +378,50 @@ ggsave(
   width = 11, height = 3.5, 
   bg = "white", dpi = 500
   )
+
+library(GGally)
+
+lowerFn <- function(data, mapping, ...) {
+  p <- ggplot(data = data, mapping = mapping) +
+    ggdist::stat_slab(normalize = "xy", height = 0.7, fill = "#000C7D", alpha = .8, breaks = 12)
+  p
+}
+
+diagFn <- function(data, mapping, ...) {
+  p <- ggplot(data = data, mapping = mapping) +
+    geom_point(color = "#000C7D", alpha = .5) +
+    geom_smooth(method = "lm", color = "#000C7D", fill = "#000C7D")
+  p
+}
+ 
+ p <- data_ml_speec |>
+ filter(id_meta %in% id_mr) |>
+  select(starts_with("abs_delta"), w_pbs, tau) |>
+  select(-ends_with("n")) |>
+  ggpairs(
+    lower = list(continuous = diagFn),
+    diag= list(continuous = lowerFn),
+    upper = list(continuous = "blankDiag"),
+    columnLabels = c(
+      "'| '*Delta[widehat(mu)[d]]*' |'", "'| '*Delta[widehat(sigma)[d]^{2}]*' |'", 
+      "widehat(omega)[PBS]", "widehat(tau)"), 
+    labeller = label_parsed
+    ) +
+  ggdist::theme_ggdist() +
+  scale_x_continuous(expand = expansion()) +
+  scale_y_continuous(expand = expansion()) +
+  coord_cartesian(clip = "off") +
+  theme(
+    text = element_text(family = "font"),
+    strip.text = element_text(size = 12),
+    strip.placement = "outside",
+    strip.background = element_rect(color = "white", size = 3)
+    )
+
+  ggsave(plot = p, filename = here("figures/pairs.png"), dpi = 500, bg = "white")
+  
+
+
+
+
+
