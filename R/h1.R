@@ -67,10 +67,10 @@ predictions(mod_h1, by  = "z_rs", type = "response", conf_level = 0.95) |>
   coord_cartesian(clip = "off") +
   theme(
     text = element_text(family = "font"),
-    axis.title = element_text(size = 10),
+    axis.title = element_text(size = 11),
     plot.margin = margin(5, 5, 5, 5, "mm"),
     axis.title.y = element_text(margin = margin(r = 0, unit = "mm")),
-    axis.text.y = element_text(margin = margin(l = 0, unit = "mm")),
+    axis.text.y = element_text(margin = margin(l = 0, unit = "mm"), size = 11),
     axis.title.x = element_text(margin = margin(t = 8, unit = "mm"))
     ) -> p
 

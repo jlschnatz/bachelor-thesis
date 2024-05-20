@@ -61,7 +61,7 @@ p <- ggeffect(mod_h2, "Delta [-.7:.7, by = 0.01]") |>
     expand = expansion(),
   ) +
   scale_x_continuous(
-    name = latex2exp::TeX("Difference $\\Delta_{\\widehat{\\mu}_d}$"),
+    name = latex2exp::TeX("Mean Difference $\\Delta_{\\widehat{\\mu}_d}$"),
     limits = c(-.8, .8),
     breaks = seq(-.8, .8, .2),
     expand = expansion()
@@ -71,9 +71,9 @@ p <- ggeffect(mod_h2, "Delta [-.7:.7, by = 0.01]") |>
   theme(
     text = element_text(family = "font"),
     plot.margin = margin(5, 5, 5, 5, "mm"),
-    axis.title.y = element_text(margin = margin(r = 0, unit = "mm")),
+    axis.title.y = element_text(margin = margin(r = 0, unit = "mm"), size = 11),
     axis.text.y = element_text(margin = margin(l = 0, unit = "mm")),
-    axis.title.x = element_text(margin = margin(t = 8, unit = "mm"))
+    axis.title.x = element_text(margin = margin(t = 8, unit = "mm"), size = 11)
   )
 
 write_rds(p, file = here("data/src/plot_h2.rds"))

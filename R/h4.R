@@ -44,10 +44,8 @@ write_rds(mod_h4, here("data/src/model_h4.rds"))
 # get quantiles of data by group
 summarise(data_model, fivenum2(w_pbs), .by = type_synthesis)
 
-
 # Plot model predictions ————————————————————————————————————————————————————————————————————————————————————————————————————
 set.seed(42)
-
 
 p <- avg_predictions(mod_h4, by = "type_synthesis") |> 
   as_tibble() |> 
@@ -56,13 +54,13 @@ p <- avg_predictions(mod_h4, by = "type_synthesis") |>
     data = data_model, 
     mapping = aes(y = w_pbs),
     width = 0.025,
-    alpha = 0.2,
+    alpha = 0.3,
     size = 1
     ) +
   stat_slab(
     data = data_model, 
     mapping = aes(y = w_pbs, fill = type_synthesis),
-    alpha = .6,
+    alpha = .7,
     normalize = "groups",
     adjust = .8,
     trim = TRUE,
@@ -90,11 +88,11 @@ p <- avg_predictions(mod_h4, by = "type_synthesis") |>
   coord_cartesian(clip = "off") +
   guides(color = "none", fill = "none") +
   scale_fill_manual(
-    values = c("#051088", "#f7ce4c"),
+    values = c("#000C7D", "#FFF123"),
     guide = "none"
   ) +
   scale_color_manual(
-    values = c("#051088", "#f7ce4c"),
+    values = c("#000C7D", "#FFF123"),
     guide = "none"
   ) +
   theme_sjplot() +

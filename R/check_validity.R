@@ -249,7 +249,7 @@ p_mu_n <- data_ml_speec |>
   ) +
   coord_equal() +
   scale_colour_paletteer_c(
-    name = TeX(r"($\Delta_{\mu_n}^{*}=|\widehat{\mu}_{n_{SPEEC}} - \widehat{\mu}_{n_{MLE}}|$)"),
+    name = TeX(r"($\Delta_{\mu_n}=|\widehat{\mu}_{n_{SPEEC}} - \widehat{\mu}_{n_{MLE}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = c(0, 180),
     breaks = seq(0, 180, 60)
@@ -282,7 +282,7 @@ p_phi_n <- data_ml_speec |>
   ) +
   coord_equal() +
   scale_colour_paletteer_c(
-    name = TeX(r"($\Delta_{\phi_n}^{*}=|\widehat{\phi}_{n_{SPEEC}} - \widehat{\phi}_{n_{MLE}}|$)"),
+    name = TeX(r"($\Delta_{\phi_n}=|\widehat{\phi}_{n_{SPEEC}} - \widehat{\phi}_{n_{MLE}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = 10**c(-1, 2),
     breaks = 10**seq(-1, 2), 
@@ -315,7 +315,7 @@ p_mu_d <- data_ml_speec |>
   ) +
   coord_equal() +
   scale_colour_paletteer_c(
-    name = TeX(r"($\Delta_{\mu_d}^{*}=|\widehat{\mu}_{d_{SPEEC}} - \widehat{\mu}_{d_{MLE}}|$)"),
+    name = TeX(r"($\Delta_{\mu_d}=|\widehat{\mu}_{d_{SPEEC}} - \widehat{\mu}_{d_{MLE}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = c(0, .3),
     breaks = seq(0, 0.3, 0.1)
@@ -352,7 +352,7 @@ p_sigma2_d <- data_ml_speec |>
   ) +
   coord_fixed() +
   scale_colour_paletteer_c(
-    name = TeX(r"($\Delta_{\sigma^2_d}^{*}=|\widehat{\sigma}^2_{d_{SPEEC}} - \widehat{\sigma}^2_{d_{MLE}}|$)"),
+    name = TeX(r"($\Delta_{\sigma^2_d}=|\widehat{\sigma}^2_{d_{SPEEC}} - \widehat{\sigma}^2_{d_{MLE}}|$)"),
     palette = "pals::kovesi.linear_bmy_10_95_c78",
     limits = 10**c(-4, 1),
     breaks = 10**seq(-4, 1),

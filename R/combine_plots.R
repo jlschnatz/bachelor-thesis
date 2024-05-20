@@ -17,3 +17,4 @@ ggsave(
   filename = here("figures/hypotheses_multipanel.png"),
   plot = plots, width = 9.5, height = 6.5, dpi = 1000
   )
+

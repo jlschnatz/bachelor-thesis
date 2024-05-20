@@ -9,6 +9,12 @@
 
 # Abstract {.unnumbered}
 
+\noindent
+The high prevalence of publication bias has been a long recognised concern for the validity of meta-analyses and more recently has been identified as a major contributor to the replication crisis leading to an overestimation of meta-analytic evidence. Although numerous statistical methods exist to assess publication bias, many have significant limitations by lacking an explicit generative publication bias model and demonstrating limited performance under various conditions frequently encountered in empirical data. The present study introduces SPEEC, a flexible and unified simulation-based framework to assess publiction bias and estimate bias-corrected effect sizes based on the joint distribution of effect size and sample size. SPEEC integrates explicit assumptions of the generative process of publication bias in its model. Effect size and sample size data are simulated from this model, and their joint estimated kernel density is iteratively compared with empirical data to adjust the model parameters, minimizing the Kullback-Leibler divergence as a statistical distance between the simulated and empirical data. The feasiability of SPEEC was evaluated in a proof-of-concept study using empirical data encompassing both classical meta-analyses ($n=150$) and publication bias absent registered replication reports ($n=57$). The confirmatory results highlighted potential challenges in the parameter estimation, while additional exploratory results suggested that between-study heterogeneity could be a significant factor contributing to these challenges. The results are discussed in terms of potential adaptations to SPEEC to address these challenges, additional factors that could be considered in the simulation framework to better model publication bias, and recommendations for future comprehensive assessments of SPEEC.
+
+\noindent
+*Keywords*: publication bias, meta-analysis, meta-science, simulation
+
 ```{=tex}
 \newpage
 \begingroup
@@ -18,9 +24,7 @@
 \endgroup
 \newpage
 \pagenumbering{arabic}
-
 ```
-
 
 ```{r}
 #| echo: false
@@ -34,7 +38,6 @@ knitr::opts_chunk$set(
 )
 
 library(here)
-
 ```
 
 # Introduction
@@ -47,7 +50,6 @@ library(here)
 intro <- knitr::knit_child(here("scripts/1_introduction.qmd"), quiet = TRUE)
 cat(intro, sep = "\n")
 ```
-
 
 ```{r}
 #| echo: false
@@ -99,10 +101,7 @@ cat(appendix, sep = "\n")
 # Statutory Declaration {.unlisted .unnumbered}
 
 ```{r declaration}
-
-library(withr)
-today <- with_locale(new = c("LC_TIME" = "de_DE"), format(Sys.Date(), "%d. %B %Y"))
-
+today <- withr::with_locale(new = c("LC_TIME" = "de_DE"), format(Sys.Date(), "%d. %B %Y"))
 ```
 
 \thispagestyle{empty}

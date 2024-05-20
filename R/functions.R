@@ -1,6 +1,5 @@
 #!/usr/bin/env Rscript
 
-
 #' @title Plot TOST Equivalence Test
 #' @description Plot the TOST equivalence test with the null hypothesis.
 #' @param tost An object of class `TOSTt`.
@@ -28,7 +27,7 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
   ggplot2::ggplot(NULL, ggplot2::aes(y = 0, dist = dist)) +
     ggdist::stat_slab(
       ggplot2::aes(fill = ggplot2::after_stat(level)),
-      alpha = .8,
+      alpha = .7,
       color = NA,
       slab_size = 0.5,
       .width = c(.9, 1)
@@ -53,7 +52,7 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
       family = "font",
       inherit.aes = FALSE
     ) +
-    ggplot2::scale_fill_manual(values = (c("#051088", "#f7ce4c"))) +
+    ggplot2::scale_fill_manual(values = (c("#000C7D", "#FFF123"))) +
     ggplot2::guides(fill = "none") +
     ggplot2::scale_y_continuous(
       name = NULL,
@@ -66,14 +65,14 @@ plot_equ_tnull <- function(tost, save_file = NULL, font = "Open Sans", ...) {
       breaks = seq(-.3, .3, .1),
       labels = scales::label_number(),
       expand = c(0, 0),
-      name = "Mean Difference"
+      name = TeX("Mean Difference $\\Delta_{\\widehat{\\mu}_d}$")
     ) +
     ggplot2::coord_cartesian(clip = "off") +
     sjPlot::theme_sjplot() +
     ggplot2::theme(
       plot.margin  = ggplot2::margin(t = 0, 1, 1, 1, unit = "lines"),
       panel.background = ggplot2::element_rect(color = "grey", linewidth = 0.5),
-      axis.title = element_text(size = 10),
+      axis.title = element_text(size = 11),
       text = ggplot2::element_text(family = "font"),
       panel.grid.major = ggplot2::element_line(linewidth = 0.2),
       panel.ontop = FALSE

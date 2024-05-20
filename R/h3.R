@@ -85,6 +85,7 @@ p_shapiro <- data_model  |>
     strip.text = element_text(size = 11)
     )
 
+
 ggsave(
   filename = here("figures/h3_qqplot.png"), 
   plot = p_shapiro, width = 8, height = 4, 
@@ -206,8 +207,9 @@ p <- ggplot() +
       legend.text.position = "left"
     ) 
 
-write_rds(p, file = here("data/src/plot_h3.rds")) # save
+p <- plot_equ_tnull(tost_t)
 
+write_rds(p, file = here("data/src/plot_h3.rds")) # save
 
 # calculate proportional distance according to Gutierrez & Cribbie (2023)
 lambda <- mean(with(data_model, mu_d - mean_d)) # observed mean difference
@@ -263,7 +265,6 @@ data_table_wilcox <- chuck(tost_wilcox, "TOST") |>
   mutate(p.value = str_remove(p.value, "^0")) |>
   relocate(c(E_Tplus, Sigma_Tplus, z), .after = statistic) |>
   relocate(hypothesis, .after = type)
-
 
 table_h3_wilcox <- nice_table(
   x = data_table_wilcox,
