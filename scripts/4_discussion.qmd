@@ -29,28 +29,23 @@ In summary, the challenges encountered by the current version of the SPEEC metho
 
 ## Limitations
 
-In addition to the already discussed likely challenges that SPEEC faces due to between-study heterogeneity there are several other limitations.
+Besides the previously discussed challenges in the parameter estimation of SPEEC, which are likely to result from heterogeneity, there are additional limitations of the present thesis that should be considered. These may be subdivided into objections against the SPEEC method itself and constraints of the study design.
 
-these may be subdivided into objections to the SPEEC method itself and limitations of the study design.
+A first major limitation of the SPEEC method itself, is the is the lack of quantification of uncertainty in the estimation of parameters in SPEEC. This lack of quantification of parameter uncertainty undermines the ability to accurately assess the confidence of these estimates [@lele_how_2020]. As an illustration, one would have varying degrees of confidence in the estimated extent of publication bias $\epbs$ and the corrected meta-analytical effect size $\mu_d$ for a small-scale meta-analysis with a sample size of $k=20$ in comparison to a large-scale meta-analysis with a sample size of $k=500$. This inability  can be considered an infeririority to other other common methods to assess publication bias that yield confidence estimates.
 
-Objections to the SPEEC method itself
-- other than the observed parameter estimation challenges that are likely due to heterogeneity:
-- altough in comparison to other common methods, an explicit generative publication bias model was assumed, real life data models and selection models of publication bias are far more complicated [@mcshane_adjusting_2016]: studies often have a multiple dependent effects of interest (selection likely to be based on properties of these multiple dependent effects jointly), QRPs also present which interacts with publication bias [@friese_p-hacking_2020] -> still kind of unrealistic model
-- no quantification of uncertainty of the parameter estimation of SPEEC -> what missing confidence in the publication bias-corrected meta-analytical effect size and the exent of publication bias
+Secondly, while the existence of an explicit generative publication bias model in SPEEC may be seen as an advancement compared to other methods lacking such assumptions entirely, the model's assumptions remain oversimplistic. Real-world scenarios involve more intricate data models and selection mechanisms. Studies often encompass multiple dependent effects of interest, with selection likely based on properties of these effects taken jointly [@mcshane_adjusting_2016]. In addition, the presence of questionable research practices in existing scientific research can further complicate the data and selection models due to its interaction with publication bias [@friese_p-hacking_2020].
 
-
-Limitations of the study
-  - Study designed as a proof of concept -> only a preliminary evalution of the SPEEC method
-  - Need large simulation study
+The constraints regarding the study design relate to the conception of the study as proof of concept. Although the investigation of the theoretically-derived hypotheses in the confirmatory analyses yielded important insights into potential parameter estimation challenges, and diagnostic exploratory findings underscored the potential significance of heterogeneity in explaining these challenges, the assessment was limited in its capacity to offer a holistic understanding of SPEEC's viability across various conditions. For this, large-scale simulation studies are necessary, because the parameter of interests are known and manipulable [@morris_using_2019].
 
 ## Directions for Future Research
 
-1. Further development of the SPEEC method
-   - Given that between-study heterogeneity is very common in psychology and other fields [@linden_heterogeneity_2021; @van_erp_estimates_2017; @higgins_commentary_2008] -> importance of incorporting heterogeneity parameter in the simulation framework -> einordnung der ergebnise -> sonst parameter schätzung nicht gut
-   - Consider sample size planning, p-hacking etc.
-2. Comprehensive Evaluation of the SPEEC method (simulation study)
-   - Comprehensive simulation study
-   - How does adapted SPEEC perform under various conditions -> heterogeneity, sample size, true effect size, degree of publication bias, (additional) *p*-hacking
+Taking into account the results of both the confirmatory and the exploratory diagnostic analyses, there is a call for further investigations in at least two directions. This encompasses the further development of the SPEEC method and a comprehensive assessment of SPEEC within a simulation setting.
+
+Regarding the former, considering the likely contribution of heterogeneity to the parameter misestimation in the investigated empirical data, as well as its common prevalence across meta-analyses [@linden_heterogeneity_2021; @van_erp_estimates_2017; @higgins_commentary_2008], highlights the importance of incorporating a heterogeneity parameter in the simulation framework of SPEEC. Failure to account for heterogeneity could otherwise potentially jeopardize the validity of SPEEC in settings where heterogeneity is present. Additionally, as briefly touched upon in the introduction, there exist other factors that influence the joint distribution of effect size and sample size, including *sample size planning*, where researchers plan sample sizes based on predicated effect sizes [@linden_publication_2024], and questionable research practices such as *p*-hacking, which can interact with publication bias [@friese_p-hacking_2020]. Incorporating these factors into the simulation framework in future research could lead to a more accurate modeling of publication bias.
+
+A comprehensive assessment of SPEEC within a simulation setting should focus on the evaluating the accuracy of parameter estimation of SPEEC under various conditions that are commonly encountered in real-world meta-analytical data and that have been considered in previous simulation studies that assessed other publication bias detection methods. Key factors to consider include the extent of publication bias ($\pbs$), true effect size ($\mu_d$), amount of heterogeneity ($\tau$),  the number of primary studies $k$ within the meta-analysis and questionable research practices such as *p*-hacking.
+
 
 ## Conclusion
+
 

@@ -390,7 +390,7 @@ lowerFn <- function(data, mapping, ...) {
 diagFn <- function(data, mapping, ...) {
   p <- ggplot(data = data, mapping = mapping) +
     geom_point(color = "#000C7D", alpha = .5) +
-    geom_smooth(method = "lm", color = "#000C7D", fill = "#000C7D")
+    geom_smooth(method = "lm", color = "#000C7D", fill = "#000C7D", alpha = .2)
   p
 }
  
@@ -418,7 +418,10 @@ diagFn <- function(data, mapping, ...) {
     strip.background = element_rect(color = "white", size = 3)
     )
 
-  ggsave(plot = p, filename = here("figures/pairs.png"), dpi = 500, bg = "white")
+  ggsave(
+    plot = p, filename = here("figures/pairs.png"), 
+    dpi = 500, bg = "white", width = 7, height = 7
+    )
   
 
 
