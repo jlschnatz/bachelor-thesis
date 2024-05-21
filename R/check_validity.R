@@ -386,13 +386,7 @@ ggsave(
   bg = "white", dpi = 500
   )
 
-# Save
-ggsave(
-  plot = p_comb, 
-  filename = here("figures/method_comparison.png"), 
-  width = 11, height = 3.5, 
-  bg = "white", dpi = 500
-  )
+
 
 library(GGally)
 

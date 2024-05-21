@@ -1,5 +1,4 @@
 
-
 ```{r}
 #| message: false
 #| echo: false
@@ -25,7 +24,7 @@ string_phi <- glue("$\\widehat{\\phi}$ = {{m_phi$b}}, {{m_phi$ci}}, $SE$ = {{m_p
 
 ```
 
-As an initial step, the assumptions made to determine the SESOIs for the four hypotheses were assessed. In the simulation-based sensitivity power analyses aimed at determining the SESOIs (see [Appendix B](Appendix B: Power Analyses determining the SESOIs)), three dispersion parameter conditions $\phi:\{10, 20, 30\}$ for the distribution of the publication bias parameter $\pbs$ were simulated. Employing an intercept-only beta regression model with the complete dataset, the estimated dispersion parameter was `r string_phi`. This much lower estimated dispersion in comparison to the simulated conditions indicates the variability in $\pbs$ was much higher that expected. In general, the lower the dispersion parameter $\phi$ for a fixed mean $\mu$, the higher the variance [@ferrari_beta_2004], as $\mathbb{V}[\pbs]=\mu \cdot (1 - \mu) / (1 + \phi)$. This finding contradicts our initial assumptions regarding the dispersion parameter's magnitude, rendering the interpretation of SESOIs for our hypotheses untenable. Consequently, it is appropriate to refrain from interpreting SESOIs that were determined from the simulation-based sensitivity power analyses in the subsequent analyses.
+As an initial step, the assumptions made to determine the SESOIs for the four hypotheses were assessed. In the simulation-based sensitivity power analyses aimed at determining the SESOIs (see [*Appendix B*](Appendix B)), three dispersion parameter conditions $\phi:\{10, 20, 30\}$ for the distribution of the publication bias parameter $\pbs$ were simulated. Employing an intercept-only beta regression model with the complete dataset, the estimated dispersion parameter was `r string_phi`. This much lower estimated dispersion in comparison to the simulated conditions indicates the variability in $\pbs$ was much higher that expected. In general, the lower the dispersion parameter $\phi$ for a fixed mean $\mu$, the higher the variance [@ferrari_beta_2004], as $\mathbb{V}[\pbs]=\mu \cdot (1 - \mu) / (1 + \phi)$. This finding contradicts our initial assumptions regarding the dispersion parameter's magnitude, rendering the interpretation of SESOIs for our hypotheses untenable. Consequently, it is appropriate to refrain from interpreting SESOIs that were determined from the simulation-based sensitivity power analyses in the subsequent analyses.
 
 <!-- Hypotheses I -->
 
@@ -251,6 +250,14 @@ Additionally, we were interested in whether the discrepancy between SPEEC and ML
 The estimates of the MLE for the distributional parameters were obtained using the Nelder-Mead optimizer [@nelder_simplex_1965]. Additionally, the mean and median discrepancy between SPEEC and MLE were calculated to descriptively assess the average difference between the two estimation methods. To estimate the extent to which the true effect sizes vary within an RRR, we used the standard deviation $\tau$ of the effect sizes to measure between-study heterogeneity. Heterogeneity was estimated using the DerSimonian-Laird estimator [@dersimonian_meta-analysis_1986] in the *metafor* package [version `r as.character(packageVersion("metafor"))`, @viechtbauer_metafor_2024].
 
 
+```{r}
+#| echo: false
+
+discr_ml_speec <- as.data.frame(read_rds(here("data/src/method_comparison_descr.rds")))
+rownames(discr_ml_speec) <- discr_ml_speec$parameter
+
+```
+
 ```{=latex}
 \begin{figure}[h]
 \caption{Divergence Between the Estimated Distributional Parameters of SPEEC and MLE}
@@ -272,17 +279,7 @@ knitr::include_graphics(here("figures/method_comparison.png"))
 \end{figure}
 ```
 
-
-
-```{r}
-#| echo: false
-
-discr_ml_speec <- as.data.frame(read_rds(here("data/src/method_comparison_descr.rds")))
-rownames(discr_ml_speec) <- discr_ml_speec$parameter
-
-```
-
-Regarding the first question, $\autoref{fig:diagnostics}$ provides a visual summary of the analysis comparing the distributional parameters estimated using the SPEEC method against those estimated using Maximum Likelihood Estimation (MLE). The diagonal line signifies perfect alignment between MLE and SPEEC. Values below the diagonal indicate higher values for MLE than SPEEC, while values above the diagonal indicate the opposite. Panel A of  $\autoref{fig:diagnostics}$ reiterates the findings of the analysis of $\hypothesis{3}{}$, suggesting a small discrepancy between the two methods in estimating the mean of the Gaussian effect size distribution $\mu_d$, `r str_discr(discr_ml_speec, "delta_mu_d")`. According to the equivalence test of $\hypothesis{3}{}$, this discrepancy can be deemed negligible. However, the other panels indicate contrasting outcomes. In Panel B, a systematic discrepancy in the estimation of the variance parameter of the effect size distribution $\sigma^2_d$ between SPEEC and MLE can be observed, `r str_discr(discr_ml_speec, "delta_sigma2_d")`. Descriptively, this suggests that, on average, the variance was greater in the SPEEC approach compared to MLE. Furthermore, this discrepancy increases in a nonlinear trend and displays substantial heteroscedasticity with rising variance estimates from the MLE approach. The greater the estimated variance from MLE, the greater the deviation of SPEEC from MLE, and the larger the variability in the estimation of SPEEC. Similarly, Panel C also illustrates a systematic overestimation of the mean parameter $\mu_n$ of the Negative-Binomial sample size distribution by SPEEC in comparison to MLE (`r str_discr(discr_ml_speec, "delta_mu_n")`), which again increases in a heteroscedastic exponential-appearing trend. Lastly, Panel D shows that SPEEC generally underestimated the dispersion parameter $\phi_n$ of the sample size distribution in comparison to the MLE estimate (`r str_discr(discr_ml_speec, "delta_phi_n")`) and furthermore indicates a systematic relationship in the discrepancy between the two approaches. Lastly, Panel D illustrates that SPEEC tends to underestimate the dispersion parameter $\phi_n$ of the sample size distribution compared to the MLE (`r str_discr(discr_ml_speec, "delta_phi_n")`) and also furthermore indicates a systematic relationship in the discrepancy between the two approaches.
+Regarding the first question, $\autoref{fig:diagnostics}$ provides a visual summary of the analysis comparing the distributional parameters estimated using the SPEEC method against those estimated using Maximum Likelihood Estimation (MLE). The diagonal line signifies perfect alignment between MLE and SPEEC. Values below the diagonal indicate higher values for MLE than SPEEC, while values above the diagonal indicate the opposite. Panel A of  $\autoref{fig:diagnostics}$ reiterates the findings of the analysis of $\hypothesis{3}{}$, suggesting a small discrepancy between the two methods in estimating the mean of the Gaussian effect size distribution $\mu_d$, `r str_discr(discr_ml_speec, "delta_mu_d")`. According to the equivalence test of $\hypothesis{3}{}$, this discrepancy can be deemed negligible. However, the other panels indicate contrasting outcomes. In Panel B, a systematic discrepancy in the estimation of the variance parameter of the effect size distribution $\sigma^2_d$ between SPEEC and MLE can be observed, `r str_discr(discr_ml_speec, "delta_sigma2_d")`. Descriptively, this suggests that, on average, the variance was greater in the SPEEC approach compared to MLE. Furthermore, this discrepancy increases in a nonlinear trend and displays substantial heteroscedasticity with rising variance estimates from the MLE approach. The greater the estimated variance from MLE, the greater the deviation of SPEEC from MLE, and the larger the variability in the estimation of SPEEC. Similarly, Panel C also illustrates a systematic overestimation of the mean parameter $\mu_n$ of the Negative-Binomial sample size distribution by SPEEC in comparison to MLE (`r str_discr(discr_ml_speec, "delta_mu_n")`), which again increases in a heteroscedastic exponential-appearing trend. Lastly, Panel D shows that SPEEC generally underestimated the dispersion parameter $\phi_n$ of the sample size distribution in comparison to the MLE estimate (`r str_discr(discr_ml_speec, "delta_phi_n")`) and furthermore indicates a systematic relationship in the discrepancy between the two approaches. Lastly, Panel D illustrates that SPEEC tends to only slightly underestimate the dispersion parameter $\phi_n$ of the sample size distribution compared to the MLE (`r str_discr(discr_ml_speec, "delta_phi_n")`) and also furthermore indicates a systematic relationship in the discrepancy between the two approaches.
 
 To address the remaining diagnostic questions, we conducted a pairwise correlational analysis using the Pearson correlation coefficient between the absolute differences of the parameter estimates derived from the two estimation methods, the publication bias parameter $\epbs$, the number of replication studies $k$ within each RRR and the between-study heterogeneity $\widehat{\tau}$. Concerning the multiple testing performed, the question of adjusting *p*-values in exploratory studies for multiple testing is an ongoing debate [@rubin_p_2017]. For reasons of transparency, both unadjusted and adjusted *p*-values are therefore reported following the method of Benjamini and Hochberg [-@benjamini_controlling_1995]. 
 
@@ -291,7 +288,6 @@ To address the remaining diagnostic questions, we conducted a pairwise correlati
 \begingroup
 \renewcommand{\arraystretch}{1.5}
    
-
 ```{r tab-ml-speec}
 #| results: asis
 
