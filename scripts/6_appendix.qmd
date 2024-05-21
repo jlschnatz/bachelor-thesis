@@ -1,6 +1,5 @@
 
 ```{=latex}
-\newpage
 \renewcommand{\thetable}{\Alph{section}\arabic{table}}
 \appendix
 \setcounter{section}{0}
@@ -21,15 +20,11 @@ source(here("R/functions.R"))
 
 ## Appendix A: Research Transparency Statement
 
-[@schnatz_assessing_2024]
-
-https://osf.io/87m9k/
-
-The present thesis project was aimed to to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available on a repository on the Local Infrastructure for Open Science (LIFOS) for members of Goethe university (https://tinyurl.com/lifos-schnatz-thesis), on the Open Science Framework (https://tinyurl.com/osf-schnatz-thesis) of this thesis and on GitHub (https://github.com/jlschnatz/bachelor-thesis). To enhance the reproducability of this project, all analyses, figures, the thesis manuscript itself are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was managed using *Snakemake* [@molder_sustainable_2021] and the R packages dependencies and version management used for the statistical analyses were managed using *renv* [@ushey_renv_2024]. The thesis manuscript itself is dynamically generated and reproducible using the *Quarto* publishing system [@allaire_quarto_2024].
+The present thesis project was aimed to be as transparent and reproducible as possible. The preregistration of the study, all data, code, and supplementary files needed to reproduce the results of this study are openly available in a repository on the Open Science Framework via this link https://osf.io/87m9k/ [see, @schnatz_assessing_2024] and on GitHub (https://github.com/jlschnatz/bachelor-thesis). To enhance the reproducibility of this project, all analyses, figures, and the thesis manuscript are generated within a containerized software environment using *Docker* [@merkel_docker_2014]. The workflow for the analyses was managed using *Snakemake* [@molder_sustainable_2021], and the R packages dependencies and version management used for the statistical analyses were managed using *renv* [@ushey_renv_2024]. The thesis manuscript is dynamically generated and reproducible using the *Quarto* publishing system [@allaire_quarto_2024].
 
 ## Appendix B: Power Analyses determining the SESOIs
 
-The simulated-based sensitivity power analysis targeted a statistical power of 80% with a fixed significance level of $\alpha = .05$. The simulated samples sizes were specified as follows:
+The simulated-based sensitivity power analysis targeted a statistical power of 80% with a fixed significance level of $\alpha = .05$. The simulated sample sizes were specified as follows:
 
 - $\hypothesis{1}{}$: $n = 150$ (only classical meta-analyses)
 - $\hypothesis{2}{}$ and $\hypothesis{4}{}$: $n = 207$ (both classical meta-analyses and registered replication reports)
@@ -47,7 +42,7 @@ $$
 
 \vspace{1cm}
 
-For hypothesis four, the proportions of the categorical predictor of the research synthesis type (classical meta-analysis $MA$, registered replication reports $RRR$) were chosen according the the actual proportions of the data ($n_{MA}=150, n_{RRR}=57$). For all simulations-based sensitivity power analyses ($\hypothesis{1}{}, \hypothesis{2}{}, \hypothesis{4}{}$), the number of simulations was set to $n_{iter}=5000$ and the average power was calculated across all simulations. More over, the the beta-regressions on $\pbs$ in $\hypothesis{i}{}$, $\hypothesis{2}{}$, and $\hypothesis{4}{}$ involved simulations for different dispersion parameter conditions $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. This is because the dispersion parameter directly influence the variance for a fixed mean. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. 
+For hypothesis four, the proportions of the categorical predictor of the research synthesis type (classical meta-analysis $MA$, registered replication reports $RRR$) were chosen according to the actual proportions of the data ($n_{MA}=150, n_{RRR}=57$). For all simulations-based sensitivity power analyses ($\hypothesis{1}{}, \hypothesis{2}{}, \hypothesis{4}{}$), the number of simulations was set to $n_{iter}=5000$ and the average power was calculated across all simulations. More over, the the beta-regressions on $\pbs$ in $\hypothesis{i}{}$, $\hypothesis{2}{}$, and $\hypothesis{4}{}$ involved simulations for different dispersion parameter conditions $\phi = \{10, 20, 30\}$, as lower dispersion parameters result in reduced test power. This is because the dispersion parameter directly influences the variance for a fixed mean. We set the SESOI for the parameters of interest more conservatively, ensuring a minimum power of 80% for the lowest dispersion parameter $\phi = 10$. 
 
 
 ```{=latex}
@@ -69,7 +64,6 @@ knitr::include_graphics(here("figures/power_sesoi.png"))
 \end{figure}
 ```
 
-
 ## Appendix C: MLE Extrema Distributional Parameters
 
 ```{=latex}
@@ -90,17 +84,15 @@ df_lims |>
     mutate(across(min:max, ~format_value(.x, digits = 3))) |>
     nice_table(
       x = _, 
-      caption = "Estimated Parameters for the Distribution of Effect Size and Sample Size from each Meta-Analysis via ML",
-      general_fn = "Maximum Likelihood Estimation using the Nelder-Mead optimizer.", 
+      caption = "Maximum Likelihood Estimated Parameters for the Distribution of Effect Size and Sample Size",
+      general_fn = "Maximum Likelihood Estimation using the Nelder-Mead optimizer (Nelder \\\\& Mead, 1965).", 
       col_names = c("Parameter", "Minimum", "Maximum")
       ) |> 
       kableExtra::group_rows("Effect Size", 1, 2) |> 
       kableExtra::group_rows("Sample Size", 3, 4)  |>
       str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]") |>
       cat()
-
 ```
-
 
 ## Appendix D: Sensitivity Analyses of Equivalence Test
 
@@ -149,8 +141,9 @@ knitr::include_graphics(here("figures/h3_qqplot.png"))
 ```{=latex}
 \begingroup
 \scriptsize
+\vspace{-3pt}
 \noindent
-\textit{Note.} Empirical observed quantiles for the average effect size $\widehat{\delta}$ and mean parameter of the effect size distribution from SPEEC $\Delta_{\widehat{\mu}_d}$ as a function of theoretical quantiles expected under the normal distribution.Ribbons represent the 95\% confidence interval. 
+\textit{Note.} Empirical observed quantiles for the average effect size $\widehat{\delta}$ and mean parameter of the effect size distribution from SPEEC $\Delta_{\widehat{\mu}_d}$ as a function of theoretical quantiles expected under the normal distribution. Ribbons represent the 95\% confidence interval. 
 \endgroup
 ```
 

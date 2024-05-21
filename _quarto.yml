@@ -15,12 +15,12 @@ format:
     author: "Jan Luca Schnatz"
     email: "janluca.schnatz@gmx.de"
     student-id: "7516898"
-    affilitation: Abteilung für Psychologische Methoden mit Interdisziplinärer Ausrichtung
-    department: "Institut für Psychologie und Sportwissenschaften" 
+    affiliation: Abteilung für Psychologische Methoden mit Interdisziplinärer Ausrichtung
+    department: "Fachbereich 5: Institut für Psychologie und Sportwissenschaften" 
     university: Goethe-Universität Frankfurt am Main
     promotor: Prof. Dr. Martin Schultze
     copromotor: Julia Beitner, M.Sc.
-    due-date: "21. Mai 2024"
+    due-date: "Darmstadt, 21. Mai 2024"
     
     # document settings
     documentclass: scrartcl

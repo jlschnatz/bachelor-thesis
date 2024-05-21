@@ -135,7 +135,7 @@ table_h4 <- nice_table(
   col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$"),
   digits = 2,
   general_fn = glue::glue("$RRR$: registered replication reports, $CI$: confidence interval. {report_fit(mod_h4, 'w_pbs')}"),
-  alphabet_fn = c("$OR$", "Raw values", "One-sided cnfidence interval in direction of the hypothesis")
+  alphabet_fn = c("Odds ratio", "Raw values", "One-sided cnfidence interval in direction of the hypothesis")
 ) |> 
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
   group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>

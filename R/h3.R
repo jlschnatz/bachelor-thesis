@@ -269,7 +269,7 @@ data_table_wilcox <- chuck(tost_wilcox, "TOST") |>
 table_h3_wilcox <- nice_table(
   x = data_table_wilcox,
   col_names = c("Type", "Hypothesis", "$T^+$", "$\\mu_{T^+}$", "$\\sigma_{T^+}$", "$z$", "$p$"),
-  caption = "Sensitivity Analyses for the equivalence test in $\\hypothesis{3}{}$ and NHST: Wilxocon Signed-Rank Test",
+  caption = "Sensitivity Analyses for the Equivalence Test in $\\hypothesis{3}{}$: Wilxocon Signed-Rank Test",
   general_fn = paste("Continuity correction applied. Approximate Gaussian null distribution used. $T^+$: positive rank sum (test statistic), ", 
                       "$\\\\mu_{T^+}$: mean of positive rank sum under $\\\\mathcal{H}_0$, ",
                       "$\\\\sigma_{T^+}$: variance of positive rank sum under $\\\\mathcal{H}_0$") 

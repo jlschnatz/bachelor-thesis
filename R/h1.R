@@ -110,7 +110,7 @@ table_h1 <- nice_table(
   digits = 2,
   col_names = c("Term", "Estimate", "$CI$ (95\\%)", "$SE$", "$z$", "$p$"),
   general_fn = paste0("$CI$: Confidence interval, $SE$: standard error, ", report_fit(mod_h1, "w_pbs")),
-  alphabet_fn = c("$OR$", "Raw values", "One-sided confidence interval in the direction of the hypothesis")
+  alphabet_fn = c("Odds ratio", "Raw values", "One-sided confidence interval in the direction of the hypothesis")
 ) |>
 group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>
 group_rows("Precision model component: $\\phi$", 3, 3, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>

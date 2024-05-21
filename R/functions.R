@@ -277,10 +277,10 @@ fivenum2 <- function(x) {
 
 str_discr <- function(x, parameter) {
     x$parameter <- dplyr::case_match(x$parameter,
-    "delta_mu_d" ~ "({\\Delta_{\\mu_d}})",
-    "delta_sigma2_d" ~ "({\\Delta_{\\sigma^2_d}})",
-    "delta_phi_n" ~ "({\\Delta_{\\phi_n}})",
-    "delta_mu_n" ~ "({\\Delta_{\\mu_n}})"
+    "delta_mu_d" ~ "({\\Delta_{\\widehat{\\mu}_d}})",
+    "delta_sigma2_d" ~ "({\\Delta_{\\widehat{\\sigma}^2_d}})",
+    "delta_phi_n" ~ "({\\Delta_{\\widehat{\\phi}_n}})",
+    "delta_mu_n" ~ "({\\Delta_{\\widehat{\\mu}_n}})"
     )
     subs <- x[parameter, ]
     glue::glue('$M{subs$parameter}$ = {subs$mean}, $Mdn{subs$parameter}$ = {subs$median}')

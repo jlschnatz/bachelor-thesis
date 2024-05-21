@@ -109,7 +109,7 @@ table_h2 <- nice_table(
   caption = "Beta Regression Results for $\\hypothesis{2}{}$",
   digits = 2,
   col_names = c("Term", "Estimate", "$CI$ (95\\%)","$SE$", "$z$", "$p$"),
-  alphabet_fn = c("$OR$", "Raw values", "One-sided confidence interval in direction of the hypothesis"),
+  alphabet_fn = c("Odds ratio", "Raw values", "One-sided confidence interval in direction of the hypothesis"),
   general_fn = paste0("$CI$: Confidence interval, $SE$: standard error, ", report_fit(mod_h2, "w_pbs"))
 ) |>
   group_rows("Mean model component: $\\mu$", 1, 2, escape = FALSE, extra_latex_after = "\\\\[-1.5ex]") |>

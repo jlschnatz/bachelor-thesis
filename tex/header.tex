@@ -1,12 +1,15 @@
 \usepackage{unicode-math}
 \usepackage[english]{babel} 
+
 \raggedbottom               % do not spread content to bottom of page
 \linespread{1.5}            % global line spread
 \usepackage{setspace}       % to modify line spread within the document
+
 \usepackage[nottoc]{tocbibind} % puts lof & lot, but not toc itself in toc
 \usepackage[section]{placeins} % keep floats in respective section
 \usepackage{indentfirst}    % indent first paragraph also
 \usepackage{sectsty}        % header styling
+
 \sectionfont{\fontsize{12}{12}\bfseries\centering} % section header
 \subsectionfont{\fontsize{12}{12}\bfseries}        % subsection header 
 \subsubsectionfont{\fontsize{12}{12}\bfseries\itshape}  % subsubsection 
@@ -15,11 +18,15 @@
 \captionsetup[table]{labelfont=bf, textfont=it, format=plain, justification=justified, singlelinecheck=false, labelsep=spaced, skip=12pt}
 \captionsetup[figure]{labelfont=bf, textfont=it, labelsep=spaced, justification=justified, singlelinecheck=false, labelsep=spaced, skip=12pt}
 \usepackage{fancyhdr}                 % fancy headers and footers
-\setlength{\headheight}{12pt}
+%\setlength{\headheight}{12pt}
+
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[LE,RO]{\thepage}
-\fancyhead[RE,LO]{}
+%\fancyhead[LE,RO]{\thepage}
+%\fancyhead[RE,LO]{Simulation-based Publication Bias Assessment}
+\fancyhead[RO,LE]{\thepage}
+\fancyhead[LO,RE]{Simulation-Based Publication Bias Assessment}
+
 
 \usepackage{tabularx} % automatic line break in a table
 
@@ -32,6 +39,7 @@
 \captionsetup{format = plain, labelfont=bf, labelsep = newline} % newline for caption after bold title
 
 \setlength{\textfloatsep}{10pt plus 3pt minus 5pt}
+
 \usepackage{ragged2e}
 \usepackage{parskip}
 \parindent=0.5in

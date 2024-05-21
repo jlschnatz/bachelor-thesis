@@ -177,7 +177,7 @@ data_table <- data_ml_speec |>
   select(comparison, r , p, fmt_p, p_adj, ci)
 
 
-caption <- "Pairwise Correlations between Absolute Divergences in Distributional Parameters of SPEEC and ML, Publication Bias Parameter, Meta-Analysis Size and Heterogeneity"
+caption <- "Pairwise Correlations Between Absolute Divergences in Distributional Parameters of SPEEC and MLE, Publication Bias Parameter, Meta-Analysis Size and Heterogeneity"
 
 table_diagnostics <- data_table |>
   mutate(r = cell_spec(r, bold = if_else(p < .05, TRUE, FALSE), format = "latex")) |>
@@ -187,12 +187,11 @@ table_diagnostics <- data_table |>
     x = _,
     col_names = c("Comparison", "$r$ (95\\% $CI$)",  "$p$", "$p_{\\text{adj}}$"), 
     caption = caption,
-    general_fn = "$r$: Pearson correlation coefficient, $CI$: confidence interval, $p$-values are adjusted on based on the correction by Benjamini \\\\& Hochberg (1995). Highlighted bold values are statistically significant according to the unadjusted $p$-values.",
+    general_fn = "$r$: Pearson correlation coefficient, $CI$: confidence interval, $p$-values are adjusted on based on the correction by Benjamini and Hochberg (1995). Highlighted bold values are statistically significant according to the unadjusted $p$-values.",
     placement = "h"
     ) |>
   kable_styling(font_size = 12) |>
   str_replace_all(string = _, pattern = "\\\\begin\\{tablenotes\\}", "\\\\begin\\{tablenotes\\}[flushleft]")
-
 
 cat(table_diagnostics, file = here("tables/table_diagnostic_cormat.tex"))
   
