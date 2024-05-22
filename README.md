@@ -96,6 +96,11 @@ sudo docker run -it --rm --entrypoint bash schnatz/thesis
 
 ![](figures/dag.png)
 
+## Optimisation Code
+
+The code to run the optimisation lies in a seperate repository on GitHub
+an is accessible on: https://github.com/jlschnatz/speec_analysis
+
 # License
 
 Shield: [![CC BY-SA
